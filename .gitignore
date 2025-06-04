@@ -1,1 +1,41 @@
-.idea
+# Symfony
+/backend/var/
+/backend/vendor/
+/backend/.env
+/backend/.env.local
+/backend/.env.*.local
+/backend/config/secrets/prod/prod.decrypt.private.php
+/backend/phpunit.xml
+/backend/phpunit.xml.dist
+/backend/var/
+/backend/var/cache/*
+/backend/var/log/*
+/backend/var/sessions/*
+!backend/var/cache/.gitkeep
+!backend/var/log/.gitkeep
+!backend/var/sessions/.gitkeep
+
+# Vue.js
+/webapp/node_modules/
+/webapp/dist/
+/webapp/.env
+/webapp/.env.local
+/webapp/.env.*.local
+/webapp/npm-debug.log*
+/webapp/yarn-debug.log*
+/webapp/yarn-error.log*
+/webapp/.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+
