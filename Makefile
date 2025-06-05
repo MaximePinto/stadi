@@ -1,6 +1,6 @@
 # Makefile pour Symfony API + Vue.js Frontend
 
-.PHONY: help start stop up cache-clear cc migration install db-create db-drop db-reset fixtures entity tree tree-simple tree-files
+.PHONY: help start stop up cache-clear cc migration install db-create db-drop db-reset fixtures entity tree tree-simple tree-files lint format
 
 # Variables
 PROJECT_NAME = stadi
@@ -67,7 +67,13 @@ install: ## Installation complète du projet
 
 ## —— 🛠️ Outils ——————————————————————————————————————————————————————————
 ssh: ## Shell dans le conteneur principal
-	ddev ssh
+        ddev ssh
+
+lint: ## Lint du code Vue
+        ddev exec --dir $(WEBAPP_FOLDER) npm run lint
+
+format: ## Formatage du code Vue
+        ddev exec --dir $(WEBAPP_FOLDER) npm run format
 
 tree: ## Affiche l'arborescence des fichiers du projet
 	@echo "📁 Arborescence du projet depuis $(shell pwd):"
