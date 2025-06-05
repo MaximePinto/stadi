@@ -14,6 +14,17 @@ TypeScript cannot handle type information for `.vue` imports by default, so we r
 
 See [Vite Configuration Reference](https://vite.dev/config/).
 
+### Tailwind CSS
+
+This project uses [Tailwind CSS](https://tailwindcss.com/) powered by PostCSS.
+The configuration lives in `tailwind.config.cjs`.
+
+### SCSS
+
+Global styles use SCSS syntax and are compiled automatically by Vite. The entry
+point is `src/assets/main.scss` which imports other SCSS files and Tailwind
+directives.
+
 ## Project Setup
 
 ```sh
