@@ -1,0 +1,250 @@
+openapi: 3.0.3
+info:
+  title: Stadi API
+  version: 1.0.0
+servers:
+  - url: http://localhost
+paths:
+  /api/login:
+    post:
+      summary: User login
+      responses:
+        '200':
+          description: JWT token returned
+  /api/register:
+    post:
+      summary: Register a new user
+      responses:
+        '201':
+          description: User created
+  /api/me:
+    get:
+      summary: Get current user information
+      responses:
+        '200':
+          description: Current user details
+  /api/abilities:
+    get:
+      summary: List abilities
+      responses:
+        '200':
+          description: List of abilities
+    post:
+      summary: Create an ability
+      responses:
+        '201':
+          description: Ability created
+  /api/abilities/{id}:
+    get:
+      summary: Get a single ability
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Ability data
+    put:
+      summary: Update an ability
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Ability updated
+    delete:
+      summary: Delete an ability
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Ability deleted
+  /api/builds:
+    get:
+      summary: List builds
+      responses:
+        '200':
+          description: List of builds
+    post:
+      summary: Create a build
+      responses:
+        '201':
+          description: Build created
+  /api/builds/{id}:
+    get:
+      summary: Get a single build
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Build data
+    put:
+      summary: Update a build
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Build updated
+    delete:
+      summary: Delete a build
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Build deleted
+  /api/build-upgrades:
+    get:
+      summary: List build upgrades
+      responses:
+        '200':
+          description: List of build upgrades
+    post:
+      summary: Create a build upgrade
+      responses:
+        '201':
+          description: Build upgrade created
+  /api/build-upgrades/{id}:
+    get:
+      summary: Get a single build upgrade
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Build upgrade data
+    put:
+      summary: Update a build upgrade
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Build upgrade updated
+    delete:
+      summary: Delete a build upgrade
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Build upgrade deleted
+  /api/heroes:
+    get:
+      summary: List heroes
+      responses:
+        '200':
+          description: List of heroes
+    post:
+      summary: Create a hero
+      responses:
+        '201':
+          description: Hero created
+  /api/heroes/{id}:
+    get:
+      summary: Get a single hero
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Hero data
+    put:
+      summary: Update a hero
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Hero updated
+    delete:
+      summary: Delete a hero
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Hero deleted
+  /api/upgrades:
+    get:
+      summary: List upgrades
+      responses:
+        '200':
+          description: List of upgrades
+    post:
+      summary: Create an upgrade
+      responses:
+        '201':
+          description: Upgrade created
+  /api/upgrades/{id}:
+    get:
+      summary: Get a single upgrade
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Upgrade data
+    put:
+      summary: Update an upgrade
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Upgrade updated
+    delete:
+      summary: Delete an upgrade
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: Upgrade deleted
