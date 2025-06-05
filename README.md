@@ -37,6 +37,20 @@ Stadi est un outil de création de builds pour **Overwatch 2** dans son mode **
 
 Les variables d’environnement par défaut (base de données, serveur SMTP, etc.) sont définies dans le fichier `.env.local`.
 
+## Authentification API
+L’API utilise maintenant un système **JWT**. Deux points d’entrée principaux sont disponibles :
+
+- `POST /api/register` : crée un nouvel utilisateur en envoyant un `email` et un `password` dans le corps JSON.
+- `POST /api/login` : retourne un token JWT à partir des mêmes informations d’identification.
+
+Pour accéder aux routes protégées, ajoutez l’en‑tête :
+
+```http
+Authorization: Bearer <token>
+```
+
+Un exemple de route protégée est `GET /api/me` qui retourne les informations de l’utilisateur connecté.
+
 ## Tests
 Dans `webapp/` :
 - Exécuter les tests unitaires :
