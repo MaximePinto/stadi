@@ -11,8 +11,8 @@ if (!store.isAdmin) {
 
 const entities = ['heroes', 'abilities', 'upgrades', 'builds', 'build-upgrades', 'users']
 const current = ref('heroes')
-const list = ref<any[]>([])
-const newItem = ref<any>({})
+const list = ref<Record<string, unknown>[]>([])
+const newItem = ref<Record<string, unknown>>({})
 
 watch(current, () => fetchList())
 fetchList()
