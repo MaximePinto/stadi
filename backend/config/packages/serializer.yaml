@@ -1,0 +1,7 @@
+framework:
+    serializer:
+        mapping:
+            paths: ['%kernel.project_dir%/config/serialization']
+        default_context:
+            circular_reference_handler: 'App\Serializer\CircularReferenceHandler'
+            ignored_attributes: ['__initializer__', '__cloner__', '__isInitialized__']

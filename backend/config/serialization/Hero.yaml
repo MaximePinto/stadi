@@ -1,0 +1,15 @@
+App\Entity\Hero:
+    attributes:
+        id:
+            groups: ['hero:read']
+        name:
+            groups: ['hero:read', 'hero:write']
+        role:
+            groups: ['hero:read', 'hero:write']
+        description:
+            groups: ['hero:read', 'hero:write']
+        imageUrl:
+            groups: ['hero:read', 'hero:write']
+        abilities:
+            groups: ['hero:read']
+            max_depth: 1

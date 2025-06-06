@@ -14,6 +14,7 @@ const user = useUserStore()
       <div class="flex space-x-6 font-medium">
         <RouterLink class="hover:text-blue-400" to="/">Accueil</RouterLink>
         <RouterLink class="hover:text-blue-400" to="/about">À propos</RouterLink>
+        <RouterLink class="hover:text-blue-400" to="/heroes">Héros</RouterLink>
         <RouterLink
           v-if="user.isAdmin"
           class="hover:text-blue-400"

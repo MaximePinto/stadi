@@ -9,6 +9,7 @@ const router = createRouter({
     { path: '/about', name: 'about', component: () => import('../views/AboutView.vue') },
     { path: '/login', name: 'login', component: () => import('../views/LoginView.vue') },
     { path: '/admin', name: 'admin', component: () => import('../views/AdminView.vue'), meta: { requiresAdmin: true } },
+    { path: '/heroes', name: 'heroes', component: () => import('../views/HeroesView.vue') },
   ],
 })
 

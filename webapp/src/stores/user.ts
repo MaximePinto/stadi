@@ -8,19 +8,19 @@ export interface UserInfo {
 }
 
 export const useUserStore = defineStore('user', () => {
-  const token = ref<string | null>(localStorage.getItem('token'))
   const user = ref<UserInfo | null>(null)
 
-  const isLogged = computed(() => !!token.value)
+  const isLogged = computed(() => !!user.value)
   const isAdmin = computed(() => user.value?.roles.includes('ROLE_ADMIN'))
 
   async function fetchMe() {
-    if (!token.value) return
     const res = await fetch('/api/me', {
-      headers: { Authorization: `Bearer ${token.value}` },
+      credentials: 'include'
     })
     if (res.ok) {
       user.value = await res.json()
+    } else {
+      user.value = null
     }
   }
 
@@ -28,27 +28,28 @@ export const useUserStore = defineStore('user', () => {
     const res = await fetch('/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ email, password }),
     })
     if (!res.ok) {
       return false
     }
-    const data = await res.json()
-    token.value = data.token
-    localStorage.setItem('token', token.value!)
     await fetchMe()
     return true
   }
 
-  function logout() {
-    token.value = null
-    user.value = null
-    localStorage.removeItem('token')
+  async function logout() {
+    const res = await fetch('/api/logout', {
+      method: 'POST',
+      credentials: 'include'
+    })
+    if (res.ok) {
+      user.value = null
+    }
   }
 
-  if (token.value) {
-    fetchMe()
-  }
+  // Vérifier l'état de connexion au démarrage
+  fetchMe()
 
-  return { token, user, isLogged, isAdmin, login, logout, fetchMe }
+  return { user, isLogged, isAdmin, login, logout, fetchMe }
 })

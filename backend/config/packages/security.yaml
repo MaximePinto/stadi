@@ -1,3 +1,4 @@
+# backend/config/packages/security.yaml
 security:
     password_hashers:
         App\Entity\User: 'auto'
@@ -14,10 +15,10 @@ security:
             security: false
 
         login:
-            pattern:  ^/api/login
+            pattern: ^/api/login
             stateless: true
             json_login:
-                check_path: /api/login
+                check_path: /api/login  # Correspond à votre route dans AuthController
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
@@ -26,8 +27,9 @@ security:
         api:
             pattern: ^/api
             stateless: true
-            jwt: ~
+            jwt: ~  # Le bundle gérera automatiquement l'extraction depuis les cookies
 
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api/register, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

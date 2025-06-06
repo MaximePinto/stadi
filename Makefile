@@ -1,7 +1,6 @@
 # Makefile pour Symfony API + Vue.js Frontend
 
-.PHONY: help start stop up cache-clear cc migration install db-create db-drop db-reset fixtures entity tree tree-simple tree-files lint format
-
+.PHONY: help start stop up cache-clear cc migration install db-create db-drop db-reset fixtures entity tree tree-simple tree-files lint format db-init create-admin migration-create migration-status migration-list backend webapp backend-shell webapp-shell
 # Variables
 PROJECT_NAME = stadi
 WEBAPP_FOLDER = /var/www/html/webapp
@@ -14,6 +13,8 @@ help: ## Liste des commandes disponibles
 ## —— 🚀 Services ————————————————————————————————————————————————————————
 start: ## Démarre DDEV
 	ddev start
+	make db-init
+	make fixtures
 
 stop: ## Arrête DDEV
 	ddev stop
@@ -21,17 +22,14 @@ stop: ## Arrête DDEV
 up: start ## Démarre DDEV et lance le serveur Vue.js
 	ddev exec --dir $(WEBAPP_FOLDER) npm run dev
 
+run: ## Lance le serveur Vue.js
+	ddev exec --dir $(WEBAPP_FOLDER) npm run dev
+
 ## —— 🐘 API Symfony —————————————————————————————————————————————————————
 cache-clear: ## Vide le cache Symfony
 	ddev exec --dir $(API_FOLDER) php bin/console cache:clear
 
 cc: cache-clear ## Raccourci pour cache-clear
-
-migration: ## Génère une migration
-	ddev exec --dir $(API_FOLDER) php bin/console make:migration
-
-migrate: ## Exécute les migrations
-	ddev exec --dir $(API_FOLDER) php bin/console doctrine:migrations:migrate -n
 
 entity: ## Crée une entité (ex: make entity NAME="User")
 ifndef NAME
@@ -44,7 +42,30 @@ endif
 fixtures: ## Charge les fixtures
 	ddev exec --dir $(API_FOLDER) php bin/console doctrine:fixtures:load -n
 
+create-admin: ## Crée l'utilisateur admin via les fixtures
+	@echo "🔐 Chargement des fixtures (admin@admin.com / admin)..."
+	ddev exec --dir $(API_FOLDER) php bin/console doctrine:fixtures:load --no-interaction --append
+	@echo "✅ Admin créé : admin@admin.com / admin"
+
+reset-data: ## Recrée toutes les données (supprime tout et recharge les fixtures)
+	@echo "🗑️ Suppression de toutes les données..."
+	ddev exec --dir $(API_FOLDER) php bin/console doctrine:fixtures:load --no-interaction
+	@echo "✅ Données rechargées avec admin par défaut"
+
+list-users: ## Liste tous les utilisateurs
+	@echo "👥 Liste des utilisateurs :"
+	@ddev mysql -e "SELECT id, email, roles FROM user;"
+
 ## —— 🗃️ Base de données ————————————————————————————————————————————————
+db-info: ## Affiche les informations de connexion DB
+	@echo "📊 Informations de connexion :"
+	@echo "Host: 127.0.0.1"
+	@echo "Port: 3307"
+	@echo "Database: db"
+	@echo "Username: db"
+	@echo "Password: db"
+	@ddev describe | grep "db:3306"
+
 db-create: ## Crée la base de données
 	ddev exec --dir $(API_FOLDER) php bin/console doctrine:database:create --if-not-exists
 
@@ -56,24 +77,86 @@ db-reset: ## Recrée la base de données complètement
 	@make db-create
 	@make migrate
 
+db-init: ## Initialise la base de données (crée la DB et les tables)
+	@make db-create
+	@make migrate
+	@echo "✅ Base de données initialisée avec succès !"
+
+migration: ## Génère une migration
+	ddev exec --dir $(API_FOLDER) php bin/console make:migration
+
+migrate: ## Exécute les migrations
+	ddev exec --dir $(API_FOLDER) php bin/console doctrine:migrations:migrate -n
+
+migration-create: ## Crée une nouvelle migration (ex: make migration-create NAME="add_user_table")
+ifndef NAME
+	@echo "❌ Spécifiez le nom avec NAME=..."
+	@echo "💡 Exemple : make migration-create NAME=\"add_user_table\""
+	@exit 1
+endif
+	ddev exec --dir $(API_FOLDER) php bin/console make:migration --name=$(NAME)
+
+migration-status: ## Affiche le statut des migrations
+	ddev exec --dir $(API_FOLDER) php bin/console doctrine:migrations:status
+
+migration-list: ## Liste toutes les migrations disponibles
+	ddev exec --dir $(API_FOLDER) php bin/console doctrine:migrations:list
+
 ## —— 📦 Installation ————————————————————————————————————————————————————
 install: ## Installation complète du projet
-	ddev start
+	#ddev start
 	ddev composer install --working-dir=backend
 	ddev exec --dir $(WEBAPP_FOLDER) npm install
 	@echo "✅ Installation terminée !"
 	@echo "🔗 API Symfony: https://$(PROJECT_NAME).ddev.site"
 	@echo "🔗 Frontend Vue: https://app.$(PROJECT_NAME).ddev.site"
 
+install-webapp: ## Installation complète du front
+	#ddev start
+	#ddev composer install --working-dir=backend
+	ddev exec --dir $(WEBAPP_FOLDER) npm install
+	@echo "✅ Installation terminée !"
+	@echo "🔗 Frontend Vue: https://app.$(PROJECT_NAME).ddev.site"
+
 ## —— 🛠️ Outils ——————————————————————————————————————————————————————————
 ssh: ## Shell dans le conteneur principal
-        ddev ssh
+	ddev ssh
+
+backend: ## Exécute une commande dans le backend (ex: make backend CMD="composer install")
+ifndef CMD
+	@echo "❌ Spécifiez la commande avec CMD=..."
+	@echo "💡 Exemples :"
+	@echo "   make backend CMD=\"composer install\""
+	@echo "   make backend CMD=\"php bin/console cache:clear\""
+	@echo "   make backend CMD=\"composer show | grep doctrine\""
+	@echo "   make backend CMD=\"php bin/console make:entity User\""
+	@exit 1
+endif
+	ddev exec --dir $(API_FOLDER) $(CMD)
+
+webapp: ## Exécute une commande dans le webapp (ex: make webapp CMD="npm install")
+ifndef CMD
+	@echo "❌ Spécifiez la commande avec CMD=..."
+	@echo "💡 Exemples :"
+	@echo "   make webapp CMD=\"npm install\""
+	@echo "   make webapp CMD=\"npm run dev\""
+	@echo "   make webapp CMD=\"npm run build\""
+	@echo "   make webapp CMD=\"npm run lint\""
+	@exit 1
+endif
+	ddev exec --dir $(WEBAPP_FOLDER) $(CMD)
+
+backend-shell: ## Ouvre un shell dans le dossier backend
+	ddev exec --dir $(API_FOLDER) bash
+
+webapp-shell: ## Ouvre un shell dans le dossier webapp
+	ddev exec --dir $(WEBAPP_FOLDER) bash
 
 lint: ## Lint du code Vue
-        ddev exec --dir $(WEBAPP_FOLDER) npm run lint
+	ddev exec --dir $(WEBAPP_FOLDER) npm run lint
 
 format: ## Formatage du code Vue
-        ddev exec --dir $(WEBAPP_FOLDER) npm run format
+	ddev exec --dir $(WEBAPP_FOLDER) npm run format
 
 tree: ## Affiche l'arborescence des fichiers du projet
 	@echo "📁 Arborescence du projet depuis $(shell pwd):"

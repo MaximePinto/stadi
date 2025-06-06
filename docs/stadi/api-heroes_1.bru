@@ -1,0 +1,24 @@
+meta {
+  name: api/heroes_1
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://stadi.ddev.site/api/heroes
+  body: json
+  auth: none
+}
+
+headers {
+  Cookie: {{jwt_cookie}}
+}
+
+body:json {
+       {
+         "name": "Ana",
+         "role": "Tank",
+         "description": "Description du héros",
+         "imageUrl": "URL de l'image (optionnel)"
+       }
+}

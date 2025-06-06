@@ -11,15 +11,15 @@ if (!store.isAdmin) {
 
 const entities = ['heroes', 'abilities', 'upgrades', 'builds', 'build-upgrades', 'users']
 const current = ref('heroes')
-const list = ref<any[]>([])
-const newItem = ref<any>({})
+const list = ref<Record<string, unknown>[]>([])
+const newItem = ref<Record<string, unknown>>({})
 
 watch(current, () => fetchList())
 fetchList()
 
 async function fetchList() {
   const res = await fetch(`/api/${current.value}`, {
-    headers: { Authorization: `Bearer ${store.token}` },
+    credentials: 'include'
   })
   if (res.ok) {
     list.value = await res.json()
@@ -33,9 +33,9 @@ async function createItem() {
   const res = await fetch(`/api/${current.value}`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${store.token}`,
+      'Content-Type': 'application/json'
     },
+    credentials: 'include',
     body: JSON.stringify(newItem.value),
   })
   if (res.ok) {
@@ -48,7 +48,7 @@ async function createItem() {
 async function deleteItem(id: number) {
   const res = await fetch(`/api/${current.value}/${id}`, {
     method: 'DELETE',
-    headers: { Authorization: `Bearer ${store.token}` },
+    credentials: 'include'
   })
   if (res.ok) {
     await fetchList()

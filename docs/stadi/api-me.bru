@@ -1,0 +1,15 @@
+meta {
+  name: api/me
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://stadi.ddev.site/api/me
+  body: none
+  auth: none
+}
+
+headers {
+  Cookie: {{jwt_cookie}}
+}

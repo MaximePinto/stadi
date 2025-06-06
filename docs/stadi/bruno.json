@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "stadi",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
