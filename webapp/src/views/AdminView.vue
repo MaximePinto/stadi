@@ -11,8 +11,8 @@ if (!store.isAdmin) {
 
 const entities = ['heroes', 'abilities', 'upgrades', 'builds', 'build-upgrades', 'users']
 const current = ref('heroes')
-const list = ref<any[]>([])
-const newItem = ref<any>({})
+const list = ref<Record<string, unknown>[]>([])
+const newItem = ref<Record<string, unknown>>({})
 
 watch(current, () => fetchList())
 fetchList()
@@ -57,39 +57,62 @@ async function deleteItem(id: number) {
 </script>
 
 <template>
-  <div>
-    <h1 class="text-2xl font-bold mb-4">Administration</h1>
-    <div class="mb-4">
-      <label>Entité : </label>
-      <select v-model="current" class="border p-1 rounded">
+  <div class="space-y-6">
+    <h1 class="text-3xl font-bold">Administration</h1>
+    <div class="flex items-center space-x-2">
+      <label class="font-medium">Entité :</label>
+      <select
+        v-model="current"
+        class="border border-gray-300 rounded p-2 bg-white shadow-sm"
+      >
         <option v-for="e in entities" :key="e" :value="e">{{ e }}</option>
       </select>
     </div>
-    <div class="grid gap-4 md:grid-cols-2">
+    <div class="grid md:grid-cols-2 gap-8">
       <div>
-        <h2 class="font-semibold mb-2">Liste</h2>
-        <table class="min-w-full text-sm text-left">
-          <thead>
-            <tr>
-              <th v-for="(val, key) in list[0] || {}" :key="key" class="border px-2">{{ key }}</th>
-              <th class="border px-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in list" :key="item.id">
-              <td v-for="(val, key) in item" :key="key" class="border px-2">{{ val }}</td>
-              <td class="border px-2">
-                <button class="text-red-600" @click="deleteItem(item.id)">Supprimer</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <h2 class="text-lg font-semibold mb-2">Liste</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 text-sm">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  v-for="(val, key) in list[0] || {}"
+                  :key="key"
+                  class="px-3 py-2 text-left font-medium text-gray-500 uppercase tracking-wider border"
+                >
+                  {{ key }}
+                </th>
+                <th class="px-3 py-2 text-left font-medium text-gray-500 uppercase border">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="item in list" :key="item.id">
+                <td v-for="(val, key) in item" :key="key" class="px-3 py-2 whitespace-nowrap border">{{ val }}</td>
+                <td class="px-3 py-2 whitespace-nowrap border">
+                  <button class="text-red-600 hover:underline" @click="deleteItem(item.id)">
+                    Supprimer
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div>
-        <h2 class="font-semibold mb-2">Ajouter</h2>
-        <form @submit.prevent="createItem" class="space-y-2">
-          <textarea v-model="newItem" placeholder='{ "name": "..." }' class="w-full border p-2 rounded" rows="6"></textarea>
-          <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Enregistrer</button>
+        <h2 class="text-lg font-semibold mb-2">Ajouter</h2>
+        <form @submit.prevent="createItem" class="space-y-4">
+          <textarea
+            v-model="newItem"
+            placeholder='{ "name": "..." }'
+            class="w-full border p-3 rounded"
+            rows="6"
+          ></textarea>
+          <button
+            type="submit"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Enregistrer
+          </button>
         </form>
       </div>
     </div>
