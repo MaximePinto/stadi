@@ -4,9 +4,11 @@ import BaseFooter from './components/BaseFooter.vue'
 </script>
 
 <template>
-  <BaseHeader />
-  <main class="container mx-auto py-8">
-    <RouterView />
-  </main>
-  <BaseFooter />
+  <div class="min-h-screen flex flex-col">
+    <BaseHeader />
+    <main class="flex-grow container mx-auto py-8">
+      <RouterView />
+    </main>
+    <BaseFooter />
+  </div>
 </template>
