@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: http://stadi.ddev.site/api/login
+  url: http://stadi.ddev.site/api/login_check
   body: json
   auth: none
 }
@@ -18,56 +18,21 @@ body:json {
 }
 
 script:post-response {
-  // Script de debug complet
-  console.log("=== DEBUG START ===");
-  console.log("Response Code:", res.getStatus());
-  
-  // Vérifier tous les headers
-  console.log("All Response Headers:", res.getHeaders().toObject());
-  
-  // Vérifier spécifiquement set-cookie
-  var setCookieHeader = res.getHeader("set-cookie");
-  console.log("Set-Cookie Header:", setCookieHeader);
-  
+  // Script simple pour extraire JWT de Bruno
   if (res.getStatus() === 204) {
-      if (setCookieHeader && setCookieHeader.includes("jwt=")) {
-          // Extraire le JWT
-          var jwtMatch = setCookieHeader.match(/jwt=([^;]+)/);
-          console.log("JWT Match:", jwtMatch);
-          
-          if (jwtMatch && jwtMatch[1]) {
-              var jwt = jwtMatch[1];
-              console.log("JWT extrait (50 premiers chars):", jwt.substring(0, 50));
-              console.log("JWT complet length:", jwt.length);
-              
-              // Essayer différentes méthodes de sauvegarde
-              try {
-                  // Méthode 1: Variables de collection
-                  bru.setVar("jwt_token", jwt);
-                  bru.setVar("jwt_cookie", "jwt=" + jwt);
-                  console.log("✅ Variables de collection créées");
-                  
-                  // Méthode 2: Variables globales (backup)
-                  bru.setGlobalEnvVar("jwt_token", jwt);
-                  bru.setGlobalEnvVar("jwt_cookie", "jwt=" + jwt);
-                  console.log("✅ Variables globales créées");
-                  
-                  // Vérifier que ça a marché
-                  console.log("Test lecture collection:", bru.getVar("jwt_token") ? "OK" : "FAILED");
-                  console.log("Test lecture global:", bru.getGlobalEnvVar("jwt_token") ? "OK" : "FAILED");
-                  
-              } catch (error) {
-                  console.log("❌ Erreur sauvegarde:", error);
-              }
-          } else {
-              console.log("❌ Pas de JWT trouvé dans le match");
-          }
+      var setCookie = res.getHeader("set-cookie");
+      var cookieStr = Array.isArray(setCookie) ? setCookie[0] : setCookie;
+      
+      if (cookieStr && cookieStr.includes("jwt=")) {
+          var jwt = cookieStr.match(/jwt=([^;]+)/)[1];
+          bru.setEnvVar("jwt_token", jwt);
+          bru.setEnvVar("jwt_cookie", "jwt=" + jwt);
+          console.log("✅ JWT sauvé:", jwt.substring(0, 30) + "...");
+          console.log("✅ Cookie sauvé: jwt=" + jwt.substring(0, 20) + "...");
       } else {
-          console.log("❌ Pas de JWT dans set-cookie header");
+          console.log("❌ Pas de JWT trouvé");
       }
   } else {
-      console.log("❌ Code de réponse incorrect");
+      console.log("❌ Erreur login, code:", res.getStatus());
   }
-  
-  console.log("=== DEBUG END ===");
 }

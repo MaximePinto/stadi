@@ -10,6 +10,7 @@ const user = useUserStore()
 
 async function handleLogin() {
   const ok = await user.login(email.value, password.value)
+  console.log('ok', ok)
   if (ok) {
     router.push('/')
   } else {

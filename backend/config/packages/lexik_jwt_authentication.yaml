@@ -23,5 +23,5 @@ lexik_jwt_authentication:
             path: '/'             # Chemin du cookie
             domain: null          # Domaine (null = domaine actuel)
             httpOnly: true        # 🔒 Cookie httpOnly (sécurité XSS)
-            secure: true          # 🔒 Cookie sécurisé (HTTPS uniquement)
+            secure: false         # 🔒 Cookie sécurisé (HTTPS uniquement)
             partitioned: false    # Pour Symfony 6.4+

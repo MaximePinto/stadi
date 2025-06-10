@@ -1,50 +1,39 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-
-export interface UserInfo {
-  id: number
-  email: string
-  roles: string[]
-}
+import type { User } from '@/types/entities'
+import { api } from '@/services/api'
 
 export const useUserStore = defineStore('user', () => {
-  const user = ref<UserInfo | null>(null)
+  const user = ref<User | null>(null)
 
   const isLogged = computed(() => !!user.value)
   const isAdmin = computed(() => user.value?.roles.includes('ROLE_ADMIN'))
 
   async function fetchMe() {
-    const res = await fetch('/api/me', {
-      credentials: 'include'
-    })
-    if (res.ok) {
-      user.value = await res.json()
-    } else {
+    try {
+      user.value = await api.get<User>('/api/me')
+      console.log(user.value)
+    } catch {
       user.value = null
     }
   }
 
   async function login(email: string, password: string) {
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({ email, password }),
-    })
-    if (!res.ok) {
+    try {
+      await api.post('/api/login_check', { email, password })
+      await fetchMe()
+      return true
+    } catch {
       return false
     }
-    await fetchMe()
-    return true
   }
 
   async function logout() {
-    const res = await fetch('/api/logout', {
-      method: 'POST',
-      credentials: 'include'
-    })
-    if (res.ok) {
+    try {
+      await api.post('/api/logout')
       user.value = null
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error)
     }
   }
 
