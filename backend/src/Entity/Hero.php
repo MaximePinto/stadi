@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 #[ORM\Entity]
 class Hero
@@ -26,7 +27,8 @@ class Hero
     #[ORM\Column(nullable: true)]
     private ?string $imageUrl = null;
 
-    #[ORM\OneToMany(mappedBy: 'hero', targetEntity: Ability::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Ability::class, mappedBy: 'hero', cascade: ['persist', 'remove'])]
+    #[MaxDepth(1)]
     private Collection $abilities;
 
     public function __construct()

@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Attribute\MaxDepth;
 
 #[ORM\Entity]
 class Ability
@@ -16,6 +17,7 @@ class Ability
 
     #[ORM\ManyToOne(targetEntity: Hero::class, inversedBy: 'abilities')]
     #[ORM\JoinColumn(nullable: false)]
+    #[MaxDepth(1)]
     private ?Hero $hero = null;
 
     #[ORM\Column(length: 100)]
@@ -31,6 +33,7 @@ class Ability
     private ?string $iconUrl = null;
 
     #[ORM\OneToMany(mappedBy: 'ability', targetEntity: Upgrade::class, cascade: ['persist', 'remove'])]
+    #[MaxDepth(1)]
     private Collection $upgrades;
 
     public function __construct()

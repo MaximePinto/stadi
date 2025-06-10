@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\MaxDepth;
 
 #[ORM\Entity]
 class BuildUpgrade
@@ -14,10 +15,12 @@ class BuildUpgrade
 
     #[ORM\ManyToOne(targetEntity: Build::class, inversedBy: 'buildUpgrades')]
     #[ORM\JoinColumn(nullable: false)]
+    #[MaxDepth(1)]
     private ?Build $build = null;
 
     #[ORM\ManyToOne(targetEntity: Upgrade::class, inversedBy: 'buildUpgrades')]
     #[ORM\JoinColumn(nullable: false)]
+    #[MaxDepth(1)]
     private ?Upgrade $upgrade = null;
 
     #[ORM\Column]

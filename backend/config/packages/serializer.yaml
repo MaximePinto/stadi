@@ -3,5 +3,5 @@ framework:
         mapping:
             paths: ['%kernel.project_dir%/config/serialization']
         default_context:
-            circular_reference_handler: 'App\Serializer\CircularReferenceHandler'
+            enable_max_depth: true
             ignored_attributes: ['__initializer__', '__cloner__', '__isInitialized__']

@@ -39,6 +39,9 @@ ifndef NAME
 endif
 	ddev exec --dir $(API_FOLDER) php bin/console make:entity $(NAME)
 
+routes:
+	make backend CMD='php bin/console debug:router'
+
 fixtures: ## Charge les fixtures
 	ddev exec --dir $(API_FOLDER) php bin/console doctrine:fixtures:load -n
 

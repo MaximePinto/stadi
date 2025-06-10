@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Attribute\MaxDepth;
 
 #[ORM\Entity]
 class Upgrade
@@ -16,6 +17,7 @@ class Upgrade
 
     #[ORM\ManyToOne(targetEntity: Ability::class, inversedBy: 'upgrades')]
     #[ORM\JoinColumn(nullable: false)]
+    #[MaxDepth(1)]
     private ?Ability $ability = null;
 
     #[ORM\Column(length: 100)]
@@ -30,7 +32,8 @@ class Upgrade
     #[ORM\Column(type: 'json')]
     private array $effect = [];
 
-    #[ORM\OneToMany(mappedBy: 'upgrade', targetEntity: BuildUpgrade::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: BuildUpgrade::class, mappedBy: 'upgrade', cascade: ['persist', 'remove'])]
+    #[MaxDepth(1)]
     private Collection $buildUpgrades;
 
     public function __construct()
