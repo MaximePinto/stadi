@@ -1,14 +1,26 @@
 <script setup lang="ts">
-import BaseHeader from './components/BaseHeader.vue'
-import BaseFooter from './components/BaseFooter.vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import DefaultLayout from './layouts/DefaultLayout.vue'
+import AuthLayout from './layouts/AuthLayout.vue'
+
+const route = useRoute()
+
+// Map des layouts disponibles
+const layouts = {
+  Default: DefaultLayout,
+  Auth: AuthLayout
+}
+
+// Récupère le layout depuis les meta de la route (défaut: Default)
+const currentLayout = computed(() => {
+  const layoutName = route.meta?.layout || 'Default'
+  return layouts[layoutName as keyof typeof layouts] || layouts.Default
+})
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
-    <BaseHeader />
-    <main class="flex-grow container mx-auto py-8">
-      <RouterView />
-    </main>
-    <BaseFooter />
-  </div>
+  <component :is="currentLayout">
+    <RouterView />
+  </component>
 </template>

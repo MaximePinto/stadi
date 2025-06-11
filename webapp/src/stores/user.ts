@@ -12,7 +12,6 @@ export const useUserStore = defineStore('user', () => {
   async function fetchMe() {
     try {
       user.value = await api.get<User>('/api/me')
-      console.log(user.value)
     } catch {
       user.value = null
     }
