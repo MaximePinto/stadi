@@ -4,6 +4,9 @@ lexik_jwt_authentication:
     public_key: '%kernel.project_dir%/config/jwt/public.pem'
     pass_phrase: '%env(JWT_PASSPHRASE)%'
     token_ttl: 3600
+    blocklist_token:
+        enabled: true
+        cache: cache.app
 
     # Configuration pour extraire le token depuis les cookies
     token_extractors:
@@ -21,7 +24,7 @@ lexik_jwt_authentication:
             lifetime: 3600        # Durée de vie du cookie (en secondes)
             samesite: 'lax'       # Protection CSRF (lax, strict, none)
             path: '/'             # Chemin du cookie
-            domain: null          # Domaine (null = domaine actuel)
+            domain: '.ddev.site'          # Domaine (null = domaine actuel)
             httpOnly: true        # 🔒 Cookie httpOnly (sécurité XSS)
             secure: false         # 🔒 Cookie sécurisé (HTTPS uniquement)
             partitioned: false    # Pour Symfony 6.4+

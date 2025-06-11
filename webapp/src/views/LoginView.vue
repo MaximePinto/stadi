@@ -20,7 +20,7 @@ async function handleLogin() {
 
 <template>
   <!-- Container principal avec arrière-plan gaming plein écran -->
-  <div class="min-h-screen bg-overwatch flex items-center justify-center p-4">
+  <div class="min-h-screen bg-overwatch flex items-center justify-center">
 
     <!-- Overlay sombre pour améliorer la lisibilité -->
     <div class="absolute inset-0 bg-black bg-opacity-40"></div>
@@ -29,7 +29,7 @@ async function handleLogin() {
     <div class="relative z-10 w-full max-w-6xl mx-auto">
 
       <!-- Carte principale avec effet glassmorphism -->
-      <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white border-opacity-20 overflow-hidden">
+      <div class="mt-36 bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white border-opacity-20 overflow-hidden">
 
         <!-- Grille responsive en 2 colonnes sur grand écran -->
         <div class="grid lg:grid-cols-2 min-h-[600px]">

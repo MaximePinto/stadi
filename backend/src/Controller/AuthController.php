@@ -10,7 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Event\LogoutEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class AuthController extends AbstractController
 {
@@ -52,16 +54,15 @@ class AuthController extends AbstractController
     }
 
     #[Route('/api/logout', name: 'api_logout', methods: ['POST'])]
-    public function logout(): Response
+    public function logout(Request $request, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage): Response
     {
+//        dd(23);
+        $token = $tokenStorage->getToken();
+        $eventDispatcher->dispatch(new LogoutEvent($request, $token));
+//        dump('LogoutEvent dispatched'); // Debug
+
         $response = new JsonResponse(['status' => 'Logged out']);
-
-        // Pour configuration simple cookie
-        $response->headers->clearCookie('jwt', '/', null, true, true, 'lax');
-
-        // Pour configuration split cookies (décommentez si vous utilisez split cookies)
-        // $response->headers->clearCookie('jwt_hp', '/', null, true, false, 'lax');
-        // $response->headers->clearCookie('jwt_s', '/', null, true, true, 'lax');
+        $response->headers->clearCookie('jwt', '/', '.ddev.site', false, true, 'lax');
 
         return $response;
     }

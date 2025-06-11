@@ -18,14 +18,18 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const store = useUserStore()
 
-  // Routes publiques
-  if (to.path === '/' || to.path === '/login') {
+  // Routes publiques - pas besoin d'initialiser
+  if (to.path === '/login') {
+    store.logout()
     next()
     return
   }
+
+  // ✅ Seulement pour les routes protégées
+  await store.initPromise
 
   // Vérification de l'authentification pour les routes protégées
   if (!store.isLogged) {
