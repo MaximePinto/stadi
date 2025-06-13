@@ -1,0 +1,111 @@
+# Dossiers Symfony
+**/var/
+**/vendor/
+**/vendor/**
+**/tests/
+**/translations/
+**/config/secrets/
+**/var/cache/
+**/var/cache/**
+**/var/log/
+**/var/sessions/
+
+# Dossiers Vue
+**/node_modules/
+**/node_modules/**
+**/dist/
+**/dist/**
+**/.vite/
+**/.nuxt/
+**/.output/
+
+# Dossiers de build et compilation
+**/public/build/
+**/public/build/**
+**/public/bundles/
+**/public/dist/
+
+# Fichiers de configuration et environnement
+**/.env
+**/.env.*
+!**/.env.example
+**/.phpunit.result.cache
+**/phpunit.xml
+**/composer.lock
+**/package-lock.json
+**/yarn.lock
+
+# Fichiers de cache et logs
+**/*.log
+**/*.cache
+**/*.swp
+**/*.swo
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+.idea/
+.idea/**
+.vscode/
+.vscode/**
+*.sublime-*
+
+# Fichiers de backup
+**/*.bak
+**/*.backup
+**/*~
+
+# Fichiers de dépendances
+**/vendor/
+**/node_modules/
+**/bower_components/
+
+# Fichiers de test et couverture
+**/coverage/
+**/phpunit.xml
+.phpunit.result.cache
+
+# Fichiers de documentation
+**/docs/
+**/*.md
+!**/README.md
+
+# Fichiers de migration et base de données
+**/migrations/*.php
+**/migrations/**
+**/*.sql
+**/*.sqlite
+
+# Fichiers de cache Symfony
+**/var/cache/*
+!**/var/cache/.gitkeep
+**/var/log/*
+!**/var/log/.gitkeep
+**/var/sessions/*
+!**/var/sessions/.gitkeep
+
+# Fichiers de build frontend
+**/public/build/*
+!**/public/build/.gitkeep
+
+# Dossiers spécifiques au projet
+/backup_all_dbs/
+/backup_all_dbs/**
+/backup_all_dbs_staging/
+/backup_all_dbs_staging/**
+/environment/
+/environment/**
+/tools/
+/tools/**
+/lib/
+/lib/**
+/microservices/
+/microservices/**
+/worker/
+/worker/**
+/nodeJS/
+/nodeJS/**
+/admin/
+/admin/**
+/front/
+/front/**

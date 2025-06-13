@@ -3,11 +3,13 @@ import { ref, computed } from 'vue'
 import type { User } from '@/types/entities'
 import { api } from '@/services/api'
 import { useRouter } from 'vue-router'
+import { useUiStore } from './ui'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<User | null>(null)
   const router = useRouter()
-  const isInitialized = ref(false)  // ✅ Ajout du flag d'initialisation
+  const uiStore = useUiStore()
+
 
   const isLogged = computed(() => !!user.value)
   const isAdmin = computed(() => user.value?.roles.includes('ROLE_ADMIN'))
@@ -17,34 +19,48 @@ export const useUserStore = defineStore('user', () => {
       user.value = await api.get<User>('/api/me')
     } catch {
       user.value = null
-    } finally {
-      isInitialized.value = true  // ✅ Toujours marquer comme initialisé
     }
   }
 
-  async function login(email: string, password: string) {
+  // On attache la disparition du loader à la fin de la promesse d'initialisation
+  const initPromise = fetchMe()
+
+  async function login(email: string, password: string): Promise<boolean> {
+    uiStore.showLoader('Connexion en cours...')
+    let success = false;
     try {
       await api.post('/api/login_check', { email, password })
       await fetchMe()
+      await router.push('/')
+      success = true;
       return true
     } catch {
       return false
+    } finally {
+      await uiStore.hideLoader(success ? 500 : 0)
     }
   }
 
   async function logout() {
+    uiStore.showLoader('Déconnexion...');
     try {
       await api.post('/api/logout')
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error)
     } finally {
       user.value = null
-      router.push('/login')
+      await router.push('/login')
+      await uiStore.hideLoader(500)
     }
   }
 
-  // ✅ Exposer la promesse d'initialisation
-  const initPromise = fetchMe()
-
-  return { user, isLogged, isAdmin, isInitialized, login, logout, fetchMe, initPromise }
+  return {
+    user,
+    isLogged,
+    isAdmin,
+    login,
+    logout,
+    fetchMe,
+    initPromise
+  }
 })
