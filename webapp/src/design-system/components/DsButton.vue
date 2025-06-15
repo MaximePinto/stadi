@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Props for the GameButton component.
+ * Props for the DsButton component.
  */
 interface Props {
   /** The text content of the button. */
@@ -16,7 +16,7 @@ interface Props {
 }
 
 /**
- * Emits for the GameButton component.
+ * Emits for the DsButton component.
  */
 interface Emits {
   /** Emitted when the button is clicked. */
