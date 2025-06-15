@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
-import GameButton from '../components/GameButton.vue' // 👈 Import du composant
+import DsButton from '@/design-system/components/DsButton.vue' // 👈 Import du composant
 
 const router = useRouter()
 const store = useUserStore()
@@ -33,9 +33,9 @@ async function handleClick(section: string) {
       🎮 Administration
     </h1>
 
-    <!-- Remplacez vos boutons par GameButton -->
+    <!-- Remplacez vos boutons par DsButton -->
     <div class="flex flex-wrap gap-4 mb-8">
-      <GameButton
+      <DsButton
         v-for="section in ['Héros', 'Pouvoir', 'Objet']"
         :key="section"
         :text="section"
@@ -56,7 +56,7 @@ async function handleClick(section: string) {
 
         <!-- Bouton pour revenir (optionnel) -->
         <div class="mt-4">
-          <GameButton
+          <DsButton
             text="🔙 Retour"
             variant="secondary"
             size="sm"
