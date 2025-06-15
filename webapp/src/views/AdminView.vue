@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
-import GameButton from '../components/GameButton.vue' // 👈 Import du composant
+import GameButton from '@/design-system/components/GameButton.vue' // 👈 Import du composant
 
 const router = useRouter()
 const store = useUserStore()
