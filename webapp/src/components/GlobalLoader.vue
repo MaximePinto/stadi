@@ -72,7 +72,7 @@ watch(
   <Transition name="fade">
     <div
       v-if="uiStore.isLoading"
-      class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm cursor-wait"
+      class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-black bg-opacity-10 backdrop-blur-sm cursor-wait"
     >
       <img
         :src="selectedLoader.src"

@@ -1,119 +1,68 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
+import GameButton from '../components/GameButton.vue' // 👈 Import du composant
 
 const router = useRouter()
 const store = useUserStore()
+
 if (!store.isAdmin) {
   router.push('/')
 }
 
-const entities = ['heroes', 'abilities', 'upgrades', 'builds', 'build-upgrades', 'users']
-const current = ref('heroes')
-const list = ref<Record<string, unknown>[]>([])
-const newItem = ref<Record<string, unknown>>({})
+const selectedSection = ref<string | null>(null)
+const loading = ref<string | null>(null) // 👈 Ajout pour le loading (optionnel)
 
-watch(current, () => fetchList())
-fetchList()
+// 👈 Fonction mise à jour pour gérer le loading (optionnel)
+async function handleClick(section: string) {
+  loading.value = section
 
-async function fetchList() {
-  const res = await fetch(`/api/${current.value}`, {
-    credentials: 'include'
-  })
-  if (res.ok) {
-    list.value = await res.json()
-  } else {
-    list.value = []
-  }
-  newItem.value = {}
-}
+  // Simulation d'un petit délai (optionnel, pour voir l'effet loading)
+  await new Promise(resolve => setTimeout(resolve, 300))
 
-async function createItem() {
-  const res = await fetch(`/api/${current.value}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    credentials: 'include',
-    body: JSON.stringify(newItem.value),
-  })
-  if (res.ok) {
-    await fetchList()
-  } else {
-    alert('Erreur lors de la création')
-  }
-}
-
-async function deleteItem(id: number) {
-  const res = await fetch(`/api/${current.value}/${id}`, {
-    method: 'DELETE',
-    credentials: 'include'
-  })
-  if (res.ok) {
-    await fetchList()
-  }
+  selectedSection.value = section
+  loading.value = null
 }
 </script>
 
 <template>
-  <div class="space-y-6">
-    <h1 class="text-3xl font-bold">Administration</h1>
-    <div class="flex items-center space-x-2">
-      <label class="font-medium">Entité :</label>
-      <select
-        v-model="current"
-        class="border border-gray-300 rounded p-2 bg-white shadow-sm"
-      >
-        <option v-for="e in entities" :key="e" :value="e">{{ e }}</option>
-      </select>
+  <div class="flex-1 flex flex-col bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 rounded-lg p-8">
+    <!-- Titre avec style amélioré -->
+    <h1 class="text-4xl font-bold text-white mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+      🎮 Administration
+    </h1>
+
+    <!-- Remplacez vos boutons par GameButton -->
+    <div class="flex flex-wrap gap-4 mb-8">
+      <GameButton
+        v-for="section in ['Héros', 'Pouvoir', 'Objet']"
+        :key="section"
+        :text="section"
+        :loading="loading === section"
+        @click="handleClick(section)"
+      />
     </div>
-    <div class="grid md:grid-cols-2 gap-8">
-      <div>
-        <h2 class="text-lg font-semibold mb-2">Liste</h2>
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200 text-sm">
-            <thead class="bg-gray-50">
-              <tr>
-                <th
-                  v-for="(val, key) in list[0] || {}"
-                  :key="key"
-                  class="px-3 py-2 text-left font-medium text-gray-500 uppercase tracking-wider border"
-                >
-                  {{ key }}
-                </th>
-                <th class="px-3 py-2 text-left font-medium text-gray-500 uppercase border">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="item in list" :key="item.id">
-                <td v-for="(val, key) in item" :key="key" class="px-3 py-2 whitespace-nowrap border">{{ val }}</td>
-                <td class="px-3 py-2 whitespace-nowrap border">
-                  <button class="text-red-600 hover:underline" @click="deleteItem(item.id)">
-                    Supprimer
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+
+    <!-- Section sélectionnée -->
+    <div v-if="selectedSection" class="w-full">
+      <div class="bg-black/20 backdrop-blur-sm border border-white/10 rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4 text-white">
+          🛠️ Gestion de {{ selectedSection }}
+        </h2>
+        <p class="text-gray-300">
+          Interface de gestion pour {{ selectedSection }} sera développée ici
+        </p>
+
+        <!-- Bouton pour revenir (optionnel) -->
+        <div class="mt-4">
+          <GameButton
+            text="🔙 Retour"
+            variant="secondary"
+            size="sm"
+            @click="selectedSection = null"
+          />
         </div>
-      </div>
-      <div>
-        <h2 class="text-lg font-semibold mb-2">Ajouter</h2>
-        <form @submit.prevent="createItem" class="space-y-4">
-          <textarea
-            v-model="newItem"
-            placeholder='{ "name": "..." }'
-            class="w-full border p-3 rounded"
-            rows="6"
-          ></textarea>
-          <button
-            type="submit"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Enregistrer
-          </button>
-        </form>
       </div>
     </div>
   </div>

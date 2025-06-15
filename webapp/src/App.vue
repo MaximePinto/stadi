@@ -24,6 +24,5 @@ const currentLayout = computed(() => {
   <component :is="currentLayout">
     <RouterView />
   </component>
-
   <GlobalLoader />
 </template>
