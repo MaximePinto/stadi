@@ -39,6 +39,7 @@ async function handleClick(section: string) {
         v-for="section in ['Héros', 'Pouvoir', 'Objet']"
         :key="section"
         :text="section"
+        variant="primary"
         :loading="loading === section"
         @click="handleClick(section)"
       />

@@ -23,6 +23,48 @@ interface Emits {
   click: [];
 }
 
+// Configuration complète du bouton avec gradients personnalisés
+const buttonConfig = {
+  variants: {
+    primary: {
+      background: 'bg-gradient-primary hover:bg-gradient-primary-hover',
+      shadow: 'shadow-glow-primary',
+      textColor: 'text-white',
+      border: 'border-white/20'
+    },
+    secondary: {
+      background: 'bg-gradient-secondary hover:bg-gradient-secondary-hover',
+      shadow: 'shadow-glow-secondary',
+      textColor: 'text-white',
+      border: 'border-white/20'
+    }
+  },
+  sizes: {
+    sm: {
+      padding: 'px-btn-px-sm py-btn-py-sm',
+      text: 'text-sm'
+    },
+    md: {
+      padding: 'px-btn-px-md py-btn-py-md',
+      text: 'text-base'
+    },
+    lg: {
+      padding: 'px-btn-px-lg py-btn-py-lg',
+      text: 'text-lg'
+    }
+  },
+  baseClasses: {
+    core: 'group relative font-bold rounded-md',
+    transitions: 'transform transition-all duration-200 ease-in-out',
+    effects: 'backdrop-blur-sm'
+  },
+  states: {
+    interactive: 'hover:scale-105 active:scale-95',
+    disabled: 'opacity-50 cursor-not-allowed',
+    loading: 'cursor-wait'
+  }
+} as const;
+
 const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
   size: 'md',
@@ -38,30 +80,39 @@ const handleClick = () => {
   }
 }
 
+// Fonctions simplifiées utilisant la configuration centralisée
 const getVariantClasses = (): string => {
-  // Returns only background and hover background color classes.
-  // Shadow will be handled directly in the template or via a separate utility if needed.
-  switch (props.variant) {
-    case 'primary':
-      return 'bg-primary hover:bg-primary-hover';
-    case 'secondary':
-      return 'bg-secondary hover:bg-secondary-hover';
-    default:
-      return 'bg-primary hover:bg-primary-hover';
-  }
+  const variant = buttonConfig.variants[props.variant];
+  return `${variant.background} ${variant.shadow} ${variant.textColor} ${variant.border}`;
 }
 
 const getSizeClasses = (): string => {
-  switch (props.size) {
-    case 'sm':
-      return 'px-btn-px-sm py-btn-py-sm text-sm';
-    case 'md':
-      return 'px-btn-px-md py-btn-py-md text-base';
-    case 'lg':
-      return 'px-btn-px-lg py-btn-py-lg text-lg';
-    default:
-      return 'px-btn-px-md py-btn-py-md text-base';
-  }
+  const size = buttonConfig.sizes[props.size];
+  return `${size.padding} ${size.text}`;
+}
+
+const getStateClasses = (): string => {
+  const { interactive, disabled, loading } = buttonConfig.states;
+  const classes = [];
+
+  if (!props.disabled && !props.loading) classes.push(interactive);
+  if (props.disabled) classes.push(disabled);
+  if (props.loading) classes.push(loading);
+
+  return classes.join(' ');
+}
+
+const getButtonClasses = (): string => {
+  const { core, transitions, effects } = buttonConfig.baseClasses;
+
+  return [
+    core,
+    transitions,
+    effects,
+    getVariantClasses(),
+    getSizeClasses(),
+    getStateClasses()
+  ]
 }
 </script>
 
@@ -69,27 +120,7 @@ const getSizeClasses = (): string => {
   <button
     @click="handleClick"
     :disabled="disabled || loading"
-    :class="[
-      'group', // For sheen effect
-      // Classes de base
-      'relative font-bold text-textBase rounded-md', // Use textBase and new default rounded-md
-      'transform transition-all duration-200 ease-in-out',
-      'border border-white/20 backdrop-blur-sm', // Keep or replace with neutral token
-
-      // Couleurs de fond (déjà géré par getVariantClasses) et ombres glow
-      getVariantClasses(),
-      props.variant === 'primary' ? 'shadow-glow-primary' : 'shadow-glow-secondary',
-
-      // Tailles
-      getSizeClasses(),
-
-      // États
-      {
-        'hover:scale-105 active:scale-95': !disabled && !loading, // Removed hover:shadow-2xl
-        'opacity-50 cursor-not-allowed': disabled,
-        'cursor-wait': loading,
-      }
-    ]"
+    :class="getButtonClasses()"
   >
     <!-- Effet de surbrillance au hover (optionnel) -->
     <div
@@ -134,8 +165,6 @@ const getSizeClasses = (): string => {
 </template>
 
 <style scoped>
-/* Scoped box-shadows for hover are removed, now using Tailwind shadow-glow tokens */
-
 /* Animation d'apparition */
 button {
   animation: fadeInUp 0.5s ease-out;

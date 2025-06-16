@@ -5,50 +5,60 @@ module.exports = {
   theme: {
     extend: {
       /**
-       * Colors: Defines the application's color palette.
-       * - primary: Main brand color, used for calls to action. (Inspired by blue/indigo/purple)
-       * - secondary: Used for less prominent elements. (Inspired by gray/slate)
-       * - neutral: Shades of gray for backgrounds, borders, and text.
-       * - textBase: Default text color.
-       * - textMuted: Muted text color for secondary information.
+       * Couleurs : Définit la palette de couleurs de l'application.
+       * - primary: Couleur principale de la marque, utilisée pour les appels à l'action. (Inspiré du bleu/indigo/violet)
+       * - secondary: Utilisé pour les éléments moins proéminents. (Inspiré du gris/ardoise)
+       * - neutral: Nuances de gris pour les arrière-plans, bordures et texte.
+       * - textBase: Couleur de texte par défaut.
+       * - textMuted: Couleur de texte atténuée pour les informations secondaires.
        */
       colors: {
-        primary: {
-          DEFAULT: '#4338ca', // indigo-700 (plus foncé pour le DEFAULT, car hover est souvent plus clair ou change d'aspect)
-          hover: '#4f46e5',   // indigo-600
-          // Pour les dégradés, nous utiliserons les classes bg-gradient-to-X directement dans les composants,
-          // mais nous définissons ici les couleurs principales du dégradé si nécessaire pour d'autres usages (bordures, textes, etc.)
-          // Exemple si on voulait des couleurs spécifiques pour le dégradé:
-          // gradientStart: '#3b82f6', // blue-500
-          // gradientVia: '#6366f1',   // indigo-500
-          // gradientEnd: '#8b5cf6',    // purple-500
-        },
-        secondary: {
-          DEFAULT: '#334155', // slate-700
-          hover: '#475569',   // slate-600
-          // gradientStart: '#475569', // slate-600
-          // gradientVia: '#334155',   // slate-700
-          // gradientEnd: '#1e293b',    // slate-800
-        },
+        // Couleurs principales - structure plate pour compatibilité avec le composant
+        primary: '#4338ca',           // indigo-700
+        'primary-hover': '#4f46e5',   // indigo-600
+        secondary: '#334155',         // slate-700
+        'secondary-hover': '#475569', // slate-600
+
+        // Couleurs pour gradients personnalisés
+        'primary-gradient-start': '#3b82f6',  // blue-500
+        'primary-gradient-via': '#6366f1',    // indigo-500
+        'primary-gradient-end': '#8b5cf6',    // purple-500
+
+        'secondary-gradient-start': '#475569', // slate-600
+        'secondary-gradient-via': '#334155',   // slate-700
+        'secondary-gradient-end': '#1e293b',   // slate-800
+
         // Palette "gaming" sombre
         neutral: {
-          DEFAULT: '#1e293b', // slate-800 (pour fonds de carte, etc.)
-          light: '#334155',  // slate-700 (pour bordures ou fonds plus clairs)
-          lighter: '#475569', // slate-600
-          dark: '#0f172a',    // slate-900
+          DEFAULT: '#1e293b',
+          light: '#334155',
+          lighter: '#475569',
+          dark: '#0f172a',
         },
+
         // Couleurs pour textes, icônes, etc.
-        textBase: '#e2e8f0', // slate-200
-        textMuted: '#94a3b8', // slate-400
+        textBase: '#e2e8f0',
+        textMuted: '#94a3b8',
       },
+
       /**
-       * Spacing: Defines padding and margin utility values.
-       * - btn-p(x/y)-(sm/md/lg): Specific paddings for buttons.
-       * - p-(sm/md/lg/xl): Generic paddings for containers like cards, sections.
+       * Gradients personnalisés
+       */
+      backgroundImage: {
+        'gradient-primary': 'linear-gradient(to right, #3b82f6, #6366f1, #8b5cf6)',
+        'gradient-primary-hover': 'linear-gradient(to right, #2563eb, #4f46e5, #7c3aed)',
+        'gradient-secondary': 'linear-gradient(to right, #475569, #334155, #1e293b)',
+        'gradient-secondary-hover': 'linear-gradient(to right, #64748b, #475569, #334155)',
+      },
+
+      /**
+       * Espacement : Définit les valeurs d'utilité pour le padding et la marge.
+       * - btn-p(x/y)-(sm/md/lg): Paddings spécifiques pour les boutons.
+       * - p-(sm/md/lg/xl): Paddings génériques pour les conteneurs comme les cartes, sections.
        */
       spacing: {
-        // Basé sur GameButton: sm: 'px-4 py-2', md: 'px-6 py-3', lg: 'px-8 py-4'
-        // On peut créer des tokens génériques ou spécifiques
+        // Basé sur DsButton: sm: 'px-4 py-2', md: 'px-6 py-3', lg: 'px-8 py-4'
+        // Tokens spécifiques pour les boutons
         'btn-py-sm': '0.5rem', // py-2
         'btn-px-sm': '1rem',   // px-4
         'btn-py-md': '0.75rem',// py-3
@@ -61,25 +71,27 @@ module.exports = {
         'p-lg': '1.5rem',
         'p-xl': '2rem',
       },
+
       /**
-       * BorderRadius: Defines border radius utility values.
-       * - DEFAULT: Default border radius (0.5rem, e.g., for cards, inputs).
-       * - sm, md, lg: Standardized radius sizes.
+       * Rayon de bordure : Définit les valeurs d'utilité pour le border radius.
+       * - DEFAULT: Rayon de bordure par défaut (0.5rem, ex: pour cartes, inputs).
+       * - sm, md, lg: Tailles de rayon standardisées.
        */
       borderRadius: {
-        'DEFAULT': '0.5rem', // rounded-lg dans GameButton
+        'DEFAULT': '0.5rem', // rounded-lg dans DsButton
         'sm': '0.25rem',
         'md': '0.5rem',      // correspond à rounded-lg
         'lg': '0.75rem',
         'full': '9999px',
       },
+
       /**
-       * FontSize: Defines text size utility values.
-       * - sm, base, lg: Standard text sizes based on GameButton.
-       * - xl, 2xl, ... : Larger text sizes for titles.
+       * Taille de police : Définit les valeurs d'utilité pour la taille de texte.
+       * - sm, base, lg: Tailles de texte standard basées sur DsButton.
+       * - xl, 2xl, ... : Tailles de texte plus grandes pour les titres.
        */
       fontSize: {
-        // Basé sur GameButton: sm: 'text-sm', md: 'text-base', lg: 'text-lg'
+        // Basé sur DsButton: sm: 'text-sm', md: 'text-base', lg: 'text-lg'
         'sm': ['0.875rem', { lineHeight: '1.25rem' }], // text-sm
         'base': ['1rem', { lineHeight: '1.5rem' }],     // text-base
         'lg': ['1.125rem', { lineHeight: '1.75rem' }], // text-lg
@@ -88,9 +100,10 @@ module.exports = {
         '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
         '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
       },
+
       /**
-       * BoxShadow: Defines shadow effects.
-       * - glow-primary/secondary: Gaming-inspired glow effects.
+       * Ombre de boîte : Définit les effets d'ombre.
+       * - glow-primary/secondary: Effets de lueur inspirés du gaming.
        */
       boxShadow: {
         'glow-primary': '0 0 20px rgba(79, 70, 229, 0.6)', // #4f46e5 avec opacité
