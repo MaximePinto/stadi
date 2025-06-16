@@ -66,9 +66,9 @@ Thumbs.db
 .phpunit.result.cache
 
 # Fichiers de documentation
-**/docs/
-**/*.md
-!**/README.md
+# **/docs/
+# **/*.md
+# !**/README.md
 
 # Fichiers de migration et base de données
 **/migrations/*.php

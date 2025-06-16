@@ -1,114 +1,156 @@
 /**
+ * 🎨 Preset Tailwind simplifié - SANS DOUBLONS
+ *
+ * Ce preset utilise UNIQUEMENT le générateur et ajoute seulement
+ * les éléments spécifiques au projet (animations, grilles, etc.)
+ */
+
+const { generateTailwindConfig } = require('./tailwind.generator.js')
+
+// Génération automatique de la configuration de base
+const generatedConfig = generateTailwindConfig()
+
+/**
  * @type {import('tailwindcss').Config}
  */
 module.exports = {
+  // ================================
+  // BASE : Configuration générée
+  // ================================
+  ...generatedConfig,
+
   theme: {
     extend: {
-      /**
-       * Couleurs : Définit la palette de couleurs de l'application.
-       * - primary: Couleur principale de la marque, utilisée pour les appels à l'action. (Inspiré du bleu/indigo/violet)
-       * - secondary: Utilisé pour les éléments moins proéminents. (Inspiré du gris/ardoise)
-       * - neutral: Nuances de gris pour les arrière-plans, bordures et texte.
-       * - textBase: Couleur de texte par défaut.
-       * - textMuted: Couleur de texte atténuée pour les informations secondaires.
-       */
-      colors: {
-        // Couleurs principales - structure plate pour compatibilité avec le composant
-        primary: '#4338ca',           // indigo-700
-        'primary-hover': '#4f46e5',   // indigo-600
-        secondary: '#334155',         // slate-700
-        'secondary-hover': '#475569', // slate-600
+      // ================================
+      // REPRISE : Toute la config générée
+      // ================================
+      ...generatedConfig.theme.extend,
 
-        // Couleurs pour gradients personnalisés
-        'primary-gradient-start': '#3b82f6',  // blue-500
-        'primary-gradient-via': '#6366f1',    // indigo-500
-        'primary-gradient-end': '#8b5cf6',    // purple-500
+      // ================================
+      // AJOUTS : Spécifiques au projet uniquement
+      // ================================
 
-        'secondary-gradient-start': '#475569', // slate-600
-        'secondary-gradient-via': '#334155',   // slate-700
-        'secondary-gradient-end': '#1e293b',   // slate-800
+      // Polices (spécifique au projet)
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'Avenir', 'Helvetica', 'Arial', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'monospace'],
+      },
 
-        // Palette "gaming" sombre
-        neutral: {
-          DEFAULT: '#1e293b',
-          light: '#334155',
-          lighter: '#475569',
-          dark: '#0f172a',
+      // Grilles personnalisées (spécifique au projet)
+      gridTemplateColumns: {
+        'auto-fit-xs': 'repeat(auto-fit, minmax(200px, 1fr))',
+        'auto-fit-sm': 'repeat(auto-fit, minmax(250px, 1fr))',
+        'auto-fit-md': 'repeat(auto-fit, minmax(300px, 1fr))',
+        'auto-fit-lg': 'repeat(auto-fit, minmax(350px, 1fr))',
+      },
+
+      // Animations gaming (spécifique au projet)
+      keyframes: {
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
-
-        // Couleurs pour textes, icônes, etc.
-        textBase: '#e2e8f0',
-        textMuted: '#94a3b8',
+        'fade-out': {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
+        'slide-in-right': {
+          '0%': { transform: 'translateX(100%)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        'slide-out-right': {
+          '0%': { transform: 'translateX(0)', opacity: '1' },
+          '100%': { transform: 'translateX(100%)', opacity: '0' },
+        },
+        'scale-in': {
+          '0%': { transform: 'scale(0.9)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        'pulse-glow': {
+          '0%, 100%': { boxShadow: '0 0 5px currentColor' },
+          '50%': { boxShadow: '0 0 20px currentColor, 0 0 30px currentColor' },
+        },
+        'gaming-float': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        }
       },
 
-      /**
-       * Gradients personnalisés
-       */
-      backgroundImage: {
-        'gradient-primary': 'linear-gradient(to right, #3b82f6, #6366f1, #8b5cf6)',
-        'gradient-primary-hover': 'linear-gradient(to right, #2563eb, #4f46e5, #7c3aed)',
-        'gradient-secondary': 'linear-gradient(to right, #475569, #334155, #1e293b)',
-        'gradient-secondary-hover': 'linear-gradient(to right, #64748b, #475569, #334155)',
-      },
-
-      /**
-       * Espacement : Définit les valeurs d'utilité pour le padding et la marge.
-       * - btn-p(x/y)-(sm/md/lg): Paddings spécifiques pour les boutons.
-       * - p-(sm/md/lg/xl): Paddings génériques pour les conteneurs comme les cartes, sections.
-       */
-      spacing: {
-        // Basé sur DsButton: sm: 'px-4 py-2', md: 'px-6 py-3', lg: 'px-8 py-4'
-        // Tokens spécifiques pour les boutons
-        'btn-py-sm': '0.5rem', // py-2
-        'btn-px-sm': '1rem',   // px-4
-        'btn-py-md': '0.75rem',// py-3
-        'btn-px-md': '1.5rem', // px-6
-        'btn-py-lg': '1rem',   // py-4
-        'btn-px-lg': '2rem',   // px-8
-        // Tokens génériques pour padding de sections, cartes etc.
-        'p-sm': '0.5rem',
-        'p-md': '1rem',
-        'p-lg': '1.5rem',
-        'p-xl': '2rem',
-      },
-
-      /**
-       * Rayon de bordure : Définit les valeurs d'utilité pour le border radius.
-       * - DEFAULT: Rayon de bordure par défaut (0.5rem, ex: pour cartes, inputs).
-       * - sm, md, lg: Tailles de rayon standardisées.
-       */
-      borderRadius: {
-        'DEFAULT': '0.5rem', // rounded-lg dans DsButton
-        'sm': '0.25rem',
-        'md': '0.5rem',      // correspond à rounded-lg
-        'lg': '0.75rem',
-        'full': '9999px',
-      },
-
-      /**
-       * Taille de police : Définit les valeurs d'utilité pour la taille de texte.
-       * - sm, base, lg: Tailles de texte standard basées sur DsButton.
-       * - xl, 2xl, ... : Tailles de texte plus grandes pour les titres.
-       */
-      fontSize: {
-        // Basé sur DsButton: sm: 'text-sm', md: 'text-base', lg: 'text-lg'
-        'sm': ['0.875rem', { lineHeight: '1.25rem' }], // text-sm
-        'base': ['1rem', { lineHeight: '1.5rem' }],     // text-base
-        'lg': ['1.125rem', { lineHeight: '1.75rem' }], // text-lg
-        'xl': ['1.25rem', { lineHeight: '1.75rem' }],
-        '2xl': ['1.5rem', { lineHeight: '2rem' }],
-        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-      },
-
-      /**
-       * Ombre de boîte : Définit les effets d'ombre.
-       * - glow-primary/secondary: Effets de lueur inspirés du gaming.
-       */
-      boxShadow: {
-        'glow-primary': '0 0 20px rgba(79, 70, 229, 0.6)', // #4f46e5 avec opacité
-        'glow-secondary': '0 0 20px rgba(71, 85, 105, 0.5)', // #475569 avec opacité
+      animation: {
+        'fade-in': 'fade-in 0.3s ease-in-out',
+        'fade-out': 'fade-out 0.3s ease-in-out',
+        'slide-in-right': 'slide-in-right 0.3s ease-in-out',
+        'slide-out-right': 'slide-out-right 0.3s ease-in-out',
+        'scale-in': 'scale-in 0.2s ease-in-out',
+        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+        'gaming-float': 'gaming-float 3s ease-in-out infinite',
       }
     }
-  }
-};
+  },
+
+  // ================================
+  // PLUGINS : Base + spécifiques
+  // ================================
+  plugins: [
+    // Plugin de base avec les composants (depuis le générateur)
+    ...generatedConfig.plugins,
+
+    // Plugin spécifique au projet gaming
+    function({ addUtilities }) {
+      addUtilities({
+        // Effets gaming spéciaux
+        '.gaming-glow': {
+          boxShadow: '0 0 20px var(--ds-color-primary), 0 0 40px var(--ds-color-primary)',
+          animation: 'pulse-glow 2s ease-in-out infinite',
+        },
+
+        '.gaming-border': {
+          border: '2px solid transparent',
+          backgroundImage: 'linear-gradient(var(--ds-bg-base), var(--ds-bg-base)), linear-gradient(45deg, var(--ds-color-primary), var(--ds-color-secondary))',
+          backgroundOrigin: 'border-box',
+          backgroundClip: 'content-box, border-box',
+        },
+
+        // Utilitaires de layout gaming
+        '.gaming-panel': {
+          backgroundColor: 'var(--ds-bg-soft)',
+          border: '1px solid var(--ds-border-base)',
+          borderRadius: 'var(--ds-radius-lg)',
+          padding: 'var(--ds-spacing-lg)',
+          position: 'relative',
+          overflow: 'hidden',
+
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: '0',
+            left: '-100%',
+            width: '100%',
+            height: '2px',
+            background: 'linear-gradient(90deg, transparent, var(--ds-color-primary), transparent)',
+            animation: 'slide-in-right 2s ease-in-out infinite',
+          }
+        },
+
+        // Scrollbar gaming style
+        '.gaming-scrollbar': {
+          '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: 'var(--ds-bg-mute)',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'var(--ds-color-primary)',
+            borderRadius: '4px',
+
+            '&:hover': {
+              background: 'var(--ds-color-primary-hover)',
+            }
+          },
+        }
+      })
+    }
+  ]
+}
