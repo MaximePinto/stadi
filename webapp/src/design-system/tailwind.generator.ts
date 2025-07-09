@@ -5,13 +5,12 @@
  * avec le système de thèmes dynamiques
  */
 
-// Import des tokens (adaptation pour CommonJS)
-const { designTokens, withOpacity } = require('./tokens.ts')
+import { designTokens, type DesignTokens } from './tokens'
 
 /**
  * Génère la configuration Tailwind à partir des design tokens
  */
-function generateTailwindConfig() {
+export function generateTailwindConfig() {
   const tokens = designTokens
 
   return {
@@ -117,7 +116,7 @@ function generateTailwindConfig() {
     // PLUGIN UNIQUE AVEC COMPOSANTS
     // ================================
     plugins: [
-      function({ addUtilities, addComponents, addBase, theme }) {
+      function({ addUtilities, addComponents, addBase, theme }: any) {
 
         // ================================
         // BASE : Variables CSS injectées
@@ -275,9 +274,4 @@ function generateTailwindConfig() {
       }
     ]
   }
-}
-
-module.exports = {
-  generateTailwindConfig,
-  designTokens
 }

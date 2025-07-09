@@ -56,10 +56,8 @@ class AuthController extends AbstractController
     #[Route('/api/logout', name: 'api_logout', methods: ['POST'])]
     public function logout(Request $request, EventDispatcherInterface $eventDispatcher, TokenStorageInterface $tokenStorage): Response
     {
-//        dd(23);
         $token = $tokenStorage->getToken();
         $eventDispatcher->dispatch(new LogoutEvent($request, $token));
-//        dump('LogoutEvent dispatched'); // Debug
 
         $response = new JsonResponse(['status' => 'Logged out']);
         $response->headers->clearCookie('jwt', '/', '.ddev.site', false, true, 'lax');

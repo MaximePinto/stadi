@@ -11,36 +11,38 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('../views/LoginView.vue'),
-      meta: { layout: 'Auth' }
+      meta: { layout: 'Auth', fetchMe: false }
     },
     { path: '/admin', name: 'admin', component: () => import('../views/AdminView.vue'), meta: { requiresAdmin: true } },
     { path: '/heroes', name: 'heroes', component: () => import('../views/HeroesView.vue') },
+    { path: '/theme-demo', name: 'theme-demo', component: () => import('../views/ThemeDemo.vue') },
+    { path: '/tailwind-demo', name: 'tailwind-demo', component: () => import('../views/TailwindDemo.vue') },
+    { path: '/naive-demo', name: 'naive-demo', component: () => import('../views/NaiveUIDemo.vue') },
   ],
 })
 
 router.beforeEach(async (to, from, next) => {
   const store = useUserStore()
 
-  // Routes publiques - pas besoin d'initialiser
+  // Récupérer les données user SAUF si explicitement désactivé
+  if (to.meta.fetchMe !== false) {
+    await store.fetchMe()
+  }
+
+  // Routes publiques
   if (to.path === '/login') {
-    store.logout()
-    next()
+    await store.logoutWithoutRedirect()
     return
   }
 
-  // ✅ Seulement pour les routes protégées
-  await store.initPromise
-
   // Vérification de l'authentification pour les routes protégées
   if (!store.isLogged) {
-    next('/login')
-    return
+    return'/login'
   }
 
   // Vérification des droits admin si nécessaire
   if (to.meta.requiresAdmin && !store.isAdmin) {
-    next('/')
-    return
+    return '/'
   }
 
   next()

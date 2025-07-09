@@ -10,7 +10,6 @@ export const useUserStore = defineStore('user', () => {
   const router = useRouter()
   const uiStore = useUiStore()
 
-
   const isLogged = computed(() => !!user.value)
   const isAdmin = computed(() => user.value?.roles.includes('ROLE_ADMIN'))
 
@@ -21,9 +20,6 @@ export const useUserStore = defineStore('user', () => {
       user.value = null
     }
   }
-
-  // On attache la disparition du loader à la fin de la promesse d'initialisation
-  const initPromise = fetchMe()
 
   async function login(email: string, password: string): Promise<boolean> {
     uiStore.showLoader('Connexion en cours...')
@@ -43,6 +39,9 @@ export const useUserStore = defineStore('user', () => {
 
   async function logout() {
     uiStore.showLoader('Déconnexion...');
+    console.log('user.value', user.value)
+    if (!user.value) return
+
     try {
       await api.post('/api/logout')
     } catch (error) {
@@ -54,13 +53,28 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  async function logoutWithoutRedirect() {
+    if (!user.value) return
+
+    uiStore.showLoader('Déconnexion...')
+
+    try {
+      await api.post('/api/logout')
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error)
+    } finally {
+      user.value = null
+      await uiStore.hideLoader(500)
+    }
+  }
+
   return {
     user,
     isLogged,
     isAdmin,
     login,
     logout,
-    fetchMe,
-    initPromise
+    logoutWithoutRedirect,
+    fetchMe
   }
 })

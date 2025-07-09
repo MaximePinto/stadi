@@ -94,6 +94,9 @@ export function useDesignSystem() {
   const naiveThemeOverrides = computed(() => {
     const cacheKey = `${themeState.value.preset}-${themeState.value.mode}-${JSON.stringify(themeState.value.customTokens)}`
 
+    // Vider le cache pour forcer le rechargement
+    themeCache.clear()
+
     if (!themeCache.has(cacheKey)) {
       const overrides = generateNaiveUIThemeOverrides(effectiveMode.value, currentTokens.value)
       themeCache.set(cacheKey, overrides)
@@ -342,6 +345,7 @@ export function useDesignSystem() {
     naiveTheme: readonly(naiveTheme),
     naiveThemeOverrides: readonly(naiveThemeOverrides),
     cssVariables: readonly(cssVariables),
+    themePresets: readonly(themePresets),
 
     // Actions
     setThemeMode,

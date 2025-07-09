@@ -32,25 +32,25 @@ export function generateNaiveUIThemeOverrides(
       // Couleurs d'information
       infoColor: colors.info,
       infoColorHover: colors.infoHover,
-      infoColorPressed: colors.info,
+      infoColorPressed: colors.infoPressed,
       infoColorSuppl: colors.info,
 
       // Couleurs de succès
       successColor: colors.success,
       successColorHover: colors.successHover,
-      successColorPressed: colors.success,
+      successColorPressed: colors.successPressed,
       successColorSuppl: colors.success,
 
       // Couleurs d'avertissement
       warningColor: colors.warning,
       warningColorHover: colors.warningHover,
-      warningColorPressed: colors.warning,
+      warningColorPressed: colors.warningPressed,
       warningColorSuppl: colors.warning,
 
       // Couleurs d'erreur
       errorColor: colors.error,
       errorColorHover: colors.errorHover,
-      errorColorPressed: colors.error,
+      errorColorPressed: colors.errorPressed,
       errorColorSuppl: colors.error,
 
       // Couleurs de texte
@@ -99,13 +99,6 @@ export function generateNaiveUIThemeOverrides(
       // Hauteur de ligne
       lineHeight: tokens.typography.base.lineHeight,
 
-      // Focus
-      focusColor: colors.borderFocus,
-      boxShadowFocus: `0 0 0 2px ${colors.borderFocus}25`,
-
-      // Curseurs
-      cursorNotAllowed: 'not-allowed',
-
       // Z-index
       zIndexBase: 'auto',
       zIndexPopover: '1000',
@@ -117,23 +110,24 @@ export function generateNaiveUIThemeOverrides(
     // BOUTONS
     // ================================
     Button: {
-      textColor: '#ffffff',
-      textColorHover: '#ffffff',
-      textColorPressed: '#ffffff',
-      textColorFocus: '#ffffff',
+      // Couleurs de texte adaptatives
+      textColor: colors.textPrimary,
+      textColorHover: colors.textPrimary,
+      textColorPressed: colors.textPrimary,
+      textColorFocus: colors.textPrimary,
       textColorDisabled: colors.textDisabled,
 
-      // Couleurs selon les variantes
-      color: 'transparent',
-      colorHover: colors.primaryHover,
-      colorPressed: colors.primaryPressed,
-      colorFocus: colors.primary,
-      colorDisabled: colors.primaryDisabled,
+      // Couleurs de fond selon les variantes
+      color: colors.backgroundSoft,
+      colorHover: colors.backgroundMute,
+      colorPressed: colors.backgroundMute,
+      colorFocus: colors.backgroundSoft,
+      colorDisabled: colors.backgroundMute,
 
-      // Bordures
+      // Bordures adaptatives
       border: `1px solid ${colors.border}`,
       borderHover: `1px solid ${colors.borderHover}`,
-      borderPressed: `1px solid ${colors.primary}`,
+      borderPressed: `1px solid ${colors.border}`,
       borderFocus: `1px solid ${colors.borderFocus}`,
       borderDisabled: `1px solid ${colors.border}`,
 
@@ -240,7 +234,6 @@ export function generateNaiveUIThemeOverrides(
         InternalSelectMenu: {
           color: colors.backgroundSoft,
           optionTextColor: colors.textPrimary,
-          optionTextColorHover: colors.textPrimary,
           optionTextColorActive: colors.textPrimary,
           optionCheckColor: colors.primary,
           borderRadius: tokens.borderRadius.md,
@@ -255,10 +248,6 @@ export function generateNaiveUIThemeOverrides(
       peers: {
         Input: {
           borderRadius: tokens.borderRadius.md,
-        },
-        Panel: {
-          color: colors.backgroundSoft,
-          borderRadius: tokens.borderRadius.lg,
         }
       }
     },

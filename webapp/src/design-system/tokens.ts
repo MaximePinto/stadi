@@ -33,14 +33,23 @@ export interface SemanticColors {
   secondary: string
   secondaryHover: string
   secondaryPressed: string
+
   info: string
   infoHover: string
+  infoPressed: string
+
   success: string
   successHover: string
+  successPressed: string
+
   warning: string
   warningHover: string
+  warningPressed: string
+
   error: string
   errorHover: string
+  errorPressed: string
+
   textPrimary: string
   textSecondary: string
   textDisabled: string
@@ -208,7 +217,7 @@ const purple: ColorScale = {
   400: '#c084fc',
   500: '#a855f7',
   600: '#9333ea',
-  700: '#7c2d12',
+  700: '#7c3aed',
   800: '#6b21a8',
   900: '#581c87',
   950: '#3b0764'
@@ -238,12 +247,16 @@ export const designTokens: DesignTokens = {
       // Couleurs sémantiques (harmonisées avec ton style)
       info: blue[500],           // #3b82f6 (ton gradient-start)
       infoHover: blue[600],
+      infoPressed: blue[700],
       success: emerald[500],
       successHover: emerald[600],
+      successPressed: emerald[700],
       warning: amber[500],
       warningHover: amber[600],
+      warningPressed: amber[700],
       error: red[500],
       errorHover: red[600],
+      errorPressed: red[700],
 
       // Texte (tes couleurs exactes mais adaptées au mode clair)
       textPrimary: slate[900],   // Sombre pour lisibilité en mode clair
@@ -279,12 +292,16 @@ export const designTokens: DesignTokens = {
       // Couleurs sémantiques (adaptées au sombre)
       info: blue[400],
       infoHover: blue[300],
+      infoPressed: blue[500],
       success: emerald[400],
       successHover: emerald[300],
+      successPressed: emerald[500],
       warning: amber[400],
       warningHover: amber[300],
+      warningPressed: amber[500],
       error: red[400],
       errorHover: red[300],
+      errorPressed: red[500],
 
       // Texte (tes couleurs exactes)
       textPrimary: '#e2e8f0',    // ton textBase actuel

@@ -5,7 +5,7 @@
  * les éléments spécifiques au projet (animations, grilles, etc.)
  */
 
-const { generateTailwindConfig } = require('./tailwind.generator.js')
+import { generateTailwindConfig } from './tailwind.generator'
 
 // Génération automatique de la configuration de base
 const generatedConfig = generateTailwindConfig()
@@ -13,7 +13,7 @@ const generatedConfig = generateTailwindConfig()
 /**
  * @type {import('tailwindcss').Config}
  */
-module.exports = {
+export default {
   // ================================
   // BASE : Configuration générée
   // ================================
@@ -96,7 +96,7 @@ module.exports = {
     ...generatedConfig.plugins,
 
     // Plugin spécifique au projet gaming
-    function({ addUtilities }) {
+    function({ addUtilities }: any) {
       addUtilities({
         // Effets gaming spéciaux
         '.gaming-glow': {
