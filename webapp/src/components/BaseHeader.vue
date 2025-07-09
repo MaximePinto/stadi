@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { useUserStore } from '../stores/user'
-import { DsThemeSelector } from '@/design-system/components'
+import { DsThemeSelector } from '@/components/UI'
 
 const user = useUserStore()
 </script>

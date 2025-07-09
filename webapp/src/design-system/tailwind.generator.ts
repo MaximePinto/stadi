@@ -5,7 +5,8 @@
  * avec le système de thèmes dynamiques
  */
 
-import { designTokens, type DesignTokens } from './tokens'
+import { designTokens } from './tokens'
+import type { DesignTokens } from '@/interfaces'
 
 /**
  * Génère la configuration Tailwind à partir des design tokens

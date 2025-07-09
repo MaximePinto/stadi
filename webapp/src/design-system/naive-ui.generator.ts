@@ -6,7 +6,8 @@
  */
 
 import { type GlobalThemeOverrides } from 'naive-ui'
-import { designTokens, type DesignTokens, type SemanticColors } from './tokens'
+import { designTokens } from './tokens'
+import type { DesignTokens, SemanticColors } from '@/interfaces'
 
 /**
  * Génère les overrides Naive UI pour un mode donné

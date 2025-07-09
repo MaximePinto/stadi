@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
-import DsButton from '@/design-system/components/DsButton.vue'
+import DsButton from '@/components/UI/DsButton.vue'
 import { useDesignSystem } from '@/composables/useDesignSystem'
 // Import des icônes pour les boutons
 import {

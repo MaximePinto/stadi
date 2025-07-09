@@ -10,6 +10,10 @@ declare module 'vue' {
   export interface GlobalComponents {
     BaseFooter: typeof import('./src/components/BaseFooter.vue')['default']
     BaseHeader: typeof import('./src/components/BaseHeader.vue')['default']
+    DsButton: typeof import('./src/components/UI/DsButton.vue')['default']
+    DsCard: typeof import('./src/components/UI/DsCard.vue')['default']
+    DsInput: typeof import('./src/components/UI/DsInput.vue')['default']
+    DsThemeSelector: typeof import('./src/components/UI/DsThemeSelector.vue')['default']
     GlobalLoader: typeof import('./src/components/GlobalLoader.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     HeroForm: typeof import('./src/components/HeroForm.vue')['default']

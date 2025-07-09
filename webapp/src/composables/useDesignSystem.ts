@@ -11,7 +11,8 @@
 
 import { ref, computed, watch, readonly } from 'vue'
 import { darkTheme, useOsTheme, type GlobalTheme } from 'naive-ui'
-import { designTokens, themePresets, type DesignTokens, type SemanticColors } from '@/design-system/tokens'
+import { designTokens, themePresets } from '@/design-system/tokens'
+import type { DesignTokens, SemanticColors } from '@/interfaces'
 import { generateNaiveUIThemeOverrides } from '@/design-system/naive-ui.generator'
 
 // ================================

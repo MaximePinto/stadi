@@ -180,7 +180,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { NButton } from 'naive-ui'
-import { DsButton, DsThemeSelector } from '@/design-system/components'
+import { DsButton, DsThemeSelector } from '@/components/UI'
 import { useDesignSystem } from '@/composables/useDesignSystem'
 
 // Utilisation du système de design

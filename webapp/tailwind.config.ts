@@ -5,7 +5,7 @@ export default {
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}', // Ensures all relevant files are scanned
-    './src/design-system/components/**/*.vue', // Explicitly include DS components
+    './src/components/UI/**/*.vue', // Explicitly include DS components
   ],
   presets: [dsPreset],
   theme: {

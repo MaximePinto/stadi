@@ -8,115 +8,19 @@
  */
 
 // ================================
-// 1. TYPES (identiques)
+// 1. IMPORT DES INTERFACES
 // ================================
 
-export interface ColorScale {
-  50: string
-  100: string
-  200: string
-  300: string
-  400: string
-  500: string
-  600: string
-  700: string
-  800: string
-  900: string
-  950: string
-}
-
-export interface SemanticColors {
-  primary: string
-  primaryHover: string
-  primaryPressed: string
-  primaryDisabled: string
-  secondary: string
-  secondaryHover: string
-  secondaryPressed: string
-
-  info: string
-  infoHover: string
-  infoPressed: string
-
-  success: string
-  successHover: string
-  successPressed: string
-
-  warning: string
-  warningHover: string
-  warningPressed: string
-
-  error: string
-  errorHover: string
-  errorPressed: string
-
-  textPrimary: string
-  textSecondary: string
-  textDisabled: string
-  background: string
-  backgroundSoft: string
-  backgroundMute: string
-  border: string
-  borderHover: string
-  borderFocus: string
-}
-
-export interface TypographyScale {
-  xs: { fontSize: string; lineHeight: string }
-  sm: { fontSize: string; lineHeight: string }
-  base: { fontSize: string; lineHeight: string }
-  lg: { fontSize: string; lineHeight: string }
-  xl: { fontSize: string; lineHeight: string }
-  '2xl': { fontSize: string; lineHeight: string }
-  '3xl': { fontSize: string; lineHeight: string }
-  '4xl': { fontSize: string; lineHeight: string }
-}
-
-export interface SpacingScale {
-  xs: string
-  sm: string
-  md: string
-  lg: string
-  xl: string
-  '2xl': string
-  '3xl': string
-  '4xl': string
-}
-
-export interface BorderRadius {
-  none: string
-  sm: string
-  md: string
-  lg: string
-  xl: string
-  full: string
-}
-
-export interface Shadows {
-  sm: string
-  md: string
-  lg: string
-  xl: string
-  glow: string
-  glowPrimary: string
-  glowSecondary: string
-}
-
-export interface DesignTokens {
-  colors: {
-    light: SemanticColors
-    dark: SemanticColors
-  }
-  typography: TypographyScale
-  spacing: SpacingScale
-  borderRadius: BorderRadius
-  shadows: Shadows
-  transitions: {
-    fast: string
-    normal: string
-    slow: string
-  }
-}
+import type {
+  ColorScale,
+  SemanticColors,
+  TypographyScale,
+  SpacingScale,
+  BorderRadius,
+  Shadows,
+  DesignTokens,
+  ThemePreset
+} from '../interfaces'
 
 // ================================
 // 2. PALETTES BASÉES SUR TES COULEURS
@@ -234,15 +138,15 @@ export const designTokens: DesignTokens = {
     // ================================
     light: {
       // Couleurs primaires (tes couleurs exactes)
-      primary: '#4338ca',        // indigo-700 (ton primary)
-      primaryHover: '#4f46e5',   // indigo-600 (ton primary-hover)
-      primaryPressed: '#3730a3', // indigo-800 (plus sombre)
-      primaryDisabled: '#a5b4fc', // indigo-300 (désactivé)
+      primary: indigo[700],        // indigo-700 (ton primary)
+      primaryHover: indigo[600],   // indigo-600 (ton primary-hover)
+      primaryPressed: indigo[800], // indigo-800 (plus sombre)
+      primaryDisabled: indigo[300], // indigo-300 (désactivé)
 
       // Couleurs secondaires (tes couleurs exactes)
-      secondary: '#334155',      // slate-700 (ton secondary)
-      secondaryHover: '#475569', // slate-600 (ton secondary-hover)
-      secondaryPressed: '#1e293b', // slate-800 (ton neutral)
+      secondary: slate[700],      // slate-700 (ton secondary)
+      secondaryHover: slate[600], // slate-600 (ton secondary-hover)
+      secondaryPressed: slate[800], // slate-800 (ton neutral)
 
       // Couleurs sémantiques (harmonisées avec ton style)
       info: blue[500],           // #3b82f6 (ton gradient-start)
@@ -264,9 +168,9 @@ export const designTokens: DesignTokens = {
       textDisabled: slate[400],  // ton textMuted (#94a3b8)
 
       // Arrière-plans (adaptés pour le mode clair)
-      background: '#ffffff',     // Blanc pur
-      backgroundSoft: slate[50], // Très léger
-      backgroundMute: slate[100], // Légèrement gris
+      background: slate[50],     // Blanc pur
+      backgroundSoft: slate[100], // Très léger
+      backgroundMute: slate[200], // Légèrement gris
 
       // Bordures
       border: slate[200],        // Bordure légère
@@ -279,15 +183,15 @@ export const designTokens: DesignTokens = {
     // ================================
     dark: {
       // Couleurs primaires (plus vives pour le mode sombre)
-      primary: '#6366f1',        // indigo-500 (plus vif)
-      primaryHover: '#818cf8',   // indigo-400 (encore plus vif)
-      primaryPressed: '#4f46e5', // indigo-600
-      primaryDisabled: '#3730a3', // indigo-800 (très sombre)
+      primary: indigo[500],        // indigo-500 (plus vif)
+      primaryHover: indigo[400],   // indigo-400 (encore plus vif)
+      primaryPressed: indigo[600], // indigo-600
+      primaryDisabled: indigo[800], // indigo-800 (très sombre)
 
       // Couleurs secondaires (ton style gaming)
-      secondary: '#475569',      // slate-600 (ton neutral.lighter)
-      secondaryHover: '#64748b', // slate-500 (plus clair)
-      secondaryPressed: '#334155', // slate-700
+      secondary: slate[600],      // slate-600 (ton neutral.lighter)
+      secondaryHover: slate[500], // slate-500 (plus clair)
+      secondaryPressed: slate[700], // slate-700
 
       // Couleurs sémantiques (adaptées au sombre)
       info: blue[400],
@@ -304,14 +208,14 @@ export const designTokens: DesignTokens = {
       errorPressed: red[500],
 
       // Texte (tes couleurs exactes)
-      textPrimary: '#e2e8f0',    // ton textBase actuel
-      textSecondary: '#94a3b8',  // ton textMuted actuel
+      textPrimary: slate[200],    // ton textBase actuel
+      textSecondary: slate[400],  // ton textMuted actuel
       textDisabled: slate[600],  // Plus sombre
 
       // Arrière-plans (ton style gaming)
-      background: '#0f172a',     // ton neutral.dark
-      backgroundSoft: '#1e293b', // ton neutral par défaut
-      backgroundMute: '#334155', // ton neutral.light
+      background: slate[900],     // ton neutral.dark
+      backgroundSoft: slate[800], // ton neutral par défaut
+      backgroundMute: slate[700], // ton neutral.light
 
       // Bordures (harmonisées)
       border: slate[700],        // Sombre mais visible
@@ -383,12 +287,6 @@ export const designTokens: DesignTokens = {
 // ================================
 // 4. PRESETS ÉTENDUS AVEC TON STYLE
 // ================================
-
-export interface ThemePreset {
-  name: string
-  description: string
-  tokens: DesignTokens
-}
 
 export const themePresets: Record<string, ThemePreset> = {
   // Ton thème actuel comme default
@@ -484,6 +382,6 @@ export function withOpacity(hex: string, opacity: number): string {
   return rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})` : hex
 }
 
-export function getTokensForMode(mode: 'light' | 'dark', preset = 'default'): DesignTokens {
-  return themePresets[preset]?.tokens || designTokens
+export function getTokensForPreset(preset = 'default'): DesignTokens {
+  return themePresets[preset]?.tokens || designTokens;
 }
