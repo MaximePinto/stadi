@@ -6,6 +6,7 @@
  */
 
 import { generateTailwindConfig } from './tailwind.generator'
+import type { PluginAPI } from 'tailwindcss/types/config'
 
 // Génération automatique de la configuration de base
 const generatedConfig = generateTailwindConfig()
@@ -96,7 +97,7 @@ export default {
     ...generatedConfig.plugins,
 
     // Plugin spécifique au projet gaming
-    function({ addUtilities }: any) {
+    function({ addUtilities }: PluginAPI) {
       addUtilities({
         // Effets gaming spéciaux
         '.gaming-glow': {

@@ -1,6 +1,6 @@
 # Makefile pour Symfony API + Vue.js Frontend
 
-.PHONY: help start stop up cache-clear cc migration install db-create db-drop db-reset fixtures entity tree tree-simple tree-files lint format db-init create-admin migration-create migration-status migration-list backend webapp backend-shell webapp-shell
+.PHONY: help start stop up cache-clear cc migration install db-create db-drop db-reset fixtures entity tree tree-simple tree-files lint format db-init create-admin migration-create migration-status migration-list backend webapp backend-shell webapp-shell logs logs-ddev logs-symfony logs-webapp logs-follow logs-error logs-clear
 # Variables
 PROJECT_NAME = stadi
 WEBAPP_FOLDER = /var/www/html/webapp
@@ -160,6 +160,51 @@ lint: ## Lint du code Vue
 
 format: ## Formatage du code Vue
 	ddev exec --dir $(WEBAPP_FOLDER) npm run format
+
+## —— 📋 Logs —————————————————————————————————————————————————————————————
+logs: ## Affiche les logs DDEV principaux
+	ddev logs
+
+logs-ddev: ## Affiche les logs DDEV détaillés
+	ddev logs --service=web
+
+logs-symfony: ## Affiche les logs Symfony (dev.log)
+	@echo "📋 Logs Symfony (dev.log) :"
+	@if ddev exec --dir $(API_FOLDER) test -f var/log/dev.log; then \
+		ddev exec --dir $(API_FOLDER) tail -f var/log/dev.log; \
+	else \
+		echo "⚠️  Aucun fichier de log Symfony trouvé (var/log/dev.log)"; \
+		echo "💡 Le fichier sera créé automatiquement lors de la première erreur"; \
+		echo "🔍 Création du fichier et surveillance..."; \
+		ddev exec --dir $(API_FOLDER) touch var/log/dev.log && ddev exec --dir $(API_FOLDER) tail -f var/log/dev.log; \
+	fi
+
+logs-webapp: ## Affiche les logs du serveur de développement Vue.js
+	ddev exec --dir $(WEBAPP_FOLDER) tail -f /dev/null & ddev exec --dir $(WEBAPP_FOLDER) npm run dev
+
+logs-follow: ## Suit les logs DDEV en temps réel
+	ddev logs -f
+
+logs-error: ## Affiche uniquement les erreurs dans les logs DDEV
+	ddev logs | grep -i error
+
+logs-clear: ## Vide les logs Symfony
+	ddev exec --dir $(API_FOLDER) rm -f var/log/*.log
+	@echo "✅ Logs Symfony supprimés"
+
+logs-all: ## Affiche tous les logs disponibles
+	@echo "📋 Logs DDEV :"
+	@echo "=============="
+	ddev logs --tail=20
+	@echo ""
+	@echo "📋 Logs Symfony (dernières 20 lignes) :"
+	@echo "======================================"
+	@if ddev exec --dir $(API_FOLDER) test -f var/log/dev.log; then \
+		ddev exec --dir $(API_FOLDER) tail -20 var/log/dev.log; \
+	else \
+		echo "⚠️  Aucun fichier de log Symfony trouvé (var/log/dev.log)"; \
+		echo "💡 Le fichier sera créé automatiquement lors de la première erreur"; \
+	fi
 
 tree: ## Affiche l'arborescence des fichiers du projet
 	@echo "📁 Arborescence du projet depuis $(shell pwd):"

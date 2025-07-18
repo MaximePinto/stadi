@@ -31,18 +31,20 @@ router.beforeEach(async (to, from, next) => {
 
   // Routes publiques
   if (to.path === '/login') {
-    await store.logoutWithoutRedirect()
-    return
+    if (store.isLogged) {
+      await store.logoutWithoutRedirect()
+    }
+    return next()
   }
 
   // Vérification de l'authentification pour les routes protégées
   if (!store.isLogged) {
-    return'/login'
+    return next('/login')
   }
 
   // Vérification des droits admin si nécessaire
   if (to.meta.requiresAdmin && !store.isAdmin) {
-    return '/'
+    return next('/')
   }
 
   next()

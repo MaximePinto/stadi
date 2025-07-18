@@ -39,7 +39,6 @@ export const useUserStore = defineStore('user', () => {
 
   async function logout() {
     uiStore.showLoader('Déconnexion...');
-    console.log('user.value', user.value)
     if (!user.value) return
 
     try {
