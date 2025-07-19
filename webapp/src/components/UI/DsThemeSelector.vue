@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { NSelect, NButton, NIcon, NTooltip, NSpace } from 'naive-ui'
+import { NSelect, NButton, NIcon, NSpace } from 'naive-ui'
 import { useDesignSystem } from '@/composables/useDesignSystem'
 import {
   SunnyOutline,
@@ -10,34 +10,20 @@ import {
   SettingsOutline
 } from '@vicons/ionicons5'
 
-/**
- * Props pour le composant DsThemeSelector.
- */
-interface Props {
-  /** Indique s'il faut afficher le bouton de basculement de mode. */
-  showModeToggle?: boolean
-  /** Indique s'il faut afficher le sélecteur de préréglage. */
-  showPresetSelector?: boolean
-  /** Indique s'il faut afficher les paramètres avancés. */
-  showAdvanced?: boolean
-  /** Taille du composant. */
-  size?: 'small' | 'medium' | 'large'
-  /** Indique s'il faut utiliser une mise en page compacte. */
-  compact?: boolean
-  /** Indique s'il faut utiliser les effets de jeu. */
-  gaming?: boolean
+
+ interface Props {
+  showModeToggle?: boolean      // Afficher les boutons mode (☀️🌙💻)
+  showPresetSelector?: boolean  // Afficher le sélecteur de presets
+  showAdvanced?: boolean        // Afficher le bouton paramètres avancés
+  size?: 'small' | 'medium' | 'large'  // Taille des composants
+  compact?: boolean             // Layout compact (vertical)
+  gaming?: boolean              // Effets visuels gaming
 }
 
-/**
- * Émissions pour le composant DsThemeSelector.
- */
-interface Emits {
-  /** Émis lors du changement de mode de thème. */
-  'mode-change': [mode: 'light' | 'dark' | 'auto']
-  /** Émis lors du changement de préréglage de thème. */
-  'preset-change': [preset: string]
-  /** Émis lors de tout changement de thème. */
-  'theme-change': [theme: any]
+ interface Emits {
+  'mode-change': [mode: 'light' | 'dark' | 'auto']  // Changement de mode
+  'preset-change': [preset: string]                 // Changement de preset
+  'theme-change': [theme: object]                   // Tout changement
 }
 
 // Définition des props avec valeurs par défaut
@@ -55,12 +41,13 @@ const emit = defineEmits<Emits>()
 
 // Utilisation du système de design unifié
 const {
-  effectiveMode,
-  setThemeMode,
-  setThemePreset,
-  toggleTheme,
-  currentTokens,
-  themePresets
+  effectiveMode,    // Mode actuel (résout 'auto' vers 'light' ou 'dark')
+  themePreset,      // Preset de thème actuel
+  setThemeMode,     // Fonction pour changer le mode
+  setThemePreset,   // Fonction pour changer le preset
+  toggleTheme,      // Fonction pour basculer light/dark
+  currentTokens,    // Tokens de design actuels
+  themePresets      // Liste des presets disponibles
 } = useDesignSystem()
 
 // Configuration des options pour le sélecteur de mode (light/dark/auto)
@@ -68,17 +55,17 @@ const modeOptions = [
   {
     label: 'Clair',
     value: 'light',
-    icon: SunnyOutline
+    icon: SunnyOutline    // ☀️
   },
   {
     label: 'Sombre',
     value: 'dark',
-    icon: MoonOutline
+    icon: MoonOutline     // 🌙
   },
   {
     label: 'Auto',
     value: 'auto',
-    icon: LaptopOutline
+    icon: LaptopOutline   // 💻
   }
 ]
 
@@ -97,23 +84,24 @@ const presetOptions = computed(() => {
 
 // Gestionnaire pour le changement de mode de thème
 const handleModeChange = (mode: 'light' | 'dark' | 'auto') => {
-  setThemeMode(mode)
-  emit('mode-change', mode)
-  emit('theme-change', { mode, type: 'mode' })
+  setThemeMode(mode)                                    // Met à jour le mode
+  emit('mode-change', mode)                            // Émet l'événement
+  emit('theme-change', { mode, type: 'mode' })         // Émet l'événement général
 }
 
 // Gestionnaire pour le changement de préréglage de thème
 const handlePresetChange = (preset: string) => {
-  setThemePreset(preset as any)
-  emit('preset-change', preset)
-  emit('theme-change', { preset, type: 'preset' })
+  setThemePreset(preset)                               // Met à jour le preset
+  emit('preset-change', preset)                        // Émet l'événement
+  emit('theme-change', { preset, type: 'preset' })    // Émet l'événement général
 }
 
 // Gestionnaire pour le basculement rapide de thème
 const handleToggleTheme = () => {
-  toggleTheme()
-  emit('theme-change', { type: 'toggle' })
+  toggleTheme()                                        // Bascule light/dark
+  emit('theme-change', { type: 'toggle' })            // Émet l'événement
 }
+
 
 // Classes CSS calculées pour les effets de jeu
 const gamingClasses = computed(() => {
@@ -124,8 +112,8 @@ const gamingClasses = computed(() => {
     'transition-all',
     'duration-300',
     'ease-in-out',
-    'hover:shadow-glow',
-    'rounded-radius-md'
+    'hover:glow',
+    'rounded-md'
   ].join(' ')
 })
 
@@ -161,94 +149,72 @@ const naiveSize = computed(() => {
       align="center"
       justify="center"
     >
-      <!-- Sélecteur de mode de thème -->
+      <!-- Sélecteur de mode de thème (☀️🌙💻) -->
       <template v-if="showModeToggle">
-        <NTooltip
+        <NButton
           v-for="option in modeOptions"
           :key="option.value"
-          :content="option.label"
-          placement="top"
+          :type="effectiveMode === option.value ? 'primary' : 'default'"
+          :size="naiveSize"
+          :ghost="effectiveMode !== option.value"
+          :class="[
+            'ds-theme-mode-btn',
+            { 'ds-theme-mode-active': effectiveMode === option.value }
+          ]"
+          :aria-label="option.label"
+          @click="handleModeChange(option.value as 'light' | 'dark' | 'auto')"
+          circle
         >
-          <template #trigger>
-            <NButton
-              :type="effectiveMode === option.value ? 'primary' : 'default'"
-              :size="naiveSize"
-              :ghost="effectiveMode !== option.value"
-              :class="[
-                'ds-theme-mode-btn',
-                { 'ds-theme-mode-active': effectiveMode === option.value }
-              ]"
-              @click="handleModeChange(option.value as 'light' | 'dark' | 'auto')"
-              circle
-            >
-              <NIcon>
-                <component :is="option.icon" />
-              </NIcon>
-            </NButton>
-          </template>
-        </NTooltip>
+          <NIcon>
+            <component :is="option.icon" />
+          </NIcon>
+        </NButton>
       </template>
 
       <!-- Bascule rapide light/dark -->
       <template v-if="showModeToggle">
         <div class="ds-theme-divider" />
-        <NTooltip content="Basculer thème" placement="top">
-          <template #trigger>
-            <NButton
-              :type="'default'"
-              :size="naiveSize"
-              ghost
-              class="ds-theme-toggle-btn"
-              @click="handleToggleTheme"
-            >
-              <NIcon>
-                <component :is="effectiveMode === 'dark' ? SunnyOutline : MoonOutline" />
-              </NIcon>
-            </NButton>
-          </template>
-        </NTooltip>
+        <NButton
+          :type="'default'"
+          :size="naiveSize"
+          ghost
+          class="ds-theme-toggle-btn"
+          aria-label="Basculer thème"
+          @click="handleToggleTheme"
+        >
+          <NIcon>
+            <component :is="effectiveMode === 'dark' ? SunnyOutline : MoonOutline" />
+          </NIcon>
+        </NButton>
       </template>
 
       <!-- Sélecteur de préréglage -->
       <template v-if="showPresetSelector">
         <div class="ds-theme-divider" />
-        <NTooltip content="Changer de thème" placement="top">
-          <template #trigger>
-            <NSelect
-              :value="themePreset"
-              :options="presetOptions"
-              :size="naiveSize"
-              placeholder="Choisir un thème"
-              class="ds-theme-preset-select"
-              @update:value="handlePresetChange"
-            >
-              <template #prefix>
-                <NIcon>
-                  <ColorPaletteOutline />
-                </NIcon>
-              </template>
-            </NSelect>
-          </template>
-        </NTooltip>
+        <NSelect
+          :value="themePreset"
+          :options="presetOptions"
+          :size="naiveSize"
+          placeholder="Choisir un thème"
+          class="ds-theme-preset-select"
+          @update:value="handlePresetChange"
+        />
       </template>
 
       <!-- Paramètres avancés -->
       <template v-if="showAdvanced">
         <div class="ds-theme-divider" />
-        <NTooltip content="Paramètres avancés" placement="top">
-          <template #trigger>
-            <NButton
-              type="default"
-              :size="naiveSize"
-              ghost
-              class="ds-theme-advanced-btn"
-            >
-              <NIcon>
-                <SettingsOutline />
-              </NIcon>
-            </NButton>
-          </template>
-        </NTooltip>
+        <NButton
+          type="default"
+          :size="naiveSize"
+          ghost
+          class="ds-theme-advanced-btn"
+          aria-label="Paramètres avancés"
+        >
+          <NIcon>
+            <SettingsOutline />
+          </NIcon>
+        </NButton>
       </template>
     </NSpace>
   </div>

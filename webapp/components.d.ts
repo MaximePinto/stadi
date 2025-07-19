@@ -11,6 +11,7 @@ declare module 'vue' {
     BaseFooter: typeof import('./src/components/BaseFooter.vue')['default']
     BaseHeader: typeof import('./src/components/BaseHeader.vue')['default']
     DsButton: typeof import('./src/components/UI/DsButton.vue')['default']
+    DsButtonShowcase: typeof import('./src/components/UI/DsButtonShowcase.vue')['default']
     DsCard: typeof import('./src/components/UI/DsCard.vue')['default']
     DsInput: typeof import('./src/components/UI/DsInput.vue')['default']
     DsThemeSelector: typeof import('./src/components/UI/DsThemeSelector.vue')['default']

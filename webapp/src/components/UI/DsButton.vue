@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { NButton, NIcon } from 'naive-ui'
 import { useDesignSystem } from '@/composables/useDesignSystem'
+import { useButtonColors } from '@/composables/useButtonColors'
 
 /**
  * Props for the DsButton component.
@@ -46,6 +47,7 @@ const emit = defineEmits<Emits>()
 
 // Utilisation du système de design unifié
 const { currentColors, getColor } = useDesignSystem()
+const { getButtonColors, currentPreset } = useButtonColors()
 
 // Mapping des variants vers les types Naive UI
 const naiveVariantMap = {
@@ -56,36 +58,19 @@ const naiveVariantMap = {
   error: 'error'
 } as const
 
-// Configuration gaming (effets visuels additionnels)
-const gamingConfig = {
-  variants: {
-    primary: {
-      gradient: `linear-gradient(135deg, ${currentColors.value.primary}, ${currentColors.value.primaryHover})`,
-      glowColor: currentColors.value.primary,
-      borderGlow: `0 0 10px ${currentColors.value.primary}40`
-    },
-    secondary: {
-      gradient: `linear-gradient(135deg, ${currentColors.value.secondary}, ${currentColors.value.secondaryHover})`,
-      glowColor: currentColors.value.secondary,
-      borderGlow: `0 0 10px ${currentColors.value.secondary}40`
-    },
-    success: {
-      gradient: `linear-gradient(135deg, ${currentColors.value.success}, ${currentColors.value.successHover})`,
-      glowColor: currentColors.value.success,
-      borderGlow: `0 0 10px ${currentColors.value.success}40`
-    },
-    warning: {
-      gradient: `linear-gradient(135deg, ${currentColors.value.warning}, ${currentColors.value.warningHover})`,
-      glowColor: currentColors.value.warning,
-      borderGlow: `0 0 10px ${currentColors.value.warning}40`
-    },
-    error: {
-      gradient: `linear-gradient(135deg, ${currentColors.value.error}, ${currentColors.value.errorHover})`,
-      glowColor: currentColors.value.error,
-      borderGlow: `0 0 10px ${currentColors.value.error}40`
-    }
+// Configuration gaming (effets visuels additionnels) - Maintenant dynamique
+const gamingConfig = computed(() => {
+  const colors = getButtonColors(props.variant)
+  
+  return {
+    gradient: colors.gradient,
+    glowColor: colors.glow,
+    borderGlow: colors.borderGlow,
+    baseColor: colors.base,
+    hoverColor: colors.hover,
+    pressedColor: colors.pressed
   }
-}
+})
 
 // Classes CSS pour les effets gaming
 const gamingClasses = computed(() => {
@@ -115,12 +100,15 @@ const gamingClasses = computed(() => {
 const gamingStyle = computed(() => {
   if (!props.gaming || props.ghost) return {}
 
-  const config = gamingConfig.variants[props.variant]
+  const config = gamingConfig.value
 
   return {
     '--gaming-gradient': config.gradient,
     '--gaming-glow': config.glowColor,
     '--gaming-border-glow': config.borderGlow,
+    '--gaming-base': config.baseColor,
+    '--gaming-hover': config.hoverColor,
+    '--gaming-pressed': config.pressedColor,
     background: config.gradient,
     boxShadow: `${config.borderGlow}, 0 4px 15px rgba(0, 0, 0, 0.2)`
   }
@@ -137,6 +125,7 @@ const handleClick = () => {
   <div
     :class="gamingClasses"
     :style="gamingStyle"
+    :data-preset="currentPreset"
     class="ds-button-wrapper"
   >
     <!-- Bouton Naive UI comme base -->
@@ -198,8 +187,20 @@ const handleClick = () => {
 /* Rendre le bouton Naive UI transparent pour laisser place au gradient */
 .ds-gaming-transparent {
   background: transparent !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid var(--gaming-glow, rgba(255, 255, 255, 0.2)) !important;
   backdrop-filter: blur(8px);
+  color: white !important;
+  
+  /* Effets hover avec les nouvelles couleurs */
+  &:hover:not(:disabled) {
+    border-color: var(--gaming-hover, rgba(255, 255, 255, 0.4)) !important;
+    transform: translateY(-1px);
+  }
+  
+  &:active:not(:disabled) {
+    border-color: var(--gaming-pressed, rgba(255, 255, 255, 0.6)) !important;
+    transform: translateY(0);
+  }
 }
 
 /* Effet d'apparition */
@@ -285,7 +286,7 @@ const handleClick = () => {
 }
 
 /* ================================ */
-/* MODES SOMBRE/CLAIR */
+/* MODES SOMBRE/CLAIR ET PRESETS */
 /* ================================ */
 
 /* Mode sombre : effets plus intenses */
@@ -296,6 +297,34 @@ const handleClick = () => {
 /* Mode clair : effets plus subtils */
 .light .ds-button-wrapper {
   --gaming-glow-intensity: 0.4;
+}
+
+/* Styles spécifiques aux presets */
+.ds-button-wrapper[data-preset="cyberpunk"] {
+  filter: saturate(1.2) contrast(1.1);
+}
+
+.ds-button-wrapper[data-preset="cyberpunk"]:hover {
+  filter: saturate(1.4) contrast(1.2);
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+
+.ds-button-wrapper[data-preset="ocean"] {
+  filter: hue-rotate(10deg) saturate(1.1);
+}
+
+.ds-button-wrapper[data-preset="ocean"]:hover {
+  filter: hue-rotate(10deg) saturate(1.3);
+  box-shadow: 0 0 25px var(--gaming-glow), 0 0 50px var(--gaming-glow);
+}
+
+.ds-button-wrapper[data-preset="forest"] {
+  filter: sepia(0.1) saturate(1.2);
+}
+
+.ds-button-wrapper[data-preset="forest"]:hover {
+  filter: sepia(0.2) saturate(1.4);
+  transform: scale(1.02) translateY(-1px);
 }
 
 /* ================================ */

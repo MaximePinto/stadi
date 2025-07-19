@@ -145,6 +145,14 @@
       </div>
     </div>
 
+    <!-- Showcase des boutons modernes -->
+    <div class="theme-demo-section">
+      <h2 class="text-xl font-semibold text-text-primary mb-4">
+        🎨 Showcase des Boutons Modernes
+      </h2>
+      <DsButtonShowcase />
+    </div>
+
     <!-- Logs des événements -->
     <div class="theme-demo-section">
       <h2 class="text-xl font-semibold text-text-primary mb-4">
@@ -180,7 +188,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { NButton } from 'naive-ui'
-import { DsButton, DsThemeSelector } from '@/components/UI'
+import { DsButton, DsThemeSelector, DsButtonShowcase } from '@/components/UI'
 import { useDesignSystem } from '@/composables/useDesignSystem'
 
 // Utilisation du système de design
@@ -199,7 +207,13 @@ const handlePresetChange = (preset: string) => {
   addLog('PRESET', `Preset changé vers: ${preset}`)
 }
 
-const handleThemeChange = (theme: any) => {
+// Type pour l'événement theme-change
+type ThemeChangeEvent =
+  | { mode: 'light' | 'dark' | 'auto'; type: 'mode' }
+  | { preset: string; type: 'preset' }
+  | { type: 'toggle' }
+
+const handleThemeChange = (theme: ThemeChangeEvent) => {
   addLog('THEME', `Changement de thème: ${JSON.stringify(theme)}`)
 }
 

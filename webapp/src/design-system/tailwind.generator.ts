@@ -6,7 +6,7 @@
  */
 
 import { designTokens } from './tokens'
-import type { DesignTokens } from '@/interfaces'
+import type { PluginAPI } from 'tailwindcss/types/config'
 
 /**
  * Génère la configuration Tailwind à partir des design tokens
@@ -117,7 +117,7 @@ export function generateTailwindConfig() {
     // PLUGIN UNIQUE AVEC COMPOSANTS
     // ================================
     plugins: [
-      function({ addUtilities, addComponents, addBase, theme }: any) {
+      function({ addUtilities, addComponents, addBase, theme }: PluginAPI) {
 
         // ================================
         // BASE : Variables CSS injectées
@@ -242,6 +242,43 @@ export function generateTailwindConfig() {
             '&:hover': {
               boxShadow: 'var(--ds-shadow-md)',
               borderColor: 'var(--ds-border-hover)',
+            }
+          },
+
+          // Boutons modernes avec preset
+          '.btn-modern': {
+            background: 'var(--gaming-gradient, var(--ds-color-primary))',
+            border: '1px solid var(--gaming-glow, var(--ds-color-primary))',
+            color: 'white',
+            borderRadius: 'var(--ds-radius-md)',
+            padding: 'var(--ds-spacing-sm) var(--ds-spacing-lg)',
+            transition: 'all var(--ds-transition-fast)',
+            position: 'relative',
+            overflow: 'hidden',
+
+            '&:hover': {
+              transform: 'translateY(-2px)',
+              boxShadow: 'var(--gaming-border-glow, 0 0 15px var(--ds-color-primary)40)',
+            },
+
+            '&:active': {
+              transform: 'translateY(0)',
+            }
+          },
+
+          '.btn-preset-aware': {
+            transition: 'all var(--ds-transition-normal)',
+
+            '&[data-preset="cyberpunk"]': {
+              filter: 'saturate(1.2) contrast(1.1)',
+            },
+
+            '&[data-preset="ocean"]': {
+              filter: 'hue-rotate(10deg) saturate(1.1)',
+            },
+
+            '&[data-preset="forest"]': {
+              filter: 'sepia(0.1) saturate(1.2)',
             }
           },
 

@@ -143,38 +143,38 @@ export const designTokens: DesignTokens = {
       primaryPressed: indigo[800], // indigo-800 (plus sombre)
       primaryDisabled: indigo[300], // indigo-300 (désactivé)
 
-      // Couleurs secondaires (tes couleurs exactes)
-      secondary: slate[700],      // slate-700 (ton secondary)
-      secondaryHover: slate[600], // slate-600 (ton secondary-hover)
-      secondaryPressed: slate[800], // slate-800 (ton neutral)
+      // Couleurs secondaires (adaptées au preset)
+      secondary: indigo[100],      // Variante claire du primary pour cohérence
+      secondaryHover: indigo[200], // Plus foncé au hover
+      secondaryPressed: indigo[300], // Plus foncé au clic
 
-      // Couleurs sémantiques (harmonisées avec ton style)
-      info: blue[500],           // #3b82f6 (ton gradient-start)
-      infoHover: blue[600],
-      infoPressed: blue[700],
-      success: emerald[500],
-      successHover: emerald[600],
-      successPressed: emerald[700],
-      warning: amber[500],
-      warningHover: amber[600],
-      warningPressed: amber[700],
-      error: red[500],
-      errorHover: red[600],
-      errorPressed: red[700],
+      // Couleurs sémantiques (adaptées au mode clair)
+      info: blue[600],           // Plus foncé pour meilleur contraste
+      infoHover: blue[700],      // Plus sombre au hover
+      infoPressed: blue[800],    // Plus sombre au clic
+      success: emerald[600],     // Plus foncé pour meilleur contraste
+      successHover: emerald[700], // Plus sombre au hover
+      successPressed: emerald[800], // Plus sombre au clic
+      warning: amber[600],       // Plus foncé pour meilleur contraste
+      warningHover: amber[700],  // Plus sombre au hover
+      warningPressed: amber[800], // Plus sombre au clic
+      error: red[600],           // Plus foncé pour meilleur contraste
+      errorHover: red[700],      // Plus sombre au hover
+      errorPressed: red[800],    // Plus sombre au clic
 
-      // Texte (tes couleurs exactes mais adaptées au mode clair)
-      textPrimary: slate[900],   // Sombre pour lisibilité en mode clair
-      textSecondary: slate[600], // Gris moyen
-      textDisabled: slate[400],  // ton textMuted (#94a3b8)
+      // Texte (optimisé pour le contraste en mode clair)
+      textPrimary: slate[900],   // Sombre pour lisibilité maximale
+      textSecondary: slate[700], // Plus sombre pour meilleur contraste
+      textDisabled: slate[400],  // Assez clair pour indiquer l'état désactivé
 
-      // Arrière-plans (adaptés pour le mode clair)
+      // Arrière-plans (optimisés pour le contraste)
       background: slate[50],     // Blanc pur
       backgroundSoft: slate[100], // Très léger
       backgroundMute: slate[200], // Légèrement gris
 
-      // Bordures
-      border: slate[200],        // Bordure légère
-      borderHover: slate[300],   // Un peu plus visible au hover
+      // Bordures (contraste amélioré)
+      border: slate[300],        // Plus visible
+      borderHover: slate[400],   // Contraste plus marqué au hover
       borderFocus: indigo[500],  // Focus avec ta couleur primaire
     },
 
@@ -184,42 +184,42 @@ export const designTokens: DesignTokens = {
     dark: {
       // Couleurs primaires (plus vives pour le mode sombre)
       primary: indigo[500],        // indigo-500 (plus vif)
-      primaryHover: indigo[400],   // indigo-400 (encore plus vif)
-      primaryPressed: indigo[600], // indigo-600
+      primaryHover: indigo[400],   // indigo-400 (encore plus vif au hover)
+      primaryPressed: indigo[500], // indigo-500 (retour à la base, effet de "click")
       primaryDisabled: indigo[800], // indigo-800 (très sombre)
 
-      // Couleurs secondaires (ton style gaming)
-      secondary: slate[600],      // slate-600 (ton neutral.lighter)
-      secondaryHover: slate[500], // slate-500 (plus clair)
-      secondaryPressed: slate[700], // slate-700
+      // Couleurs secondaires (adaptées au preset)
+      secondary: indigo[900],      // Variante sombre du primary pour cohérence
+      secondaryHover: indigo[800], // Plus clair au hover (mode sombre)
+      secondaryPressed: indigo[900], // Retour à la base
 
-      // Couleurs sémantiques (adaptées au sombre)
+      // Couleurs sémantiques (adaptées au mode sombre)
       info: blue[400],
-      infoHover: blue[300],
-      infoPressed: blue[500],
+      infoHover: blue[300],        // Plus vif au hover
+      infoPressed: blue[500],      // Plus sombre au clic
       success: emerald[400],
-      successHover: emerald[300],
-      successPressed: emerald[500],
+      successHover: emerald[300],  // Plus vif au hover
+      successPressed: emerald[500], // Plus sombre au clic
       warning: amber[400],
-      warningHover: amber[300],
-      warningPressed: amber[500],
+      warningHover: amber[300],    // Plus vif au hover
+      warningPressed: amber[500],  // Plus sombre au clic
       error: red[400],
-      errorHover: red[300],
-      errorPressed: red[500],
+      errorHover: red[300],        // Plus vif au hover
+      errorPressed: red[500],      // Plus sombre au clic
 
-      // Texte (tes couleurs exactes)
-      textPrimary: slate[200],    // ton textBase actuel
-      textSecondary: slate[400],  // ton textMuted actuel
-      textDisabled: slate[600],  // Plus sombre
+      // Texte (optimisé pour le contraste en mode sombre)
+      textPrimary: slate[100],    // Plus clair pour meilleur contraste
+      textSecondary: slate[300],  // Plus clair que l'original
+      textDisabled: slate[600],   // Assez sombre pour indiquer l'état désactivé
 
       // Arrière-plans (ton style gaming)
       background: slate[900],     // ton neutral.dark
       backgroundSoft: slate[800], // ton neutral par défaut
       backgroundMute: slate[700], // ton neutral.light
 
-      // Bordures (harmonisées)
-      border: slate[700],        // Sombre mais visible
-      borderHover: slate[600],   // Plus clair au hover
+      // Bordures (optimisées pour le mode sombre)
+      border: slate[600],        // Plus clair pour meilleur contraste
+      borderHover: slate[500],   // Plus clair au hover
       borderFocus: indigo[400],  // Focus vif
     }
   },

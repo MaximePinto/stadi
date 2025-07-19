@@ -6,6 +6,7 @@ export { default as DsButton } from './DsButton.vue'
 export { default as DsCard } from './DsCard.vue'
 export { default as DsInput } from './DsInput.vue'
 export { default as DsThemeSelector } from './DsThemeSelector.vue'
+export { default as DsButtonShowcase } from './DsButtonShowcase.vue'
 
 // ================================
 // TYPES EXPORTÉS

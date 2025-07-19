@@ -93,10 +93,7 @@ export function useDesignSystem() {
    * Overrides Naive UI générés à partir des tokens
    */
   const naiveThemeOverrides = computed(() => {
-    const cacheKey = `${themeState.value.preset}-${themeState.value.mode}-${JSON.stringify(themeState.value.customTokens)}`
-
-    // Vider le cache pour forcer le rechargement
-    themeCache.clear()
+    const cacheKey = `${themeState.value.preset}-${effectiveMode.value}-${JSON.stringify(themeState.value.customTokens)}`
 
     if (!themeCache.has(cacheKey)) {
       const overrides = generateNaiveUIThemeOverrides(effectiveMode.value, currentTokens.value)
@@ -121,9 +118,13 @@ export function useDesignSystem() {
       '--ds-color-secondary': colors.secondary,
       '--ds-color-secondary-hover': colors.secondaryHover,
       '--ds-color-info': colors.info,
+      '--ds-color-info-hover': colors.infoHover,
       '--ds-color-success': colors.success,
+      '--ds-color-success-hover': colors.successHover,
       '--ds-color-warning': colors.warning,
+      '--ds-color-warning-hover': colors.warningHover,
       '--ds-color-error': colors.error,
+      '--ds-color-error-hover': colors.errorHover,
 
       // Texte
       '--ds-text-primary': colors.textPrimary,

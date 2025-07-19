@@ -12,11 +12,12 @@
 <template>
   <div
     class="
-      bg-neutral/50        <!-- Using neutral.DEFAULT (slate-800) / 50 from preset -->
-      p-md                 <!-- Using p-md (1rem) from preset spacing -->
-      border border-neutral-light <!-- Using neutral.light (slate-700) for border -->
-      rounded-md           <!-- Using rounded-md (0.5rem) from preset borderRadius -->
-      shadow-lg            <!-- Standard Tailwind shadow -->
+      bg-bg-soft           <!-- Using design system background soft -->
+      p-lg                 <!-- Using design system spacing lg -->
+      border border-border-base <!-- Using design system border base -->
+      rounded-lg           <!-- Using design system border radius lg -->
+      shadow-md            <!-- Using design system shadow md -->
+      card                 <!-- Using design system card utility -->
     "
   >
     <slot />
