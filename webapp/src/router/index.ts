@@ -15,7 +15,7 @@ const router = createRouter({
     },
     { path: '/admin', name: 'admin', component: () => import('../views/AdminView.vue'), meta: { requiresAdmin: true } },
     { path: '/heroes', name: 'heroes', component: () => import('../views/HeroesView.vue') },
-    { path: '/theme-demo', name: 'theme-demo', component: () => import('../views/ThemeDemo.vue') },
+    { path: '/theme-demo', name: 'theme-demo', component: () => import('../design-system/views/ThemeDemo.vue') },
     { path: '/tailwind-demo', name: 'tailwind-demo', component: () => import('../views/TailwindDemo.vue') },
     { path: '/naive-demo', name: 'naive-demo', component: () => import('../views/NaiveUIDemo.vue') },
   ],

@@ -1,13 +1,13 @@
 /**
  * 🎨 Composable pour les couleurs de boutons dynamiques
- * 
+ *
  * Ce composable génère des couleurs de boutons modernes et cohérentes
  * basées sur le preset actuel tout en gardant la sémantique des rôles
  */
 
 import { computed, readonly } from 'vue'
-import { useDesignSystem } from './useDesignSystem'
-import type { SemanticColors } from '@/interfaces'
+import { useDesignSystem } from '../../composables/useDesignSystem'
+import type { SemanticColorsInterface } from '../../interfaces'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info'
 
@@ -32,14 +32,14 @@ export function useButtonColors() {
   const generatePresetVariants = computed(() => {
     const colors = currentColors.value
     const primary = colors.primary
-    
+
     // Extraction des composantes RGB pour générer des variantes
     const rgb = hexToRgb(primary)
     if (!rgb) return null
 
     // Génération de variantes HSL pour plus de contrôle
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b)
-    
+
     return {
       // Variante secondaire : même teinte, saturation réduite
       secondary: {
@@ -69,6 +69,49 @@ export function useButtonColors() {
     const colors = currentColors.value
     const variants = generatePresetVariants.value
 
+    // Préparation des variantes conditionnelles
+    let secondaryColors: ButtonColorScheme
+    if (variants) {
+      secondaryColors = {
+        base: variants.secondary.base,
+        hover: variants.secondary.hover,
+        pressed: variants.secondary.pressed,
+        glow: variants.secondary.base,
+        gradient: `linear-gradient(135deg, ${variants.secondary.base}, ${variants.secondary.hover})`,
+        borderGlow: `0 0 15px ${variants.secondary.base}40`
+      }
+    } else {
+      secondaryColors = {
+        base: colors.secondary,
+        hover: colors.secondaryHover,
+        pressed: colors.secondaryPressed,
+        glow: colors.secondary,
+        gradient: `linear-gradient(135deg, ${colors.secondary}, ${colors.secondaryHover})`,
+        borderGlow: `0 0 15px ${colors.secondary}40`
+      }
+    }
+
+    let infoColors: ButtonColorScheme
+    if (variants) {
+      infoColors = {
+        base: variants.accent.base,
+        hover: variants.accent.hover,
+        pressed: variants.accent.pressed,
+        glow: variants.accent.base,
+        gradient: `linear-gradient(135deg, ${variants.accent.base}, ${variants.accent.hover})`,
+        borderGlow: `0 0 15px ${variants.accent.base}40`
+      }
+    } else {
+      infoColors = {
+        base: colors.info,
+        hover: colors.infoHover,
+        pressed: colors.infoPressed,
+        glow: colors.info,
+        gradient: `linear-gradient(135deg, ${colors.info}, ${colors.infoHover})`,
+        borderGlow: `0 0 15px ${colors.info}40`
+      }
+    }
+
     const baseConfig = {
       primary: {
         base: colors.primary,
@@ -78,21 +121,7 @@ export function useButtonColors() {
         gradient: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryHover})`,
         borderGlow: `0 0 15px ${colors.primary}40`
       },
-      secondary: variants ? {
-        base: variants.secondary.base,
-        hover: variants.secondary.hover,
-        pressed: variants.secondary.pressed,
-        glow: variants.secondary.base,
-        gradient: `linear-gradient(135deg, ${variants.secondary.base}, ${variants.secondary.hover})`,
-        borderGlow: `0 0 15px ${variants.secondary.base}40`
-      } : {
-        base: colors.secondary,
-        hover: colors.secondaryHover,
-        pressed: colors.secondaryPressed,
-        glow: colors.secondary,
-        gradient: `linear-gradient(135deg, ${colors.secondary}, ${colors.secondaryHover})`,
-        borderGlow: `0 0 15px ${colors.secondary}40`
-      },
+      secondary: secondaryColors,
       success: {
         base: colors.success,
         hover: colors.successHover,
@@ -117,21 +146,7 @@ export function useButtonColors() {
         gradient: `linear-gradient(135deg, ${colors.error}, ${colors.errorHover})`,
         borderGlow: `0 0 15px ${colors.error}40`
       },
-      info: variants ? {
-        base: variants.accent.base,
-        hover: variants.accent.hover,
-        pressed: variants.accent.pressed,
-        glow: variants.accent.base,
-        gradient: `linear-gradient(135deg, ${variants.accent.base}, ${variants.accent.hover})`,
-        borderGlow: `0 0 15px ${variants.accent.base}40`
-      } : {
-        base: colors.info,
-        hover: colors.infoHover,
-        pressed: colors.infoPressed,
-        glow: colors.info,
-        gradient: `linear-gradient(135deg, ${colors.info}, ${colors.infoHover})`,
-        borderGlow: `0 0 15px ${colors.info}40`
-      }
+      info: infoColors
     }
 
     return baseConfig
@@ -149,7 +164,7 @@ export function useButtonColors() {
    */
   const getPresetSpecificColors = computed(() => {
     const preset = themePreset.value
-    
+
     switch (preset) {
       case 'cyberpunk':
         return {

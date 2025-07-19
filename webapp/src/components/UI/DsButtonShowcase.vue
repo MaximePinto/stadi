@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import DsButton from './DsButton.vue'
-import DsThemeSelector from './DsThemeSelector.vue'
-import { useDesignSystem } from '@/composables/useDesignSystem'
-import { useButtonColors } from '@/composables/useButtonColors'
+import { DsButton, DsThemeSelector, useDesignSystem, useButtonColors } from '@/design-system'
 
 const { themePreset, effectiveMode } = useDesignSystem()
 const { buttonColors } = useButtonColors()

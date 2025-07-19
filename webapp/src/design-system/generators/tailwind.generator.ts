@@ -5,7 +5,7 @@
  * avec le système de thèmes dynamiques
  */
 
-import { designTokens } from './tokens'
+import { designTokens } from '../foundations/tokens'
 import type { PluginAPI } from 'tailwindcss/types/config'
 
 /**

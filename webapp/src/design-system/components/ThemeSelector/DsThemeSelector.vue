@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { NSelect, NButton, NIcon, NSpace } from 'naive-ui'
-import { useDesignSystem } from '@/composables/useDesignSystem'
+import { useDesignSystem } from '../../composables/useDesignSystem'
+import type { ThemeChangeEvent } from '../../types'
 import {
   SunnyOutline,
   MoonOutline,
   LaptopOutline,
-  ColorPaletteOutline,
   SettingsOutline
 } from '@vicons/ionicons5'
 
@@ -20,10 +19,10 @@ import {
   gaming?: boolean              // Effets visuels gaming
 }
 
- interface Emits {
+interface Emits {
   'mode-change': [mode: 'light' | 'dark' | 'auto']  // Changement de mode
   'preset-change': [preset: string]                 // Changement de preset
-  'theme-change': [theme: object]                   // Tout changement
+  'theme-change': [theme: ThemeChangeEvent]         // Tout changement
 }
 
 // Définition des props avec valeurs par défaut
@@ -90,7 +89,9 @@ const handleModeChange = (mode: 'light' | 'dark' | 'auto') => {
 }
 
 // Gestionnaire pour le changement de préréglage de thème
-const handlePresetChange = (preset: string) => {
+const handlePresetChange = (event: Event) => {
+  const target = event.target as HTMLSelectElement
+  const preset = target.value
   setThemePreset(preset)                               // Met à jour le preset
   emit('preset-change', preset)                        // Émet l'événement
   emit('theme-change', { preset, type: 'preset' })    // Émet l'événement général
@@ -127,96 +128,89 @@ const gamingStyle = computed(() => {
   }
 })
 
-// Taille des composants Naive UI calculée selon la prop size
-const naiveSize = computed(() => {
+// Classes de taille calculées selon la prop size
+const sizeClasses = computed(() => {
   switch (props.size) {
-    case 'small': return 'small'
-    case 'large': return 'large'
-    default: return 'medium'
+    case 'small': return 'ds-theme-size-small'
+    case 'large': return 'ds-theme-size-large'
+    default: return 'ds-theme-size-medium'
   }
 })
 </script>
 
 <template>
   <div
-    :class="gamingClasses"
+    :class="[gamingClasses, sizeClasses]"
     :style="gamingStyle"
     class="ds-theme-selector"
   >
-    <NSpace
-      :size="compact ? 'small' : 'medium'"
-      :vertical="!compact"
-      align="center"
-      justify="center"
+    <div
+      :class="[
+        'ds-theme-container',
+        { 'ds-theme-compact': compact }
+      ]"
     >
       <!-- Sélecteur de mode de thème (☀️🌙💻) -->
       <template v-if="showModeToggle">
-        <NButton
+        <button
           v-for="option in modeOptions"
           :key="option.value"
-          :type="effectiveMode === option.value ? 'primary' : 'default'"
-          :size="naiveSize"
-          :ghost="effectiveMode !== option.value"
           :class="[
             'ds-theme-mode-btn',
             { 'ds-theme-mode-active': effectiveMode === option.value }
           ]"
           :aria-label="option.label"
           @click="handleModeChange(option.value as 'light' | 'dark' | 'auto')"
-          circle
+          type="button"
         >
-          <NIcon>
-            <component :is="option.icon" />
-          </NIcon>
-        </NButton>
+          <component :is="option.icon" />
+        </button>
       </template>
 
       <!-- Bascule rapide light/dark -->
       <template v-if="showModeToggle">
         <div class="ds-theme-divider" />
-        <NButton
-          :type="'default'"
-          :size="naiveSize"
-          ghost
+        <button
           class="ds-theme-toggle-btn"
           aria-label="Basculer thème"
           @click="handleToggleTheme"
+          type="button"
         >
-          <NIcon>
-            <component :is="effectiveMode === 'dark' ? SunnyOutline : MoonOutline" />
-          </NIcon>
-        </NButton>
+          <component :is="effectiveMode === 'dark' ? SunnyOutline : MoonOutline" />
+        </button>
       </template>
 
       <!-- Sélecteur de préréglage -->
       <template v-if="showPresetSelector">
         <div class="ds-theme-divider" />
-        <NSelect
+        <select
           :value="themePreset"
-          :options="presetOptions"
-          :size="naiveSize"
-          placeholder="Choisir un thème"
           class="ds-theme-preset-select"
-          @update:value="handlePresetChange"
-        />
+          @change="handlePresetChange"
+        >
+          <option value="" disabled>Choisir un thème</option>
+          <option
+            v-for="option in presetOptions"
+            :key="option.value"
+            :value="option.value"
+          >
+            {{ option.label }}
+          </option>
+        </select>
       </template>
 
       <!-- Paramètres avancés -->
       <template v-if="showAdvanced">
         <div class="ds-theme-divider" />
-        <NButton
-          type="default"
-          :size="naiveSize"
-          ghost
+        <button
           class="ds-theme-advanced-btn"
           aria-label="Paramètres avancés"
+          type="button"
         >
-          <NIcon>
-            <SettingsOutline />
-          </NIcon>
-        </NButton>
+          <SettingsOutline />
+        </button>
       </template>
-    </NSpace>
+    </div>
   </div>
 </template>
 
@@ -241,6 +235,18 @@ const naiveSize = computed(() => {
   background: var(--ds-bg-base);
 }
 
+.ds-theme-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-spacing-sm);
+}
+
+.ds-theme-compact {
+  flex-direction: column;
+  gap: var(--ds-spacing-xs);
+}
+
 /* ================================ */
 /* BOUTONS DE MODE */
 /* ================================ */
@@ -249,16 +255,28 @@ const naiveSize = computed(() => {
   position: relative;
   overflow: hidden;
   transition: all var(--ds-transition-fast);
+  background: transparent;
+  border: 1px solid var(--ds-border-base);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ds-text-primary);
 }
 
 .ds-theme-mode-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: var(--ds-border-hover);
 }
 
 .ds-theme-mode-active {
   background: var(--ds-color-primary) !important;
   color: white !important;
+  border-color: var(--ds-color-primary) !important;
   box-shadow: 0 0 15px var(--ds-color-primary)40;
 }
 
@@ -275,12 +293,23 @@ const naiveSize = computed(() => {
   position: relative;
   overflow: hidden;
   transition: all var(--ds-transition-fast);
+  background: transparent;
+  border: 1px solid var(--ds-border-base);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ds-text-primary);
 }
 
 .ds-theme-toggle-btn:hover {
   transform: rotate(180deg) scale(1.1);
   background: var(--ds-color-primary) !important;
   color: white !important;
+  border-color: var(--ds-color-primary) !important;
 }
 
 /* ================================ */
@@ -289,12 +318,26 @@ const naiveSize = computed(() => {
 
 .ds-theme-preset-select {
   min-width: 140px;
+  padding: 8px 12px;
+  border: 1px solid var(--ds-border-base);
+  border-radius: var(--ds-radius-md);
+  background: var(--ds-bg-base);
+  color: var(--ds-text-primary);
+  font-size: 14px;
+  cursor: pointer;
   transition: all var(--ds-transition-fast);
 }
 
 .ds-theme-preset-select:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: var(--ds-border-hover);
+}
+
+.ds-theme-preset-select:focus {
+  outline: none;
+  border-color: var(--ds-color-primary);
+  box-shadow: 0 0 0 2px var(--ds-color-primary)20;
 }
 
 /* ================================ */
@@ -305,12 +348,23 @@ const naiveSize = computed(() => {
   position: relative;
   overflow: hidden;
   transition: all var(--ds-transition-fast);
+  background: transparent;
+  border: 1px solid var(--ds-border-base);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ds-text-primary);
 }
 
 .ds-theme-advanced-btn:hover {
   transform: rotate(90deg);
   background: var(--ds-color-secondary) !important;
   color: white !important;
+  border-color: var(--ds-color-secondary) !important;
 }
 
 /* ================================ */
@@ -322,6 +376,76 @@ const naiveSize = computed(() => {
   height: 24px;
   background: var(--ds-border-base);
   margin: 0 var(--ds-spacing-xs);
+}
+
+.ds-theme-compact .ds-theme-divider {
+  width: 100%;
+  height: 1px;
+  margin: var(--ds-spacing-xs) 0;
+}
+
+/* ================================ */
+/* TAILLES */
+/* ================================ */
+
+.ds-theme-size-small .ds-theme-mode-btn,
+.ds-theme-size-small .ds-theme-toggle-btn,
+.ds-theme-size-small .ds-theme-advanced-btn {
+  width: 32px;
+  height: 32px;
+}
+
+.ds-theme-size-small .ds-theme-mode-btn svg,
+.ds-theme-size-small .ds-theme-toggle-btn svg,
+.ds-theme-size-small .ds-theme-advanced-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ds-theme-size-small .ds-theme-preset-select {
+  padding: 6px 10px;
+  font-size: 12px;
+  min-width: 120px;
+}
+
+.ds-theme-size-medium .ds-theme-mode-btn,
+.ds-theme-size-medium .ds-theme-toggle-btn,
+.ds-theme-size-medium .ds-theme-advanced-btn {
+  width: 40px;
+  height: 40px;
+}
+
+.ds-theme-size-medium .ds-theme-mode-btn svg,
+.ds-theme-size-medium .ds-theme-toggle-btn svg,
+.ds-theme-size-medium .ds-theme-advanced-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ds-theme-size-medium .ds-theme-preset-select {
+  padding: 8px 12px;
+  font-size: 14px;
+  min-width: 140px;
+}
+
+.ds-theme-size-large .ds-theme-mode-btn,
+.ds-theme-size-large .ds-theme-toggle-btn,
+.ds-theme-size-large .ds-theme-advanced-btn {
+  width: 48px;
+  height: 48px;
+}
+
+.ds-theme-size-large .ds-theme-mode-btn svg,
+.ds-theme-size-large .ds-theme-toggle-btn svg,
+.ds-theme-size-large .ds-theme-advanced-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.ds-theme-size-large .ds-theme-preset-select {
+  padding: 10px 14px;
+  font-size: 16px;
+  min-width: 160px;
 }
 
 /* ================================ */
@@ -378,6 +502,11 @@ const naiveSize = computed(() => {
     gap: var(--ds-spacing-sm);
   }
 
+  .ds-theme-container {
+    flex-direction: column;
+    gap: var(--ds-spacing-sm);
+  }
+
   .ds-theme-divider {
     width: 100%;
     height: 1px;
@@ -397,5 +526,22 @@ const naiveSize = computed(() => {
 .dark .ds-theme-selector:hover {
   background: var(--ds-bg-soft);
   border-color: var(--ds-border-hover);
+}
+
+/* ================================ */
+/* ACCESSIBILITÉ */
+/* ================================ */
+
+.ds-theme-mode-btn:focus,
+.ds-theme-toggle-btn:focus,
+.ds-theme-advanced-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--ds-color-primary)40;
+}
+
+.ds-theme-mode-btn:active,
+.ds-theme-toggle-btn:active,
+.ds-theme-advanced-btn:active {
+  transform: scale(0.95);
 }
 </style>

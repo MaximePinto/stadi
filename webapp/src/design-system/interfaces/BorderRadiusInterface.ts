@@ -1,4 +1,4 @@
-export interface BorderRadius {
+export interface BorderRadiusInterface {
   none: string
   sm: string
   md: string

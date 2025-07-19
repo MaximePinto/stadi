@@ -1,5 +1,5 @@
 // webapp/tailwind.config.ts
-import dsPreset from './src/design-system/tailwind.preset';
+import dsPreset from './src/design-system/generators/tailwind.preset';
 
 export default {
   content: [

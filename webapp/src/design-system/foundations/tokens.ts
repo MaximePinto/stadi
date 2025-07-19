@@ -12,14 +12,14 @@
 // ================================
 
 import type {
-  ColorScale,
-  SemanticColors,
-  TypographyScale,
-  SpacingScale,
-  BorderRadius,
-  Shadows,
-  DesignTokens,
-  ThemePreset
+  ColorScaleInterface,
+  SemanticColorsInterface,
+  TypographyScaleInterface,
+  SpacingScaleInterface,
+  BorderRadiusInterface,
+  ShadowsInterface,
+  DesignTokensInterface,
+  ThemePresetInterface
 } from '../interfaces'
 
 // ================================
@@ -27,7 +27,7 @@ import type {
 // ================================
 
 // Palette indigo (tes couleurs primaires actuelles)
-const indigo: ColorScale = {
+const indigo: ColorScaleInterface = {
   50: '#eef2ff',
   100: '#e0e7ff',
   200: '#c7d2fe',
@@ -42,7 +42,7 @@ const indigo: ColorScale = {
 }
 
 // Palette slate (tes couleurs secondaires actuelles)
-const slate: ColorScale = {
+const slate: ColorScaleInterface = {
   50: '#f8fafc',
   100: '#f1f5f9',
   200: '#e2e8f0',  // ton textBase actuel
@@ -57,7 +57,7 @@ const slate: ColorScale = {
 }
 
 // Autres palettes pour les couleurs sémantiques
-const blue: ColorScale = {
+const blue: ColorScaleInterface = {
   50: '#eff6ff',
   100: '#dbeafe',
   200: '#bfdbfe',
@@ -71,7 +71,7 @@ const blue: ColorScale = {
   950: '#172554'
 }
 
-const emerald: ColorScale = {
+const emerald: ColorScaleInterface = {
   50: '#ecfdf5',
   100: '#d1fae5',
   200: '#a7f3d0',
@@ -85,7 +85,7 @@ const emerald: ColorScale = {
   950: '#022c22'
 }
 
-const amber: ColorScale = {
+const amber: ColorScaleInterface = {
   50: '#fffbeb',
   100: '#fef3c7',
   200: '#fde68a',
@@ -99,7 +99,7 @@ const amber: ColorScale = {
   950: '#451a03'
 }
 
-const red: ColorScale = {
+const red: ColorScaleInterface = {
   50: '#fef2f2',
   100: '#fee2e2',
   200: '#fecaca',
@@ -113,7 +113,7 @@ const red: ColorScale = {
   950: '#450a0a'
 }
 
-const purple: ColorScale = {
+const purple: ColorScaleInterface = {
   50: '#faf5ff',
   100: '#f3e8ff',
   200: '#e9d5ff',
@@ -131,7 +131,7 @@ const purple: ColorScale = {
 // 3. TOKENS ADAPTÉS À TON STYLE
 // ================================
 
-export const designTokens: DesignTokens = {
+export const designTokens: DesignTokensInterface = {
   colors: {
     // ================================
     // MODE CLAIR - Style gaming adapté
@@ -147,6 +147,11 @@ export const designTokens: DesignTokens = {
       secondary: indigo[100],      // Variante claire du primary pour cohérence
       secondaryHover: indigo[200], // Plus foncé au hover
       secondaryPressed: indigo[300], // Plus foncé au clic
+      
+      // Couleurs de surface et accent
+      surface: slate[50],          // Surface claire
+      text: slate[900],           // Texte principal sombre
+      accent: purple[600],        // Couleur d'accent
 
       // Couleurs sémantiques (adaptées au mode clair)
       info: blue[600],           // Plus foncé pour meilleur contraste
@@ -192,6 +197,11 @@ export const designTokens: DesignTokens = {
       secondary: indigo[900],      // Variante sombre du primary pour cohérence
       secondaryHover: indigo[800], // Plus clair au hover (mode sombre)
       secondaryPressed: indigo[900], // Retour à la base
+      
+      // Couleurs de surface et accent
+      surface: slate[800],         // Surface sombre
+      text: slate[100],           // Texte principal clair
+      accent: purple[400],        // Couleur d'accent adaptée au sombre
 
       // Couleurs sémantiques (adaptées au mode sombre)
       info: blue[400],
@@ -288,10 +298,11 @@ export const designTokens: DesignTokens = {
 // 4. PRESETS ÉTENDUS AVEC TON STYLE
 // ================================
 
-export const themePresets: Record<string, ThemePreset> = {
+export const themePresets: Record<string, ThemePresetInterface> = {
   // Ton thème actuel comme default
   default: {
     name: 'Gaming Indigo',
+    displayName: 'Gaming Indigo',
     description: 'Ton thème actuel - Style gaming avec indigo et slate',
     tokens: designTokens
   },
@@ -299,6 +310,7 @@ export const themePresets: Record<string, ThemePreset> = {
   // Variations basées sur ton style
   cyberpunk: {
     name: 'Cyberpunk',
+    displayName: 'Cyberpunk',
     description: 'Style gaming futuriste avec purple et neon',
     tokens: {
       ...designTokens,
@@ -321,6 +333,7 @@ export const themePresets: Record<string, ThemePreset> = {
 
   ocean: {
     name: 'Ocean Gaming',
+    displayName: 'Ocean Gaming',
     description: 'Style gaming avec des bleus océan',
     tokens: {
       ...designTokens,
@@ -343,6 +356,7 @@ export const themePresets: Record<string, ThemePreset> = {
 
   forest: {
     name: 'Forest Gaming',
+    displayName: 'Forest Gaming',
     description: 'Style gaming avec des verts nature',
     tokens: {
       ...designTokens,
@@ -382,6 +396,6 @@ export function withOpacity(hex: string, opacity: number): string {
   return rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})` : hex
 }
 
-export function getTokensForPreset(preset = 'default'): DesignTokens {
+export function getTokensForPreset(preset = 'default'): DesignTokensInterface {
   return themePresets[preset]?.tokens || designTokens;
 }

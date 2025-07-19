@@ -2,12 +2,8 @@
 // BARREL EXPORTS - INTERFACES PRINCIPALES
 // ================================
 
-// Design System Interfaces
-export type { ColorScale } from './design-system/ColorScale'
-export type { SemanticColors } from './design-system/SemanticColors'
-export type { TypographyScale } from './design-system/TypographyScale'
-export type { SpacingScale } from './design-system/SpacingScale'
-export type { BorderRadius } from './design-system/BorderRadius'
-export type { Shadows } from './design-system/Shadows'
-export type { DesignTokens } from './design-system/DesignTokens'
-export type { ThemePreset } from './design-system/ThemePreset'
+// Les interfaces du design système sont maintenant dans design-system/interfaces/
+// Ce fichier peut être supprimé ou redirigé selon les besoins de l'application
+
+// Redirection vers les nouvelles interfaces du design système
+export * from '../design-system/interfaces'

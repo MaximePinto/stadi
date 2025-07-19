@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { NButton, NIcon } from 'naive-ui'
-import { useDesignSystem } from '@/composables/useDesignSystem'
-import { useButtonColors } from '@/composables/useButtonColors'
+import { useDesignSystem } from '../../composables/useDesignSystem'
+import { useButtonColors } from './useButtonColors'
 
 /**
  * Props for the DsButton component.

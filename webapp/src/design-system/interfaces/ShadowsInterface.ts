@@ -1,4 +1,4 @@
-export interface Shadows {
+export interface ShadowsInterface {
   sm: string
   md: string
   lg: string

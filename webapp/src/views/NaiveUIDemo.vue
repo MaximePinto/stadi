@@ -250,8 +250,7 @@ import {
   NAlert,
   NProgress
 } from 'naive-ui'
-import { useDesignSystem } from '@/composables/useDesignSystem'
-import { themePresets } from '@/design-system/tokens'
+import { useDesignSystem, themePresets } from '@/design-system'
 
 const {
   themePreset,

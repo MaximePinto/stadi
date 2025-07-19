@@ -1,4 +1,4 @@
-export interface SpacingScale {
+export interface SpacingScaleInterface {
   xs: string
   sm: string
   md: string

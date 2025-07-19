@@ -325,8 +325,8 @@
 </template>
 
 <script setup lang="ts">
-import { useDesignSystem } from '@/composables/useDesignSystem'
-import { themePresets } from '@/design-system/tokens'
+import { useDesignSystem } from '@/design-system'
+import { themePresets } from '@/design-system/foundations/tokens'
 
 const {
   themePreset,

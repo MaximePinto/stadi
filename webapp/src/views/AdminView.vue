@@ -2,8 +2,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
-import DsButton from '@/components/UI/DsButton.vue'
-import { useDesignSystem } from '@/composables/useDesignSystem'
+import { DsButton, useDesignSystem } from '@/design-system'
 // Import des icônes pour les boutons
 import {
   PersonOutline,

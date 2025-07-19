@@ -1,4 +1,4 @@
-export interface TypographyScale {
+export interface TypographyScaleInterface {
   xs: { fontSize: string; lineHeight: string }
   sm: { fontSize: string; lineHeight: string }
   base: { fontSize: string; lineHeight: string }

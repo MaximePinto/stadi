@@ -188,8 +188,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { NButton } from 'naive-ui'
-import { DsButton, DsThemeSelector, DsButtonShowcase } from '@/components/UI'
-import { useDesignSystem } from '@/composables/useDesignSystem'
+import { DsButton, DsThemeSelector, useDesignSystem } from '@/design-system'
+import { DsButtonShowcase } from '@/components/UI'
+import type { ThemeChangeEvent } from '../types'
 
 // Utilisation du système de design
 const { effectiveMode } = useDesignSystem()
@@ -206,12 +207,6 @@ const handleModeChange = (mode: string) => {
 const handlePresetChange = (preset: string) => {
   addLog('PRESET', `Preset changé vers: ${preset}`)
 }
-
-// Type pour l'événement theme-change
-type ThemeChangeEvent =
-  | { mode: 'light' | 'dark' | 'auto'; type: 'mode' }
-  | { preset: string; type: 'preset' }
-  | { type: 'toggle' }
 
 const handleThemeChange = (theme: ThemeChangeEvent) => {
   addLog('THEME', `Changement de thème: ${JSON.stringify(theme)}`)
