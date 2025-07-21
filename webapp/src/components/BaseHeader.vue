@@ -27,12 +27,7 @@ const user = useUserStore()
 
       <div class="flex items-center space-x-4">
         <!-- Sélecteur de thème -->
-        <DsThemeSelector
-          :compact="true"
-          :size="'small'"
-          :show-advanced="false"
-          class="theme-selector-header"
-        />
+        <DsThemeSelector/>
 
         <!-- Bouton de connexion/déconnexion -->
         <div>

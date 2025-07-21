@@ -33,7 +33,7 @@
         Variantes du Sélecteur
       </h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="theme-variants-grid">
         <!-- Sélecteur compact -->
         <div class="theme-variant-card">
           <h3 class="text-lg font-medium text-text-primary mb-2">Compact</h3>
@@ -258,6 +258,17 @@ const clearLogs = () => {
 .theme-variant-card:hover {
   border-color: var(--ds-border-hover);
   box-shadow: var(--ds-shadow-md);
+}
+
+.theme-variants-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.theme-variant-card {
+  flex: 0 0 auto; /* Taille naturelle du contenu */
+  min-width: 300px; /* Minimum pour éviter que ce soit trop petit */
 }
 
 .theme-test-zone {
