@@ -7,7 +7,7 @@
 
 import { computed, readonly } from 'vue'
 import { useDesignSystem } from '../../composables/useDesignSystem'
-import type { SemanticColorsInterface } from '../../interfaces'
+import type { SemanticColors } from '../../types'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info'
 

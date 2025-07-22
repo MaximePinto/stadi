@@ -1,1 +1,0 @@
-export type ThemeModeInterface = 'light' | 'dark' | 'auto'

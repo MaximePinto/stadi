@@ -12,7 +12,7 @@
 import { ref, computed, watch, readonly } from 'vue'
 import { darkTheme, useOsTheme, type GlobalTheme } from 'naive-ui'
 import { designTokens, themePresets } from '../foundations/tokens'
-import type { DesignTokensInterface, SemanticColorsInterface } from '../interfaces'
+import type { DesignTokens, SemanticColors } from '../types'
 import { generateNaiveUIThemeOverrides } from '../generators/naive-ui.generator'
 
 // ================================
@@ -25,7 +25,7 @@ export type ThemePresetKey = keyof typeof themePresets
 export interface ThemeState {
   mode: ThemeMode
   preset: ThemePresetKey
-  customTokens?: Partial<DesignTokensInterface>
+  customTokens?: Partial<DesignTokens>
 }
 
 // ================================
@@ -64,7 +64,7 @@ export function useDesignSystem() {
   /**
    * Tokens de design actuels (avec preset et customizations)
    */
-  const currentTokens = computed<DesignTokensInterface>(() => {
+  const currentTokens = computed<DesignTokens>(() => {
     const baseTokens = themePresets[themeState.value.preset]?.tokens || designTokens
 
     // Fusion avec les customizations si présentes
@@ -78,7 +78,7 @@ export function useDesignSystem() {
   /**
    * Couleurs pour le mode actuel
    */
-  const currentColors = computed<SemanticColorsInterface>(() => {
+  const currentColors = computed<SemanticColors>(() => {
     return currentTokens.value.colors[effectiveMode.value]
   })
 
@@ -201,7 +201,7 @@ export function useDesignSystem() {
   /**
    * Met à jour les couleurs personnalisées
    */
-  const updateCustomColors = (mode: 'light' | 'dark', colors: Partial<SemanticColorsInterface>) => {
+  const updateCustomColors = (mode: 'light' | 'dark', colors: Partial<SemanticColors>) => {
     if (!themeState.value.customTokens) {
       themeState.value.customTokens = {
         colors: {
@@ -263,7 +263,7 @@ export function useDesignSystem() {
   /**
    * Obtient une couleur CSS pour le mode actuel
    */
-  const getColor = (colorKey: keyof SemanticColorsInterface): string => {
+  const getColor = (colorKey: keyof SemanticColors): string => {
     return currentColors.value[colorKey]
   }
 
@@ -373,7 +373,7 @@ export function useDesignSystem() {
 /**
  * Fusionne deux objets de tokens en profondeur
  */
-function mergeTokens(base: DesignTokensInterface, custom: Partial<DesignTokensInterface>): DesignTokensInterface {
+function mergeTokens(base: DesignTokens, custom: Partial<DesignTokens>): DesignTokens {
   const result = JSON.parse(JSON.stringify(base)) // Deep clone
 
   // Fusion récursive

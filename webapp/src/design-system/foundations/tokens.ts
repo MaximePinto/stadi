@@ -12,22 +12,22 @@
 // ================================
 
 import type {
-  ColorScaleInterface,
-  SemanticColorsInterface,
-  TypographyScaleInterface,
-  SpacingScaleInterface,
-  BorderRadiusInterface,
-  ShadowsInterface,
-  DesignTokensInterface,
-  ThemePresetInterface
-} from '../interfaces'
+  ColorScale,
+  SemanticColors,
+  TypographyScale,
+  SpacingScale,
+  BorderRadius,
+  Shadows,
+  DesignTokens,
+  ThemePreset
+} from '../types'
 
 // ================================
 // 2. PALETTES BASÉES SUR TES COULEURS
 // ================================
 
 // Palette indigo (tes couleurs primaires actuelles)
-const indigo: ColorScaleInterface = {
+const indigo: ColorScale = {
   50: '#eef2ff',
   100: '#e0e7ff',
   200: '#c7d2fe',
@@ -42,7 +42,7 @@ const indigo: ColorScaleInterface = {
 }
 
 // Palette slate (tes couleurs secondaires actuelles)
-const slate: ColorScaleInterface = {
+const slate: ColorScale = {
   50: '#f8fafc',
   100: '#f1f5f9',
   200: '#e2e8f0',  // ton textBase actuel
@@ -57,7 +57,7 @@ const slate: ColorScaleInterface = {
 }
 
 // Autres palettes pour les couleurs sémantiques
-const blue: ColorScaleInterface = {
+const blue: ColorScale = {
   50: '#eff6ff',
   100: '#dbeafe',
   200: '#bfdbfe',
@@ -71,7 +71,7 @@ const blue: ColorScaleInterface = {
   950: '#172554'
 }
 
-const emerald: ColorScaleInterface = {
+const emerald: ColorScale = {
   50: '#ecfdf5',
   100: '#d1fae5',
   200: '#a7f3d0',
@@ -85,7 +85,7 @@ const emerald: ColorScaleInterface = {
   950: '#022c22'
 }
 
-const amber: ColorScaleInterface = {
+const amber: ColorScale = {
   50: '#fffbeb',
   100: '#fef3c7',
   200: '#fde68a',
@@ -99,7 +99,7 @@ const amber: ColorScaleInterface = {
   950: '#451a03'
 }
 
-const red: ColorScaleInterface = {
+const red: ColorScale = {
   50: '#fef2f2',
   100: '#fee2e2',
   200: '#fecaca',
@@ -113,7 +113,7 @@ const red: ColorScaleInterface = {
   950: '#450a0a'
 }
 
-const purple: ColorScaleInterface = {
+const purple: ColorScale = {
   50: '#faf5ff',
   100: '#f3e8ff',
   200: '#e9d5ff',
@@ -131,7 +131,7 @@ const purple: ColorScaleInterface = {
 // 3. TOKENS ADAPTÉS À TON STYLE
 // ================================
 
-export const designTokens: DesignTokensInterface = {
+export const designTokens: DesignTokens = {
   colors: {
     // ================================
     // MODE CLAIR - Style gaming adapté
@@ -298,7 +298,7 @@ export const designTokens: DesignTokensInterface = {
 // 4. PRESETS ÉTENDUS AVEC TON STYLE
 // ================================
 
-export const themePresets: Record<string, ThemePresetInterface> = {
+export const themePresets: Record<string, ThemePreset> = {
   // Ton thème actuel comme default
   default: {
     name: 'Gaming Indigo',
@@ -396,6 +396,6 @@ export function withOpacity(hex: string, opacity: number): string {
   return rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})` : hex
 }
 
-export function getTokensForPreset(preset = 'default'): DesignTokensInterface {
+export function getTokensForPreset(preset = 'default'): DesignTokens {
   return themePresets[preset]?.tokens || designTokens;
 }

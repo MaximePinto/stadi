@@ -14,7 +14,6 @@ export { createNaiveUITheme } from './generators/naive-ui.generator'
 export { generateTailwindConfig } from './generators/tailwind.generator'
 
 // Types & Interfaces
-export * from './interfaces'
 export * from './types'
 
 // Default export pour faciliter l'import

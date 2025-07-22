@@ -9,83 +9,70 @@
       </p>
     </div>
 
-    <!-- Sélecteur de thème principal -->
-    <div class="theme-demo-section">
-      <h2 class="text-xl font-semibold text-text-primary mb-4">
-        Sélecteur de Thème Principal
-      </h2>
-      <div class="flex flex-wrap gap-4 items-center">
-        <DsThemeSelector
-          @mode-change="handleModeChange"
-          @preset-change="handlePresetChange"
-          @theme-change="handleThemeChange"
-        />
+    <!-- Rendu dynamique des composants -->
+    <div
+      v-for="section in componentVariants"
+      :key="section.title"
+      class="theme-demo-section"
+    >
+      <div class="section-header mb-4">
+        <div class="flex items-center gap-2 mb-2">
+          <h2 class="text-xl font-semibold text-text-primary">
+            {{ section.title }}
+          </h2>
+          <span class="category-badge">{{ section.category }}</span>
+          <span v-if="section.experimental" class="experimental-badge">Expérimental</span>
+        </div>
+        <p v-if="section.description" class="text-text-secondary mb-2">
+          {{ section.description }}
+        </p>
+        <div v-if="section.tags" class="flex flex-wrap gap-1 mb-2">
+          <span v-for="tag in section.tags" :key="tag" class="tag">{{ tag }}</span>
+        </div>
+      </div>
 
+      <!-- Affichage inline avec informations contextuelles -->
+      <div v-if="section.layout === 'inline'" class="flex flex-wrap gap-4 items-center">
+        <component
+          :is="section.component"
+          v-for="(variant, index) in section.variants"
+          :key="`${section.title}-${index}`"
+          v-bind="variant.props"
+          v-on="variant.events || {}"
+        />
+        
         <div class="text-sm text-text-secondary">
           Mode actuel: <span class="font-medium">{{ currentMode }}</span>
         </div>
       </div>
-    </div>
 
-    <!-- Variantes du sélecteur -->
-    <div class="theme-demo-section">
-      <h2 class="text-xl font-semibold text-text-primary mb-4">
-        Variantes du Sélecteur
-      </h2>
-
-      <div class="theme-variants-grid">
-        <!-- Sélecteur compact -->
-        <div class="theme-variant-card">
-          <h3 class="text-lg font-medium text-text-primary mb-2">Compact</h3>
-          <DsThemeSelector
-            :compact="true"
-            :size="'small'"
-            :show-advanced="false"
-          />
-        </div>
-
-        <!-- Sélecteur large -->
-        <div class="theme-variant-card">
-          <h3 class="text-lg font-medium text-text-primary mb-2">Large</h3>
-          <DsThemeSelector
-            :size="'large'"
-            :show-advanced="true"
-          />
-        </div>
-
-        <!-- Sélecteur sans gaming -->
-        <div class="theme-variant-card">
-          <h3 class="text-lg font-medium text-text-primary mb-2">Sans Gaming</h3>
-          <DsThemeSelector
-            :gaming="false"
-            :show-preset-selector="false"
-          />
-        </div>
-
-        <!-- Sélecteur mode uniquement -->
-        <div class="theme-variant-card">
-          <h3 class="text-lg font-medium text-text-primary mb-2">Mode uniquement</h3>
-          <DsThemeSelector
-            :show-preset-selector="false"
-            :show-advanced="false"
-          />
-        </div>
-
-        <!-- Sélecteur preset uniquement -->
-        <div class="theme-variant-card">
-          <h3 class="text-lg font-medium text-text-primary mb-2">Preset uniquement</h3>
-          <DsThemeSelector
-            :show-mode-toggle="false"
-            :show-advanced="false"
-          />
-        </div>
-
-        <!-- Sélecteur complet -->
-        <div class="theme-variant-card">
-          <h3 class="text-lg font-medium text-text-primary mb-2">Complet</h3>
-          <DsThemeSelector
-            :show-advanced="true"
-            :gaming="true"
+      <!-- Grille de variantes -->
+      <div v-else class="theme-variants-grid">
+        <div
+          v-for="(variant, index) in section.variants"
+          :key="`${section.title}-${index}`"
+          class="theme-variant-card"
+        >
+          <div class="variant-header mb-3">
+            <div class="flex items-center gap-2 mb-1">
+              <h3 class="text-lg font-medium text-text-primary">
+                {{ variant.title }}
+              </h3>
+              <span v-if="variant.complexity" class="complexity-badge">
+                {{ variant.complexity }}
+              </span>
+            </div>
+            <p v-if="variant.description" class="text-sm text-text-secondary mb-2">
+              {{ variant.description }}
+            </p>
+            <div v-if="variant.tags" class="flex flex-wrap gap-1">
+              <span v-for="tag in variant.tags" :key="tag" class="tag tag-small">{{ tag }}</span>
+            </div>
+          </div>
+          <component
+            :is="section.component"
+            v-bind="variant.props"
+            v-on="variant.events || {}"
           />
         </div>
       </div>
@@ -153,78 +140,23 @@
       <DsButtonShowcase />
     </div>
 
-    <!-- Logs des événements -->
-    <div class="theme-demo-section">
-      <h2 class="text-xl font-semibold text-text-primary mb-4">
-        Logs des Événements
-      </h2>
-
-      <div class="theme-logs">
-        <div class="flex justify-between items-center mb-4">
-          <span class="text-text-secondary">Événements récents:</span>
-          <n-button size="small" @click="clearLogs">Effacer</n-button>
-        </div>
-
-        <div class="logs-container">
-          <div
-            v-for="(log, index) in logs"
-            :key="index"
-            class="log-item"
-          >
-            <span class="log-time">{{ log.time }}</span>
-            <span class="log-type">{{ log.type }}</span>
-            <span class="log-message">{{ log.message }}</span>
-          </div>
-
-          <div v-if="logs.length === 0" class="text-text-secondary text-center py-8">
-            Aucun événement pour le moment
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { NButton } from 'naive-ui'
-import { DsButton, DsThemeSelector, useDesignSystem } from '@/design-system'
+import { computed } from 'vue'
+import { DsButton, useDesignSystem } from '@/design-system'
 import { DsButtonShowcase } from '@/components/UI'
-import type { ThemeChangeEvent } from '../types'
+import { themeDemoConfig } from './config/theme-demo-config'
 
 // Utilisation du système de design
 const { effectiveMode } = useDesignSystem()
 
 // État local
-const logs = ref<Array<{time: string, type: string, message: string}>>([])
 const currentMode = computed(() => effectiveMode.value)
 
-// Gestionnaires d'événements
-const handleModeChange = (mode: string) => {
-  addLog('MODE', `Mode changé vers: ${mode}`)
-}
-
-const handlePresetChange = (preset: string) => {
-  addLog('PRESET', `Preset changé vers: ${preset}`)
-}
-
-const handleThemeChange = (theme: ThemeChangeEvent) => {
-  addLog('THEME', `Changement de thème: ${JSON.stringify(theme)}`)
-}
-
-const addLog = (type: string, message: string) => {
-  const time = new Date().toLocaleTimeString()
-  logs.value.unshift({ time, type, message })
-
-  // Garder seulement les 10 derniers logs
-  if (logs.value.length > 10) {
-    logs.value = logs.value.slice(0, 10)
-  }
-}
-
-const clearLogs = () => {
-  logs.value = []
-}
+// Configuration des variantes de composants (externalisée)
+const componentVariants = themeDemoConfig
 </script>
 
 <style scoped>
@@ -284,47 +216,59 @@ const clearLogs = () => {
   border-radius: var(--ds-radius-md);
 }
 
-.theme-logs {
-  background: var(--ds-bg-base);
-  border-radius: var(--ds-radius-md);
-  padding: var(--ds-spacing-lg);
-}
-
-.logs-container {
-  max-height: 300px;
-  overflow-y: auto;
-  border: 1px solid var(--ds-border-base);
+/* Nouveaux styles pour les metadata */
+.category-badge {
+  background: var(--ds-color-primary);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
   border-radius: var(--ds-radius-sm);
-  background: var(--ds-bg-mute);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.log-item {
-  display: flex;
-  gap: var(--ds-spacing-md);
-  padding: var(--ds-spacing-sm) var(--ds-spacing-md);
-  border-bottom: 1px solid var(--ds-border-base);
-  font-family: monospace;
-  font-size: 0.875rem;
-}
-
-.log-item:last-child {
-  border-bottom: none;
-}
-
-.log-time {
-  color: var(--ds-text-secondary);
-  min-width: 80px;
-}
-
-.log-type {
-  color: var(--ds-color-primary);
-  font-weight: 600;
-  min-width: 60px;
-}
-
-.log-message {
+.experimental-badge {
+  background: var(--ds-color-warning);
   color: var(--ds-text-primary);
-  flex: 1;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--ds-radius-sm);
+  font-weight: 500;
+}
+
+.complexity-badge {
+  background: var(--ds-bg-mute);
+  color: var(--ds-text-secondary);
+  font-size: 0.7rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--ds-radius-sm);
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.tag {
+  background: var(--ds-bg-mute);
+  color: var(--ds-text-secondary);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--ds-radius-sm);
+  font-weight: 400;
+}
+
+.tag-small {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.3rem;
+}
+
+.section-header {
+  border-bottom: 1px solid var(--ds-border-base);
+  padding-bottom: var(--ds-spacing-sm);
+}
+
+.variant-header {
+  border-bottom: 1px solid var(--ds-border-mute);
+  padding-bottom: var(--ds-spacing-xs);
 }
 
 /* Responsive */
@@ -337,14 +281,5 @@ const clearLogs = () => {
     padding: var(--ds-spacing-md);
   }
 
-  .log-item {
-    flex-direction: column;
-    gap: var(--ds-spacing-xs);
-  }
-
-  .log-time,
-  .log-type {
-    min-width: auto;
-  }
 }
 </style>

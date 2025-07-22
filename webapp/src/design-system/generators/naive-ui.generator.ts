@@ -7,14 +7,14 @@
 
 import { type GlobalThemeOverrides } from 'naive-ui'
 import { designTokens } from '../foundations/tokens'
-import type { DesignTokensInterface, SemanticColorsInterface } from '../interfaces'
+import type { DesignTokens, SemanticColors } from '../types'
 
 /**
  * Génère les overrides Naive UI pour un mode donné
  */
 export function generateNaiveUIThemeOverrides(
   mode: 'light' | 'dark' = 'light',
-  customTokens?: DesignTokensInterface
+  customTokens?: DesignTokens
 ): GlobalThemeOverrides {
   const tokens = customTokens || designTokens
   const colors = tokens.colors[mode]
@@ -353,7 +353,7 @@ export function generateNaiveUIThemeOverrides(
 /**
  * Crée un thème Naive UI complet avec mode clair et sombre
  */
-export function createNaiveUITheme(customTokens?: DesignTokensInterface) {
+export function createNaiveUITheme(customTokens?: DesignTokens) {
   return {
     light: generateNaiveUIThemeOverrides('light', customTokens),
     dark: generateNaiveUIThemeOverrides('dark', customTokens)
