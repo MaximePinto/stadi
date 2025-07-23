@@ -140,6 +140,7 @@ export function useDesignSystem() {
       '--ds-border-base': colors.border,
       '--ds-border-hover': colors.borderHover,
       '--ds-border-focus': colors.borderFocus,
+      '--ds-border-mute': colors.backgroundMute, // Utilise backgroundMute comme border-mute
 
       // Espacements
       '--ds-spacing-xs': tokens.spacing.xs,
@@ -147,17 +148,26 @@ export function useDesignSystem() {
       '--ds-spacing-md': tokens.spacing.md,
       '--ds-spacing-lg': tokens.spacing.lg,
       '--ds-spacing-xl': tokens.spacing.xl,
+      '--ds-spacing-2xl': tokens.spacing['2xl'],
+      '--ds-spacing-3xl': tokens.spacing['3xl'],
+      '--ds-spacing-4xl': tokens.spacing['4xl'],
 
       // Border radius
+      '--ds-radius-none': tokens.borderRadius.none,
       '--ds-radius-sm': tokens.borderRadius.sm,
       '--ds-radius-md': tokens.borderRadius.md,
       '--ds-radius-lg': tokens.borderRadius.lg,
+      '--ds-radius-xl': tokens.borderRadius.xl,
+      '--ds-radius-full': tokens.borderRadius.full,
 
       // Ombres
       '--ds-shadow-sm': tokens.shadows.sm,
       '--ds-shadow-md': tokens.shadows.md,
       '--ds-shadow-lg': tokens.shadows.lg,
+      '--ds-shadow-xl': tokens.shadows.xl,
       '--ds-shadow-glow': tokens.shadows.glow,
+      '--ds-shadow-glow-primary': tokens.shadows.glowPrimary,
+      '--ds-shadow-glow-secondary': tokens.shadows.glowSecondary,
 
       // Transitions
       '--ds-transition-fast': tokens.transitions.fast,
