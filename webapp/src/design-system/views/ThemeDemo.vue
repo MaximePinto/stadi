@@ -13,17 +13,28 @@
 
     <!-- Boucle sur chaque groupe de composants -->
     <div
-      v-for="group in componentVariants"
+      v-for="(group, index) in componentVariants"
       :key="group.title"
       class="theme-demo-section"
     >
       <!-- En-tête du groupe -->
       <div class="section-header mb-4">
-        <div class="flex items-center gap-2 mb-2">
-          <h2 class="text-xl font-semibold text-text-primary">
-            {{ group.title }}
-          </h2>
-          <span class="category-badge">{{ group.category }}</span>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 mb-2">
+            <h2 class="text-xl font-semibold text-text-primary">
+              {{ group.title }}
+            </h2>
+            <span class="category-badge">{{ group.category }}</span>
+          </div>
+          <button 
+            @click="toggleSection(index)"
+            class="collapse-toggle"
+            :class="{ 'rotated': isSectionCollapsed(index) }"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M4 6l4 4 4-4H4z"/>
+            </svg>
+          </button>
         </div>
         <p v-if="group.description" class="text-text-secondary mb-2">
           {{ group.description }}
@@ -34,7 +45,10 @@
       </div>
 
       <!-- Structure groupée : Principal + Variantes -->
-      <div class="component-group-container">
+      <div 
+        class="component-group-container"
+        :class="{ 'collapsed': isSectionCollapsed(index) }"
+      >
         <!-- Bloc Principal (si il y a des variantes) -->
         <div v-if="group.mainSection.variants.length > 0" class="component-main-section">
           <h3 class="text-lg font-medium text-text-primary mb-3">{{ group.mainSection.title }}</h3>
@@ -141,7 +155,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useDesignSystem } from '@/design-system'
 import { themeDemoConfig } from './config/theme-demo-config'
 
@@ -150,6 +164,23 @@ const { effectiveMode } = useDesignSystem()
 
 // État local
 const currentMode = computed(() => effectiveMode.value)
+
+// État de collapse pour chaque section (basé sur l'index)
+const collapsedSections = ref<Set<number>>(new Set())
+
+// Fonction pour basculer l'état de collapse d'une section
+const toggleSection = (index: number) => {
+  if (collapsedSections.value.has(index)) {
+    collapsedSections.value.delete(index)
+  } else {
+    collapsedSections.value.add(index)
+  }
+}
+
+// Vérifier si une section est collapsed
+const isSectionCollapsed = (index: number) => {
+  return collapsedSections.value.has(index)
+}
 
 // Configuration des variantes de composants (externalisée)
 const componentVariants = themeDemoConfig
@@ -282,6 +313,35 @@ console.log(componentVariants)
   padding-bottom: var(--ds-spacing-sm);
 }
 
+/* Styles pour le bouton de collapse */
+.collapse-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--ds-bg-soft);
+  border: 1px solid var(--ds-border-base);
+  border-radius: var(--ds-radius-sm);
+  color: var(--ds-text-secondary);
+  cursor: pointer;
+  transition: all var(--ds-transition-fast);
+}
+
+.collapse-toggle:hover {
+  background: var(--ds-bg-mute);
+  border-color: var(--ds-border-hover);
+  color: var(--ds-text-primary);
+}
+
+.collapse-toggle svg {
+  transition: transform var(--ds-transition-fast);
+}
+
+.collapse-toggle.rotated svg {
+  transform: rotate(-180deg);
+}
+
 .variant-header {
   /* Plus de border-bottom pour unifier les blocs */
   margin-bottom: var(--ds-spacing-sm);
@@ -305,6 +365,17 @@ console.log(componentVariants)
   display: flex;
   flex-direction: column;
   gap: var(--ds-spacing-xl);
+  overflow: hidden;
+  transition: max-height var(--ds-transition-normal) ease-out, opacity var(--ds-transition-fast) ease-out;
+  max-height: 2000px; /* Valeur assez haute pour le contenu normal */
+  opacity: 1;
+}
+
+.component-group-container.collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin: 0;
+  padding: 0;
 }
 
 .component-main-section {

@@ -3,6 +3,7 @@
  * Regroupe tous les types liés aux composants du design system
  */
 
+import type { Component } from 'vue'
 import type { ThemeMode, ThemeChangeEvent } from './theme'
 
 // ============================================================================
@@ -52,7 +53,7 @@ export interface DsButtonProps {
   size?: ComponentSize
   disabled?: boolean
   loading?: boolean
-  icon?: any
+  icon?: string | Component
   ghost?: boolean
   gaming?: boolean
   type?: ButtonType
