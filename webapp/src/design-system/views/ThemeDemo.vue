@@ -2,10 +2,10 @@
   <div class="theme-demo">
     <div class="theme-demo-header">
       <h1 class="text-3xl font-bold text-text-primary mb-4">
-        🎨 Démonstration du Sélecteur de Thème
+        🎨 Démonstration du Design System
       </h1>
       <p class="text-text-secondary mb-8">
-        Testez les différentes fonctionnalités du système de theming unifié
+        Explorez tous les composants et leurs variantes dans différents thèmes
       </p>
     </div>
 
@@ -40,7 +40,7 @@
           v-bind="variant.props"
           v-on="variant.events || {}"
         />
-        
+
         <div class="text-sm text-text-secondary">
           Mode actuel: <span class="font-medium">{{ currentMode }}</span>
         </div>
@@ -77,76 +77,12 @@
         </div>
       </div>
     </div>
-
-    <!-- Zone de test des thèmes -->
-    <div class="theme-demo-section">
-      <h2 class="text-xl font-semibold text-text-primary mb-4">
-        Zone de Test des Thèmes
-      </h2>
-
-      <div class="theme-test-zone">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Composants de test -->
-          <div class="theme-test-card">
-            <h3 class="text-lg font-medium mb-4">Composants Design System</h3>
-            <div class="space-y-4">
-              <DsButton text="Bouton Primaire" variant="primary" />
-              <DsButton text="Bouton Secondaire" variant="secondary" />
-              <DsButton text="Bouton Succès" variant="success" />
-              <DsButton text="Bouton Warning" variant="warning" />
-              <DsButton text="Bouton Erreur" variant="error" />
-            </div>
-          </div>
-
-          <!-- Composants Naive UI -->
-          <div class="theme-test-card">
-            <h3 class="text-lg font-medium mb-4">Composants Naive UI</h3>
-            <div class="space-y-4">
-              <n-button type="primary">Bouton Primaire</n-button>
-              <n-button type="default">Bouton Défaut</n-button>
-              <n-button type="success">Bouton Succès</n-button>
-              <n-button type="warning">Bouton Warning</n-button>
-              <n-button type="error">Bouton Erreur</n-button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Classes Tailwind -->
-        <div class="theme-test-card mt-6">
-          <h3 class="text-lg font-medium mb-4">Classes Tailwind</h3>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="p-4 bg-bg-base border border-border-base rounded-radius-md">
-              <p class="text-text-primary">bg-bg-base</p>
-            </div>
-            <div class="p-4 bg-bg-soft border border-border-base rounded-radius-md">
-              <p class="text-text-primary">bg-bg-soft</p>
-            </div>
-            <div class="p-4 bg-bg-mute border border-border-base rounded-radius-md">
-              <p class="text-text-primary">bg-bg-mute</p>
-            </div>
-            <div class="p-4 bg-primary text-white rounded-radius-md">
-              <p>bg-primary</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Showcase des boutons modernes -->
-    <div class="theme-demo-section">
-      <h2 class="text-xl font-semibold text-text-primary mb-4">
-        🎨 Showcase des Boutons Modernes
-      </h2>
-      <DsButtonShowcase />
-    </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { DsButton, useDesignSystem } from '@/design-system'
-import { DsButtonShowcase } from '@/components/UI'
+import { useDesignSystem } from '@/design-system'
 import { themeDemoConfig } from './config/theme-demo-config'
 
 // Utilisation du système de design
