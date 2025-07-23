@@ -8,9 +8,9 @@
 // ============================================================================
 
 /**
- * Gestionnaire d'événements générique
+ * Gestionnaire d'événements générique pour les démos
  */
-export type EventHandler = (...args: unknown[]) => void
+export type DemoEventHandler = (...args: unknown[]) => void
 
 /**
  * Catégories de composants pour l'organisation
@@ -40,7 +40,9 @@ export interface ComponentVariant {
   /** Props à passer au composant */
   props: Record<string, unknown>
   /** Événements à écouter */
-  events?: Record<string, EventHandler>
+  events?: Record<string, DemoEventHandler>
+  /** Template HTML pour le slot (optionnel) */
+  template?: string
   /** Description courte de la variante */
   description?: string
   /** Tags pour faciliter la recherche */

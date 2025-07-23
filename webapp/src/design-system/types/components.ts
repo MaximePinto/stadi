@@ -3,6 +3,8 @@
  * Regroupe tous les types liés aux composants du design system
  */
 
+import type { ThemeMode, ThemeChangeEvent } from './theme'
+
 // ============================================================================
 // TYPES DE BASE ET UTILITAIRES
 // ============================================================================
@@ -10,7 +12,7 @@
 /**
  * Gestionnaire d'événements générique
  */
-export type EventHandler = (...args: unknown[]) => void
+export type ComponentEventHandler = (...args: unknown[]) => void
 
 /**
  * Tailles communes aux composants
@@ -117,17 +119,14 @@ export interface DsThemeSelectorEmits {
 // ============================================================================
 
 /**
- * Mode de thème
+ * Mode de thème - défini dans theme.ts
  */
-export type ThemeMode = 'light' | 'dark' | 'auto'
+// export type ThemeMode = 'light' | 'dark' | 'auto' // Supprimé pour éviter la duplication
 
 /**
- * Événement de changement de thème
+ * Événement de changement de thème - défini dans theme.ts
  */
-export type ThemeChangeEvent =
-  | { mode: ThemeMode; type: 'mode' }
-  | { preset: string; type: 'preset' }
-  | { type: 'toggle' }
+// export type ThemeChangeEvent = ... // Supprimé pour éviter la duplication
 
 // ============================================================================
 // TYPES POUR LE SYSTÈME DE COULEURS DES COMPOSANTS

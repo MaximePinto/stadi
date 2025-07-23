@@ -153,8 +153,8 @@ export function generateTailwindConfig() {
             transition: 'var(--ds-transition-fast)',
             cursor: 'pointer',
             border: '1px solid transparent',
-            fontSize: theme('fontSize.base')[0],
-            lineHeight: theme('fontSize.base')[1].lineHeight,
+            fontSize: theme('fontSize.body')?.[0] || '1rem',
+            lineHeight: theme('fontSize.body')?.[1]?.lineHeight || '1.5',
 
             '&:disabled': {
               opacity: '0.5',
@@ -165,14 +165,14 @@ export function generateTailwindConfig() {
           // Tailles
           '.btn-sm': {
             padding: 'var(--ds-spacing-sm) var(--ds-spacing-md)',
-            fontSize: theme('fontSize.sm')[0],
+            fontSize: theme('fontSize.caption')?.[0] || '0.875rem',
           },
           '.btn-md': {
             padding: 'var(--ds-spacing-sm) var(--ds-spacing-lg)',
           },
           '.btn-lg': {
             padding: 'var(--ds-spacing-md) var(--ds-spacing-xl)',
-            fontSize: theme('fontSize.lg')[0],
+            fontSize: theme('fontSize.h5')?.[0] || '1.125rem',
           },
 
           // Variantes de couleur (UNE SEULE VERSION)

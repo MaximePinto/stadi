@@ -25,34 +25,34 @@ export function generateNaiveUIThemeOverrides(
     // ================================
     common: {
       // Couleurs primaires
-      primaryColor: colors.primary,
+      primaryColor: colors.primaryBase,
       primaryColorHover: colors.primaryHover,
       primaryColorPressed: colors.primaryPressed,
-      primaryColorSuppl: colors.primary,
+      primaryColorSuppl: colors.primaryBase,
 
       // Couleurs d'information
-      infoColor: colors.info,
+      infoColor: colors.infoBase,
       infoColorHover: colors.infoHover,
       infoColorPressed: colors.infoPressed,
-      infoColorSuppl: colors.info,
+      infoColorSuppl: colors.infoBase,
 
       // Couleurs de succès
-      successColor: colors.success,
+      successColor: colors.successBase,
       successColorHover: colors.successHover,
       successColorPressed: colors.successPressed,
-      successColorSuppl: colors.success,
+      successColorSuppl: colors.successBase,
 
       // Couleurs d'avertissement
-      warningColor: colors.warning,
+      warningColor: colors.warningBase,
       warningColorHover: colors.warningHover,
       warningColorPressed: colors.warningPressed,
-      warningColorSuppl: colors.warning,
+      warningColorSuppl: colors.warningBase,
 
       // Couleurs d'erreur
-      errorColor: colors.error,
+      errorColor: colors.errorBase,
       errorColorHover: colors.errorHover,
       errorColorPressed: colors.errorPressed,
-      errorColorSuppl: colors.error,
+      errorColorSuppl: colors.errorBase,
 
       // Couleurs de texte
       textColorBase: colors.textPrimary,
@@ -89,22 +89,16 @@ export function generateNaiveUIThemeOverrides(
       fontFamilyMono: 'ui-monospace, SFMono-Regular, "SF Mono", "Monaco", "Inconsolata", "Roboto Mono", monospace',
 
       // Taille de police
-      fontSize: tokens.typography.base.fontSize,
-      fontSizeMini: tokens.typography.xs.fontSize,
-      fontSizeTiny: tokens.typography.sm.fontSize,
-      fontSizeSmall: tokens.typography.sm.fontSize,
-      fontSizeMedium: tokens.typography.base.fontSize,
-      fontSizeLarge: tokens.typography.lg.fontSize,
-      fontSizeHuge: tokens.typography.xl.fontSize,
+      fontSize: tokens.typography.body.fontSize,
+      fontSizeMini: tokens.typography.caption.fontSize,
+      fontSizeTiny: tokens.typography.caption.fontSize,
+      fontSizeSmall: tokens.typography.caption.fontSize,
+      fontSizeMedium: tokens.typography.body.fontSize,
+      fontSizeLarge: tokens.typography.h5.fontSize,
+      fontSizeHuge: tokens.typography.h4.fontSize,
 
       // Hauteur de ligne
-      lineHeight: tokens.typography.base.lineHeight,
-
-      // Z-index
-      zIndexBase: 'auto',
-      zIndexPopover: '1000',
-      zIndexModal: '1001',
-      zIndexMessage: '1002',
+      lineHeight: tokens.typography.body.lineHeight,
     },
 
     // ================================
@@ -184,11 +178,11 @@ export function generateNaiveUIThemeOverrides(
       paddingMedium: `0 ${tokens.spacing.md}`,
       paddingLarge: `0 ${tokens.spacing.lg}`,
 
-      fontSize: tokens.typography.base.fontSize,
-      fontSizeTiny: tokens.typography.xs.fontSize,
-      fontSizeSmall: tokens.typography.sm.fontSize,
-      fontSizeMedium: tokens.typography.base.fontSize,
-      fontSizeLarge: tokens.typography.lg.fontSize,
+      fontSize: tokens.typography.body.fontSize,
+      fontSizeTiny: tokens.typography.caption.fontSize,
+      fontSizeSmall: tokens.typography.caption.fontSize,
+      fontSizeMedium: tokens.typography.body.fontSize,
+      fontSizeLarge: tokens.typography.h5.fontSize,
     },
 
     // ================================
@@ -205,7 +199,7 @@ export function generateNaiveUIThemeOverrides(
 
       titleTextColor: colors.textPrimary,
       titleFontWeight: '600',
-      titleFontSize: tokens.typography.lg.fontSize,
+      titleFontSize: tokens.typography.h5.fontSize,
 
       paddingSmall: tokens.spacing.md,
       paddingMedium: tokens.spacing.lg,
@@ -236,7 +230,7 @@ export function generateNaiveUIThemeOverrides(
           color: colors.backgroundSoft,
           optionTextColor: colors.textPrimary,
           optionTextColorActive: colors.textPrimary,
-          optionCheckColor: colors.primary,
+          optionCheckColor: colors.primaryBase,
           borderRadius: tokens.borderRadius.md,
         }
       }
@@ -260,13 +254,13 @@ export function generateNaiveUIThemeOverrides(
       color: colors.backgroundSoft,
       itemTextColor: colors.textPrimary,
       itemTextColorHover: colors.textPrimary,
-      itemTextColorActive: colors.primary,
-      itemTextColorActiveHover: colors.primary,
-      itemTextColorChildActive: colors.primary,
-      itemTextColorChildActiveHover: colors.primary,
+      itemTextColorActive: colors.primaryBase,
+      itemTextColorActiveHover: colors.primaryBase,
+      itemTextColorChildActive: colors.primaryBase,
+      itemTextColorChildActiveHover: colors.primaryBase,
       itemColorHover: colors.backgroundMute,
-      itemColorActive: `${colors.primary}15`,
-      itemColorActiveHover: `${colors.primary}20`,
+      itemColorActive: `${colors.primaryBase}15`,
+      itemColorActiveHover: `${colors.primaryBase}20`,
       borderRadius: tokens.borderRadius.md,
       itemBorderRadius: tokens.borderRadius.sm,
     },
@@ -275,10 +269,10 @@ export function generateNaiveUIThemeOverrides(
     // MESSAGES/ALERTS
     // ================================
     Message: {
-      colorInfo: colors.info,
-      colorSuccess: colors.success,
-      colorWarning: colors.warning,
-      colorError: colors.error,
+      colorInfo: colors.infoBase,
+      colorSuccess: colors.successBase,
+      colorWarning: colors.warningBase,
+      colorError: colors.errorBase,
       textColorInfo: '#ffffff',
       textColorSuccess: '#ffffff',
       textColorWarning: '#ffffff',
@@ -327,11 +321,11 @@ export function generateNaiveUIThemeOverrides(
     // PROGRESS
     // ================================
     Progress: {
-      fillColor: colors.primary,
-      fillColorInfo: colors.info,
-      fillColorSuccess: colors.success,
-      fillColorWarning: colors.warning,
-      fillColorError: colors.error,
+      fillColor: colors.primaryBase,
+      fillColorInfo: colors.infoBase,
+      fillColorSuccess: colors.successBase,
+      fillColorWarning: colors.warningBase,
+      fillColorError: colors.errorBase,
       railColor: colors.backgroundMute,
       borderRadius: tokens.borderRadius.full,
     },
@@ -341,10 +335,10 @@ export function generateNaiveUIThemeOverrides(
     // ================================
     Tag: {
       borderRadius: tokens.borderRadius.md,
-      color: `${colors.primary}15`,
-      textColor: colors.primary,
-      border: `1px solid ${colors.primary}30`,
-      closeColorHover: colors.error,
+      color: `${colors.primaryBase}15`,
+      textColor: colors.primaryBase,
+      border: `1px solid ${colors.primaryBase}30`,
+      closeColorHover: colors.errorBase,
       closeColorPressed: colors.errorHover,
     }
   }

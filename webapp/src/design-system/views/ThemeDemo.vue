@@ -83,7 +83,10 @@
                   :is="group.mainSection.component"
                   v-bind="variant.props"
                   v-on="variant.events || {}"
-                />
+                >
+                  <!-- Contenu du slot si template fourni -->
+                  <div v-if="variant.template" v-html="variant.template"></div>
+                </component>
               </div>
             </div>
           </div>
@@ -124,7 +127,10 @@
                   :is="group.variantsSection.component"
                   v-bind="variant.props"
                   v-on="variant.events || {}"
-                />
+                >
+                  <!-- Contenu du slot si template fourni -->
+                  <div v-if="variant.template" v-html="variant.template"></div>
+                </component>
               </div>
             </div>
           </div>

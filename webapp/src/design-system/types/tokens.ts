@@ -80,83 +80,64 @@ export interface Shadows {
  */
 export interface SemanticColors {
   // Layout
-  layout: {
-    background: string
-    surface: string
-    surfaceHover: string
-    surfaceActive: string
-    text: string
-  }
+  background: string
+  backgroundSoft: string
+  backgroundMute: string
+  surface: string
+  surfaceHover: string
+  surfaceActive: string
 
   // Texte
-  text: {
-    primary: string
-    secondary: string
-    disabled: string
-  }
+  textPrimary: string
+  textSecondary: string
+  textDisabled: string
 
   // Bordures
-  border: {
-    border: string
-    borderHover: string
-    borderFocus: string
-  }
+  border: string
+  borderHover: string
+  borderFocus: string
 
   // Couleurs primaires
-  primary: {
-    primary: string
-    primaryHover: string
-    primaryPressed: string
-    primaryDisabled: string
-    onPrimary: string
-  }
+  primaryBase: string
+  primaryHover: string
+  primaryPressed: string
+  primaryDisabled: string
+  onPrimary: string
 
   // Couleurs secondaires
-  secondary: {
-    secondary: string
-    secondaryHover: string
-    secondaryPressed: string
-    secondaryDisabled: string
-    onSecondary: string
-  }
+  secondaryBase: string
+  secondaryHover: string
+  secondaryPressed: string
+  secondaryDisabled: string
+  onSecondary: string
 
   // Couleurs d'accent
-  accent: {
-    accent: string
-    accentHover: string
-    accentPressed: string
-    accentDisabled: string
-    onAccent: string
-  }
+  accentBase: string
+  accentHover: string
+  accentPressed: string
+  accentDisabled: string
+  onAccent: string
 
   // États
-  success: {
-    success: string
-    successHover: string
-    successPressed: string
-    onSuccess: string
-  }
+  successBase: string
+  successHover: string
+  successPressed: string
+  onSuccess: string
 
-  warning: {
-    warning: string
-    warningHover: string
-    warningPressed: string
-    onWarning: string
-  }
+  warningBase: string
+  warningHover: string
+  warningPressed: string
+  onWarning: string
 
-  error: {
-    error: string
-    errorHover: string
-    errorPressed: string
-    onError: string
-  }
+  errorBase: string
+  errorHover: string
+  errorPressed: string
+  onError: string
 
-  info: {
-    info: string
-    infoHover: string
-    infoPressed: string
-    onInfo: string
-  }
+  infoBase: string
+  infoHover: string
+  infoPressed: string
+  onInfo: string
 }
 
 // ============================================================================

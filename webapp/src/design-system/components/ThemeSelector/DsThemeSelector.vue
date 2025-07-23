@@ -123,8 +123,8 @@ const gamingStyle = computed(() => {
   if (!props.gaming) return {}
 
   return {
-    '--gaming-glow': currentTokens.value.colors[effectiveMode.value].primary,
-    boxShadow: `0 0 20px ${currentTokens.value.colors[effectiveMode.value].primary}20`
+    '--gaming-glow': currentTokens.value.colors[effectiveMode.value].primaryBase,
+    boxShadow: `0 0 20px ${currentTokens.value.colors[effectiveMode.value].primaryBase}20`
   }
 })
 

@@ -137,100 +137,136 @@ export const designTokens: DesignTokens = {
     // MODE CLAIR - Style gaming adapté
     // ================================
     light: {
-      // Couleurs primaires (tes couleurs exactes)
-      primary: indigo[700],        // indigo-700 (ton primary)
-      primaryHover: indigo[600],   // indigo-600 (ton primary-hover)
-      primaryPressed: indigo[800], // indigo-800 (plus sombre)
-      primaryDisabled: indigo[300], // indigo-300 (désactivé)
+      // Layout
+      background: slate[50],      // Arrière-plan principal
+      backgroundSoft: slate[100], // Arrière-plan doux
+      backgroundMute: slate[200], // Arrière-plan atténué
+      surface: slate[50],         // Surface principale
+      surfaceHover: slate[100],   // Surface au hover
+      surfaceActive: slate[200],  // Surface active
 
-      // Couleurs secondaires (adaptées au preset)
-      secondary: indigo[100],      // Variante claire du primary pour cohérence
-      secondaryHover: indigo[200], // Plus foncé au hover
-      secondaryPressed: indigo[300], // Plus foncé au clic
-      
-      // Couleurs de surface et accent
-      surface: slate[50],          // Surface claire
-      text: slate[900],           // Texte principal sombre
-      accent: purple[600],        // Couleur d'accent
+      // Texte
+      textPrimary: slate[900],    // Texte principal
+      textSecondary: slate[700],  // Texte secondaire
+      textDisabled: slate[400],   // Texte désactivé
 
-      // Couleurs sémantiques (adaptées au mode clair)
-      info: blue[600],           // Plus foncé pour meilleur contraste
-      infoHover: blue[700],      // Plus sombre au hover
-      infoPressed: blue[800],    // Plus sombre au clic
-      success: emerald[600],     // Plus foncé pour meilleur contraste
-      successHover: emerald[700], // Plus sombre au hover
-      successPressed: emerald[800], // Plus sombre au clic
-      warning: amber[600],       // Plus foncé pour meilleur contraste
-      warningHover: amber[700],  // Plus sombre au hover
-      warningPressed: amber[800], // Plus sombre au clic
-      error: red[600],           // Plus foncé pour meilleur contraste
-      errorHover: red[700],      // Plus sombre au hover
-      errorPressed: red[800],    // Plus sombre au clic
+      // Bordures
+      border: slate[300],         // Bordure par défaut
+      borderHover: slate[400],    // Bordure au hover
+      borderFocus: indigo[500],   // Bordure en focus
 
-      // Texte (optimisé pour le contraste en mode clair)
-      textPrimary: slate[900],   // Sombre pour lisibilité maximale
-      textSecondary: slate[700], // Plus sombre pour meilleur contraste
-      textDisabled: slate[400],  // Assez clair pour indiquer l'état désactivé
+      // Couleurs primaires
+      primaryBase: indigo[700],     // Couleur primaire de base
+      primaryHover: indigo[600],    // Primaire au hover
+      primaryPressed: indigo[800],  // Primaire pressé
+      primaryDisabled: indigo[300], // Primaire désactivé
+      onPrimary: slate[50],         // Texte sur primaire
 
-      // Arrière-plans (optimisés pour le contraste)
-      background: slate[50],     // Blanc pur
-      backgroundSoft: slate[100], // Très léger
-      backgroundMute: slate[200], // Légèrement gris
+      // Couleurs secondaires
+      secondaryBase: indigo[100],    // Secondaire de base
+      secondaryHover: indigo[200],   // Secondaire au hover
+      secondaryPressed: indigo[300], // Secondaire pressé
+      secondaryDisabled: indigo[50], // Secondaire désactivé
+      onSecondary: slate[900],       // Texte sur secondaire
 
-      // Bordures (contraste amélioré)
-      border: slate[300],        // Plus visible
-      borderHover: slate[400],   // Contraste plus marqué au hover
-      borderFocus: indigo[500],  // Focus avec ta couleur primaire
+      // Couleurs d'accent
+      accentBase: purple[600],      // Accent de base
+      accentHover: purple[500],     // Accent au hover
+      accentPressed: purple[700],   // Accent pressé
+      accentDisabled: purple[300],  // Accent désactivé
+      onAccent: slate[50],          // Texte sur accent
+
+      // États - Success
+      successBase: emerald[600],     // Success de base
+      successHover: emerald[700],    // Success au hover
+      successPressed: emerald[800],  // Success pressé
+      onSuccess: slate[50],          // Texte sur success
+
+      // États - Warning
+      warningBase: amber[600],       // Warning de base
+      warningHover: amber[700],      // Warning au hover
+      warningPressed: amber[800],    // Warning pressé
+      onWarning: slate[50],          // Texte sur warning
+
+      // États - Error
+      errorBase: red[600],           // Error de base
+      errorHover: red[700],          // Error au hover
+      errorPressed: red[800],        // Error pressé
+      onError: slate[50],            // Texte sur error
+
+      // États - Info
+      infoBase: blue[600],           // Info de base
+      infoHover: blue[700],          // Info au hover
+      infoPressed: blue[800],        // Info pressé
+      onInfo: slate[50],             // Texte sur info
     },
 
     // ================================
     // MODE SOMBRE - Ton style gaming
     // ================================
     dark: {
-      // Couleurs primaires (plus vives pour le mode sombre)
-      primary: indigo[500],        // indigo-500 (plus vif)
-      primaryHover: indigo[400],   // indigo-400 (encore plus vif au hover)
-      primaryPressed: indigo[500], // indigo-500 (retour à la base, effet de "click")
-      primaryDisabled: indigo[800], // indigo-800 (très sombre)
+      // Layout
+      background: slate[900],     // Arrière-plan principal sombre
+      backgroundSoft: slate[800], // Arrière-plan doux sombre
+      backgroundMute: slate[700], // Arrière-plan atténué sombre
+      surface: slate[800],        // Surface principale sombre
+      surfaceHover: slate[700],   // Surface au hover sombre
+      surfaceActive: slate[600],  // Surface active sombre
 
-      // Couleurs secondaires (adaptées au preset)
-      secondary: indigo[900],      // Variante sombre du primary pour cohérence
-      secondaryHover: indigo[800], // Plus clair au hover (mode sombre)
-      secondaryPressed: indigo[900], // Retour à la base
-      
-      // Couleurs de surface et accent
-      surface: slate[800],         // Surface sombre
-      text: slate[100],           // Texte principal clair
-      accent: purple[400],        // Couleur d'accent adaptée au sombre
+      // Texte
+      textPrimary: slate[100],    // Texte principal clair
+      textSecondary: slate[300],  // Texte secondaire clair
+      textDisabled: slate[600],   // Texte désactivé sombre
 
-      // Couleurs sémantiques (adaptées au mode sombre)
-      info: blue[400],
-      infoHover: blue[300],        // Plus vif au hover
-      infoPressed: blue[500],      // Plus sombre au clic
-      success: emerald[400],
-      successHover: emerald[300],  // Plus vif au hover
-      successPressed: emerald[500], // Plus sombre au clic
-      warning: amber[400],
-      warningHover: amber[300],    // Plus vif au hover
-      warningPressed: amber[500],  // Plus sombre au clic
-      error: red[400],
-      errorHover: red[300],        // Plus vif au hover
-      errorPressed: red[500],      // Plus sombre au clic
+      // Bordures
+      border: slate[600],         // Bordure par défaut sombre
+      borderHover: slate[500],    // Bordure au hover sombre
+      borderFocus: indigo[400],   // Bordure en focus vive
 
-      // Texte (optimisé pour le contraste en mode sombre)
-      textPrimary: slate[100],    // Plus clair pour meilleur contraste
-      textSecondary: slate[300],  // Plus clair que l'original
-      textDisabled: slate[600],   // Assez sombre pour indiquer l'état désactivé
+      // Couleurs primaires
+      primaryBase: indigo[500],     // Couleur primaire de base vive
+      primaryHover: indigo[400],    // Primaire au hover plus vif
+      primaryPressed: indigo[600],  // Primaire pressé plus sombre
+      primaryDisabled: indigo[800], // Primaire désactivé sombre
+      onPrimary: slate[50],         // Texte sur primaire
 
-      // Arrière-plans (ton style gaming)
-      background: slate[900],     // ton neutral.dark
-      backgroundSoft: slate[800], // ton neutral par défaut
-      backgroundMute: slate[700], // ton neutral.light
+      // Couleurs secondaires
+      secondaryBase: indigo[900],    // Secondaire de base sombre
+      secondaryHover: indigo[800],   // Secondaire au hover plus clair
+      secondaryPressed: indigo[950], // Secondaire pressé plus sombre
+      secondaryDisabled: slate[800], // Secondaire désactivé
+      onSecondary: slate[100],       // Texte sur secondaire
 
-      // Bordures (optimisées pour le mode sombre)
-      border: slate[600],        // Plus clair pour meilleur contraste
-      borderHover: slate[500],   // Plus clair au hover
-      borderFocus: indigo[400],  // Focus vif
+      // Couleurs d'accent
+      accentBase: purple[400],      // Accent de base vif
+      accentHover: purple[300],     // Accent au hover plus vif
+      accentPressed: purple[500],   // Accent pressé plus sombre
+      accentDisabled: purple[800],  // Accent désactivé sombre
+      onAccent: slate[50],          // Texte sur accent
+
+      // États - Success
+      successBase: emerald[400],     // Success de base vif
+      successHover: emerald[300],    // Success au hover plus vif
+      successPressed: emerald[500],  // Success pressé plus sombre
+      onSuccess: slate[50],          // Texte sur success
+
+      // États - Warning
+      warningBase: amber[400],       // Warning de base vif
+      warningHover: amber[300],      // Warning au hover plus vif
+      warningPressed: amber[500],    // Warning pressé plus sombre
+      onWarning: slate[50],          // Texte sur warning
+
+      // États - Error
+      errorBase: red[400],           // Error de base vif
+      errorHover: red[300],          // Error au hover plus vif
+      errorPressed: red[500],        // Error pressé plus sombre
+      onError: slate[50],            // Texte sur error
+
+      // États - Info
+      infoBase: blue[400],           // Info de base vif
+      infoHover: blue[300],          // Info au hover plus vif
+      infoPressed: blue[500],        // Info pressé plus sombre
+      onInfo: slate[50],             // Texte sur info
     }
   },
 
@@ -238,14 +274,14 @@ export const designTokens: DesignTokens = {
   // TYPOGRAPHIE (basée sur tes tokens)
   // ================================
   typography: {
-    xs: { fontSize: '0.75rem', lineHeight: '1rem' },      // Conservé
-    sm: { fontSize: '0.875rem', lineHeight: '1.25rem' },  // text-sm de tes boutons
-    base: { fontSize: '1rem', lineHeight: '1.5rem' },     // text-base de tes boutons
-    lg: { fontSize: '1.125rem', lineHeight: '1.75rem' },  // text-lg de tes boutons
-    xl: { fontSize: '1.25rem', lineHeight: '1.75rem' },   // Étendu
-    '2xl': { fontSize: '1.5rem', lineHeight: '2rem' },    // Étendu
-    '3xl': { fontSize: '1.875rem', lineHeight: '2.25rem' }, // Étendu
-    '4xl': { fontSize: '2.25rem', lineHeight: '2.5rem' }   // Étendu
+    h1: { fontSize: '2.25rem', lineHeight: '2.5rem' },     // 36px
+    h2: { fontSize: '1.875rem', lineHeight: '2.25rem' },   // 30px
+    h3: { fontSize: '1.5rem', lineHeight: '2rem' },        // 24px
+    h4: { fontSize: '1.25rem', lineHeight: '1.75rem' },    // 20px
+    h5: { fontSize: '1.125rem', lineHeight: '1.75rem' },   // 18px
+    h6: { fontSize: '1rem', lineHeight: '1.5rem' },        // 16px
+    body: { fontSize: '1rem', lineHeight: '1.5rem' },      // 16px - texte principal
+    caption: { fontSize: '0.875rem', lineHeight: '1.25rem' } // 14px - légendes et textes secondaires
   },
 
   // ================================
@@ -317,13 +353,13 @@ export const themePresets: Record<string, ThemePreset> = {
       colors: {
         light: {
           ...designTokens.colors.light,
-          primary: purple[600],
+          primaryBase: purple[600],
           primaryHover: purple[500],
           primaryPressed: purple[700]
         },
         dark: {
           ...designTokens.colors.dark,
-          primary: purple[400],
+          primaryBase: purple[400],
           primaryHover: purple[300],
           primaryPressed: purple[500]
         }
@@ -340,13 +376,13 @@ export const themePresets: Record<string, ThemePreset> = {
       colors: {
         light: {
           ...designTokens.colors.light,
-          primary: blue[600],
+          primaryBase: blue[600],
           primaryHover: blue[500],
           primaryPressed: blue[700]
         },
         dark: {
           ...designTokens.colors.dark,
-          primary: blue[400],
+          primaryBase: blue[400],
           primaryHover: blue[300],
           primaryPressed: blue[500]
         }
@@ -363,13 +399,13 @@ export const themePresets: Record<string, ThemePreset> = {
       colors: {
         light: {
           ...designTokens.colors.light,
-          primary: emerald[600],
+          primaryBase: emerald[600],
           primaryHover: emerald[500],
           primaryPressed: emerald[700]
         },
         dark: {
           ...designTokens.colors.dark,
-          primary: emerald[400],
+          primaryBase: emerald[400],
           primaryHover: emerald[300],
           primaryPressed: emerald[500]
         }

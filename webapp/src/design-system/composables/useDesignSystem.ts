@@ -112,18 +112,18 @@ export function useDesignSystem() {
 
     return {
       // Couleurs
-      '--ds-color-primary': colors.primary,
+      '--ds-color-primary': colors.primaryBase,
       '--ds-color-primary-hover': colors.primaryHover,
       '--ds-color-primary-pressed': colors.primaryPressed,
-      '--ds-color-secondary': colors.secondary,
+      '--ds-color-secondary': colors.secondaryBase,
       '--ds-color-secondary-hover': colors.secondaryHover,
-      '--ds-color-info': colors.info,
+      '--ds-color-info': colors.infoBase,
       '--ds-color-info-hover': colors.infoHover,
-      '--ds-color-success': colors.success,
+      '--ds-color-success': colors.successBase,
       '--ds-color-success-hover': colors.successHover,
-      '--ds-color-warning': colors.warning,
+      '--ds-color-warning': colors.warningBase,
       '--ds-color-warning-hover': colors.warningHover,
-      '--ds-color-error': colors.error,
+      '--ds-color-error': colors.errorBase,
       '--ds-color-error-hover': colors.errorHover,
 
       // Texte

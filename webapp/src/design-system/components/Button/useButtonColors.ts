@@ -31,7 +31,7 @@ export function useButtonColors() {
    */
   const generatePresetVariants = computed(() => {
     const colors = currentColors.value
-    const primary = colors.primary
+    const primary = colors.primaryBase
 
     // Extraction des composantes RGB pour générer des variantes
     const rgb = hexToRgb(primary)
@@ -82,12 +82,12 @@ export function useButtonColors() {
       }
     } else {
       secondaryColors = {
-        base: colors.secondary,
+        base: colors.secondaryBase,
         hover: colors.secondaryHover,
         pressed: colors.secondaryPressed,
-        glow: colors.secondary,
-        gradient: `linear-gradient(135deg, ${colors.secondary}, ${colors.secondaryHover})`,
-        borderGlow: `0 0 15px ${colors.secondary}40`
+        glow: colors.secondaryBase,
+        gradient: `linear-gradient(135deg, ${colors.secondaryBase}, ${colors.secondaryHover})`,
+        borderGlow: `0 0 15px ${colors.secondaryBase}40`
       }
     }
 
@@ -103,48 +103,48 @@ export function useButtonColors() {
       }
     } else {
       infoColors = {
-        base: colors.info,
+        base: colors.infoBase,
         hover: colors.infoHover,
         pressed: colors.infoPressed,
-        glow: colors.info,
-        gradient: `linear-gradient(135deg, ${colors.info}, ${colors.infoHover})`,
-        borderGlow: `0 0 15px ${colors.info}40`
+        glow: colors.infoBase,
+        gradient: `linear-gradient(135deg, ${colors.infoBase}, ${colors.infoHover})`,
+        borderGlow: `0 0 15px ${colors.infoBase}40`
       }
     }
 
     const baseConfig = {
       primary: {
-        base: colors.primary,
+        base: colors.primaryBase,
         hover: colors.primaryHover,
         pressed: colors.primaryPressed,
-        glow: colors.primary,
-        gradient: `linear-gradient(135deg, ${colors.primary}, ${colors.primaryHover})`,
-        borderGlow: `0 0 15px ${colors.primary}40`
+        glow: colors.primaryBase,
+        gradient: `linear-gradient(135deg, ${colors.primaryBase}, ${colors.primaryHover})`,
+        borderGlow: `0 0 15px ${colors.primaryBase}40`
       },
       secondary: secondaryColors,
       success: {
-        base: colors.success,
+        base: colors.successBase,
         hover: colors.successHover,
         pressed: colors.successPressed,
-        glow: colors.success,
-        gradient: `linear-gradient(135deg, ${colors.success}, ${colors.successHover})`,
-        borderGlow: `0 0 15px ${colors.success}40`
+        glow: colors.successBase,
+        gradient: `linear-gradient(135deg, ${colors.successBase}, ${colors.successHover})`,
+        borderGlow: `0 0 15px ${colors.successBase}40`
       },
       warning: {
-        base: colors.warning,
+        base: colors.warningBase,
         hover: colors.warningHover,
         pressed: colors.warningPressed,
-        glow: colors.warning,
-        gradient: `linear-gradient(135deg, ${colors.warning}, ${colors.warningHover})`,
-        borderGlow: `0 0 15px ${colors.warning}40`
+        glow: colors.warningBase,
+        gradient: `linear-gradient(135deg, ${colors.warningBase}, ${colors.warningHover})`,
+        borderGlow: `0 0 15px ${colors.warningBase}40`
       },
       error: {
-        base: colors.error,
+        base: colors.errorBase,
         hover: colors.errorHover,
         pressed: colors.errorPressed,
-        glow: colors.error,
-        gradient: `linear-gradient(135deg, ${colors.error}, ${colors.errorHover})`,
-        borderGlow: `0 0 15px ${colors.error}40`
+        glow: colors.errorBase,
+        gradient: `linear-gradient(135deg, ${colors.errorBase}, ${colors.errorHover})`,
+        borderGlow: `0 0 15px ${colors.errorBase}40`
       },
       info: infoColors
     }
