@@ -1,6 +1,6 @@
 import { markRaw, h } from 'vue'
 import { DsCard } from '@/design-system'
-import type { ComponentSection } from '@/design-system/types/demo'
+import type { ComponentSection, ComponentGroup } from '@/design-system/types/demo'
 
 /**
  * Factory pour créer la section principale des cartes
@@ -187,10 +187,61 @@ const createCardVisualSection = (): ComponentSection => ({
 })
 
 /**
- * Toutes les sections des cartes
+ * Groupe des cartes de base
+ */
+const createCardBaseGroup = (): ComponentGroup => ({
+  title: "Cartes de Base",
+  category: "layout" as const,
+  description: "Composant carte avec différents types de contenu",
+  tags: ["card", "container", "layout", "content"],
+  mainSection: createCardMainSection(),
+  variantsSection: {
+    title: "",
+    component: null,
+    category: "layout" as const,
+    variants: []
+  }
+})
+
+/**
+ * Groupe des cartes interactives
+ */
+const createCardInteractiveGroup = (): ComponentGroup => ({
+  title: "Cartes Interactives",
+  category: "layout" as const,
+  description: "Cartes avec éléments interactifs et actions",
+  tags: ["card", "interactive", "buttons", "actions"],
+  mainSection: {
+    title: "",
+    component: null,
+    category: "layout" as const,
+    variants: []
+  },
+  variantsSection: createCardInteractiveSection()
+})
+
+/**
+ * Groupe des styles visuels
+ */
+const createCardVisualGroup = (): ComponentGroup => ({
+  title: "Styles Visuels des Cartes",
+  category: "layout" as const,
+  description: "Différents styles visuels pour les cartes",
+  tags: ["card", "visual", "styles", "appearance"],
+  mainSection: {
+    title: "",
+    component: null,
+    category: "layout" as const,
+    variants: []
+  },
+  variantsSection: createCardVisualSection()
+})
+
+/**
+ * Toutes les sections des cartes - Structure ComponentGroup uniquement
  */
 export const cardSections = [
-  createCardMainSection(),
-  createCardInteractiveSection(),
-  createCardVisualSection()
+  createCardBaseGroup(),
+  createCardInteractiveGroup(),
+  createCardVisualGroup()
 ]

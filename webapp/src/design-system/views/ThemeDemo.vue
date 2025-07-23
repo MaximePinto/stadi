@@ -1,5 +1,7 @@
 <template>
+  <!-- Conteneur principal de la démo du design system -->
   <div class="theme-demo">
+    <!-- En-tête de la page de démonstration -->
     <div class="theme-demo-header">
       <h1 class="text-3xl font-bold text-text-primary mb-4">
         🎨 Démonstration du Design System
@@ -9,71 +11,123 @@
       </p>
     </div>
 
-    <!-- Rendu dynamique des composants -->
+    <!-- Boucle sur chaque groupe de composants -->
     <div
-      v-for="section in componentVariants"
-      :key="section.title"
+      v-for="group in componentVariants"
+      :key="group.title"
       class="theme-demo-section"
     >
+      <!-- En-tête du groupe -->
       <div class="section-header mb-4">
         <div class="flex items-center gap-2 mb-2">
           <h2 class="text-xl font-semibold text-text-primary">
-            {{ section.title }}
+            {{ group.title }}
           </h2>
-          <span class="category-badge">{{ section.category }}</span>
-          <span v-if="section.experimental" class="experimental-badge">Expérimental</span>
+          <span class="category-badge">{{ group.category }}</span>
         </div>
-        <p v-if="section.description" class="text-text-secondary mb-2">
-          {{ section.description }}
+        <p v-if="group.description" class="text-text-secondary mb-2">
+          {{ group.description }}
         </p>
-        <div v-if="section.tags" class="flex flex-wrap gap-1 mb-2">
-          <span v-for="tag in section.tags" :key="tag" class="tag">{{ tag }}</span>
+        <div v-if="group.tags" class="flex flex-wrap gap-1 mb-2">
+          <span v-for="tag in group.tags" :key="tag" class="tag">{{ tag }}</span>
         </div>
       </div>
 
-      <!-- Affichage inline avec informations contextuelles -->
-      <div v-if="section.layout === 'inline'" class="flex flex-wrap gap-4 items-center">
-        <component
-          :is="section.component"
-          v-for="(variant, index) in section.variants"
-          :key="`${section.title}-${index}`"
-          v-bind="variant.props"
-          v-on="variant.events || {}"
-        />
-
-        <div class="text-sm text-text-secondary">
-          Mode actuel: <span class="font-medium">{{ currentMode }}</span>
-        </div>
-      </div>
-
-      <!-- Grille de variantes -->
-      <div v-else class="theme-variants-grid">
-        <div
-          v-for="(variant, index) in section.variants"
-          :key="`${section.title}-${index}`"
-          class="theme-variant-card"
-        >
-          <div class="variant-header mb-3">
-            <div class="flex items-center gap-2 mb-1">
-              <h3 class="text-lg font-medium text-text-primary">
-                {{ variant.title }}
-              </h3>
-              <span v-if="variant.complexity" class="complexity-badge">
-                {{ variant.complexity }}
-              </span>
-            </div>
-            <p v-if="variant.description" class="text-sm text-text-secondary mb-2">
-              {{ variant.description }}
-            </p>
-            <div v-if="variant.tags" class="flex flex-wrap gap-1">
-              <span v-for="tag in variant.tags" :key="tag" class="tag tag-small">{{ tag }}</span>
+      <!-- Structure groupée : Principal + Variantes -->
+      <div class="component-group-container">
+        <!-- Bloc Principal (si il y a des variantes) -->
+        <div v-if="group.mainSection.variants.length > 0" class="component-main-section">
+          <h3 class="text-lg font-medium text-text-primary mb-3">{{ group.mainSection.title }}</h3>
+          <div v-if="group.mainSection.layout === 'inline'" class="flex flex-wrap gap-4 items-center">
+            <component
+              :is="group.mainSection.component"
+              v-for="(variant, index) in group.mainSection.variants"
+              :key="`main-${index}`"
+              v-bind="variant.props"
+              v-on="variant.events || {}"
+            />
+            <!-- Affichage du mode de thème actuel -->
+            <div class="text-sm text-text-secondary">
+              Mode actuel: <span class="font-medium">{{ currentMode }}</span>
             </div>
           </div>
-          <component
-            :is="section.component"
-            v-bind="variant.props"
-            v-on="variant.events || {}"
-          />
+          <div v-else class="theme-variants-grid">
+            <div
+              v-for="(variant, index) in group.mainSection.variants"
+              :key="`main-${index}`"
+              class="theme-variant-card"
+            >
+              <!-- Bloc Principal : Métadonnées de la variante -->
+              <div class="component-main-block">
+                <div class="variant-header">
+                  <div class="flex items-center gap-2 mb-1">
+                    <h4 class="text-base font-medium text-text-primary">
+                      {{ variant.title }}
+                    </h4>
+                    <span v-if="variant.complexity" class="complexity-badge">
+                      {{ variant.complexity }}
+                    </span>
+                  </div>
+                  <p v-if="variant.description" class="text-sm text-text-secondary mb-2">
+                    {{ variant.description }}
+                  </p>
+                  <div v-if="variant.tags" class="flex flex-wrap gap-1">
+                    <span v-for="tag in variant.tags" :key="tag" class="tag tag-small">{{ tag }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Bloc Variante : Rendu du composant -->
+              <div class="component-variant-block">
+                <component
+                  :is="group.mainSection.component"
+                  v-bind="variant.props"
+                  v-on="variant.events || {}"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bloc Variantes (si il y a des variantes) -->
+        <div v-if="group.variantsSection.variants.length > 0" class="component-variants-section">
+          <h3 class="text-lg font-medium text-text-primary mb-3">{{ group.variantsSection.title }}</h3>
+          <div class="theme-variants-grid">
+            <div
+              v-for="(variant, index) in group.variantsSection.variants"
+              :key="`variant-${index}`"
+              class="theme-variant-card"
+            >
+              <!-- Bloc Principal : Métadonnées de la variante -->
+              <div class="component-main-block">
+                <div class="variant-header">
+                  <div class="flex items-center gap-2 mb-1">
+                    <h4 class="text-base font-medium text-text-primary">
+                      {{ variant.title }}
+                    </h4>
+                    <span v-if="variant.complexity" class="complexity-badge">
+                      {{ variant.complexity }}
+                    </span>
+                  </div>
+                  <p v-if="variant.description" class="text-sm text-text-secondary mb-2">
+                    {{ variant.description }}
+                  </p>
+                  <div v-if="variant.tags" class="flex flex-wrap gap-1">
+                    <span v-for="tag in variant.tags" :key="tag" class="tag tag-small">{{ tag }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Bloc Variante : Rendu du composant -->
+              <div class="component-variant-block">
+                <component
+                  :is="group.variantsSection.component"
+                  v-bind="variant.props"
+                  v-on="variant.events || {}"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -93,6 +147,7 @@ const currentMode = computed(() => effectiveMode.value)
 
 // Configuration des variantes de composants (externalisée)
 const componentVariants = themeDemoConfig
+console.log(componentVariants)
 </script>
 
 <style scoped>
@@ -116,27 +171,46 @@ const componentVariants = themeDemoConfig
 }
 
 .theme-variant-card {
-  padding: var(--ds-spacing-lg);
   background: var(--ds-bg-base);
-  border: 1px solid var(--ds-border-base);
-  border-radius: var(--ds-radius-md);
+  border: 2px solid var(--ds-border-base);
+  border-radius: var(--ds-radius-lg);
   transition: all var(--ds-transition-normal);
+  overflow: hidden;
+  box-shadow: var(--ds-shadow-sm);
 }
 
 .theme-variant-card:hover {
   border-color: var(--ds-border-hover);
-  box-shadow: var(--ds-shadow-md);
+  box-shadow: var(--ds-shadow-lg);
+  transform: translateY(-2px);
 }
 
 .theme-variants-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 2rem; /* Augmenté pour mieux séparer les cartes */
 }
 
 .theme-variant-card {
-  flex: 0 0 auto; /* Taille naturelle du contenu */
-  min-width: 300px; /* Minimum pour éviter que ce soit trop petit */
+  flex: 0 0 auto;
+  min-width: 320px; /* Légèrement augmenté */
+}
+
+/* Bloc Principal : Métadonnées */
+.component-main-block {
+  padding: var(--ds-spacing-lg);
+  background: var(--ds-bg-soft);
+  border-bottom: 1px solid var(--ds-border-base);
+}
+
+/* Bloc Variante : Composant rendu */
+.component-variant-block {
+  padding: var(--ds-spacing-lg);
+  background: var(--ds-bg-base);
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .theme-test-zone {
@@ -203,8 +277,42 @@ const componentVariants = themeDemoConfig
 }
 
 .variant-header {
-  border-bottom: 1px solid var(--ds-border-mute);
-  padding-bottom: var(--ds-spacing-xs);
+  /* Plus de border-bottom pour unifier les blocs */
+  margin-bottom: var(--ds-spacing-sm);
+}
+
+/* Préparation pour le système réduisible */
+.component-variant-block {
+  transition: all var(--ds-transition-normal);
+}
+
+.component-variant-block.collapsed {
+  display: none;
+}
+
+.component-variant-block.expanded {
+  display: flex;
+}
+
+/* Styles pour la structure groupée */
+.component-group-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-spacing-xl);
+}
+
+.component-main-section {
+  padding: var(--ds-spacing-lg);
+  background: var(--ds-bg-soft);
+  border: 1px solid var(--ds-border-base);
+  border-radius: var(--ds-radius-lg);
+}
+
+.component-variants-section {
+  padding: var(--ds-spacing-lg);
+  background: var(--ds-bg-base);
+  border: 1px solid var(--ds-border-base);
+  border-radius: var(--ds-radius-lg);
 }
 
 /* Responsive */

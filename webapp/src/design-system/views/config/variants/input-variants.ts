@@ -1,6 +1,6 @@
 import { markRaw } from 'vue'
 import { DsInput } from '@/design-system'
-import type { ComponentSection } from '@/design-system/types/demo'
+import type { ComponentSection, ComponentGroup } from '@/design-system/types/demo'
 
 /**
  * Factory pour créer la section principale des inputs
@@ -257,12 +257,74 @@ const createInputSpecializedSection = (): ComponentSection => ({
 })
 
 /**
- * Toutes les sections des inputs
+ * Groupe principal des inputs (Principal + Types)
+ */
+const createInputMainGroup = (): ComponentGroup => ({
+  title: "Champs de Saisie",
+  category: "forms" as const,
+  description: "Composants de saisie avec tous les types disponibles",
+  tags: ["input", "forms", "text", "types"],
+  mainSection: createInputMainSection(),
+  variantsSection: createInputTypesSection()
+})
+
+/**
+ * Groupe des états des inputs
+ */
+const createInputStatesGroup = (): ComponentGroup => ({
+  title: "États des Champs",
+  category: "forms" as const,
+  description: "Différents états visuels des champs de saisie",
+  tags: ["input", "states", "validation", "status"],
+  mainSection: {
+    title: "",
+    component: null,
+    category: "forms" as const,
+    variants: []
+  },
+  variantsSection: createInputStatesSection()
+})
+
+/**
+ * Groupe des labels et textes d'aide
+ */
+const createInputLabelsGroup = (): ComponentGroup => ({
+  title: "Labels et Textes d'Aide",
+  category: "forms" as const,
+  description: "Gestion des labels et messages d'aide",
+  tags: ["input", "labels", "help", "guidance"],
+  mainSection: {
+    title: "",
+    component: null,
+    category: "forms" as const,
+    variants: []
+  },
+  variantsSection: createInputLabelsSection()
+})
+
+/**
+ * Groupe des cas d'usage spécialisés
+ */
+const createInputSpecializedGroup = (): ComponentGroup => ({
+  title: "Cas d'Usage Spécialisés",
+  category: "forms" as const,
+  description: "Champs spécialisés pour des besoins particuliers",
+  tags: ["input", "specialized", "advanced", "specific"],
+  mainSection: {
+    title: "",
+    component: null,
+    category: "forms" as const,
+    variants: []
+  },
+  variantsSection: createInputSpecializedSection()
+})
+
+/**
+ * Toutes les sections des inputs - Structure ComponentGroup uniquement
  */
 export const inputSections = [
-  createInputMainSection(),
-  createInputTypesSection(),
-  createInputStatesSection(),
-  createInputLabelsSection(),
-  createInputSpecializedSection()
+  createInputMainGroup(),
+  createInputStatesGroup(),
+  createInputLabelsGroup(),
+  createInputSpecializedGroup()
 ]

@@ -1,6 +1,6 @@
 import { markRaw } from 'vue'
 import { DsButton } from '@/design-system'
-import type { ComponentSection } from '@/design-system/types/demo'
+import type { ComponentSection, ComponentGroup } from '@/design-system/types/demo'
 
 /**
  * Factory pour créer la section principale des boutons
@@ -178,11 +178,56 @@ const createButtonGamingSection = (): ComponentSection => ({
 })
 
 /**
- * Toutes les sections des boutons
+ * Groupe principal des boutons (Principal + Variantes)
+ */
+const createButtonGroup = (): ComponentGroup => ({
+  title: "Boutons",
+  category: "forms" as const,
+  description: "Système complet de boutons avec toutes les variantes",
+  tags: ["button", "action", "forms"],
+  mainSection: createButtonMainSection(),
+  variantsSection: createButtonVariantsSection()
+})
+
+/**
+ * Groupe des tailles de boutons
+ */
+const createButtonSizesGroup = (): ComponentGroup => ({
+  title: "Tailles des Boutons", 
+  category: "forms" as const,
+  description: "Différentes tailles disponibles pour les boutons",
+  tags: ["button", "sizes", "dimensions"],
+  mainSection: createButtonSizesSection(),
+  variantsSection: {
+    title: "",
+    component: null,
+    category: "forms" as const,
+    variants: []
+  }
+})
+
+/**
+ * Groupe des effets gaming
+ */
+const createButtonGamingGroup = (): ComponentGroup => ({
+  title: "Effets Gaming",
+  category: "forms" as const, 
+  description: "Boutons avec et sans effets gaming",
+  tags: ["button", "gaming", "effects", "visual"],
+  mainSection: {
+    title: "",
+    component: null,
+    category: "forms" as const,
+    variants: []
+  },
+  variantsSection: createButtonGamingSection()
+})
+
+/**
+ * Toutes les sections des boutons - Structure ComponentGroup uniquement
  */
 export const buttonSections = [
-  createButtonMainSection(),
-  createButtonVariantsSection(),
-  createButtonSizesSection(),
-  createButtonGamingSection()
+  createButtonGroup(),
+  createButtonSizesGroup(),
+  createButtonGamingGroup()
 ]

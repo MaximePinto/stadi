@@ -70,3 +70,21 @@ export interface ComponentSection {
   /** Liste des variantes à démontrer */
   variants: ComponentVariant[]
 }
+
+/**
+ * Groupe de composants avec section principale et variantes
+ */
+export interface ComponentGroup {
+  /** Titre du groupe */
+  title: string
+  /** Catégorie du composant */
+  category: ComponentCategory
+  /** Description du groupe */
+  description?: string
+  /** Tags pour faciliter la recherche */
+  tags?: string[]
+  /** Section principale (layout inline généralement) */
+  mainSection: ComponentSection
+  /** Section des variantes (layout grid généralement) */
+  variantsSection: ComponentSection
+}

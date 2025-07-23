@@ -1,8 +1,8 @@
 import { allComponentVariants } from './variants'
-import type { ComponentSection } from '@/design-system/types/demo'
+import type { ComponentGroup } from '@/design-system/types/demo'
 
 /**
  * Configuration des variantes de composants pour ThemeDemo
- * Utilise maintenant la structure modulaire des variants
+ * Utilise maintenant la structure modulaire des variants - ComponentGroup uniquement
  */
-export const themeDemoConfig: ComponentSection[] = allComponentVariants
+export const themeDemoConfig: ComponentGroup[] = allComponentVariants

@@ -1,6 +1,6 @@
 import { markRaw } from 'vue'
 import { DsThemeSelector } from '@/design-system'
-import type { ComponentSection } from '@/design-system/types/demo'
+import type { ComponentSection, ComponentGroup } from '@/design-system/types/demo'
 
 /**
  * Factory pour créer la section du sélecteur de thème principal
@@ -97,9 +97,20 @@ const createThemeSelectorVariantsSection = (): ComponentSection => ({
 })
 
 /**
- * Toutes les sections du ThemeSelector
+ * Groupe du sélecteur de thème
+ */
+const createThemeSelectorGroup = (): ComponentGroup => ({
+  title: "Sélecteur de Thème",
+  category: "theming" as const,
+  description: "Composant pour changer les thèmes et modes d'affichage",
+  tags: ["theme", "mode", "preset", "selector"],
+  mainSection: createThemeSelectorMainSection(),
+  variantsSection: createThemeSelectorVariantsSection()
+})
+
+/**
+ * Toutes les sections du ThemeSelector - Structure ComponentGroup uniquement
  */
 export const themeSelectorSections = [
-  createThemeSelectorMainSection(),
-  createThemeSelectorVariantsSection()
+  createThemeSelectorGroup()
 ]
