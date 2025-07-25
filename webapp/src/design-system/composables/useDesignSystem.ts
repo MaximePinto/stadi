@@ -3,17 +3,14 @@
  *
  * Ce composable fait le lien entre :
  * - Les design tokens centralisés
- * - Naive UI theme overrides
  * - Variables CSS personnalisées
  * - Classes Tailwind dynamiques
  * - Persistance des préférences
  */
 
 import { ref, computed, watch, readonly } from 'vue'
-import { darkTheme, useOsTheme, type GlobalTheme } from 'naive-ui'
 import { designTokens, themePresets } from '../foundations/tokens'
 import type { DesignTokens, SemanticColors } from '../types'
-import { generateNaiveUIThemeOverrides } from '../generators/naive-ui.generator'
 
 // ================================
 // TYPES
@@ -45,8 +42,6 @@ const themeCache = new Map<string, any>()
  * Composable principal pour le système de design unifié
  */
 export function useDesignSystem() {
-  const osTheme = useOsTheme()
-
   // ================================
   // ÉTAT CALCULÉ
   // ================================
@@ -56,7 +51,11 @@ export function useDesignSystem() {
    */
   const effectiveMode = computed<'light' | 'dark'>(() => {
     if (themeState.value.mode === 'auto') {
-      return osTheme.value === 'dark' ? 'dark' : 'light'
+      // Détection simple du thème OS
+      if (typeof window !== 'undefined') {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+      }
+      return 'light'
     }
     return themeState.value.mode
   })
@@ -82,26 +81,6 @@ export function useDesignSystem() {
     return currentTokens.value.colors[effectiveMode.value]
   })
 
-  /**
-   * Thème Naive UI (null pour light, darkTheme pour dark)
-   */
-  const naiveTheme = computed<GlobalTheme | null>(() => {
-    return effectiveMode.value === 'dark' ? darkTheme : null
-  })
-
-  /**
-   * Overrides Naive UI générés à partir des tokens
-   */
-  const naiveThemeOverrides = computed(() => {
-    const cacheKey = `${themeState.value.preset}-${effectiveMode.value}-${JSON.stringify(themeState.value.customTokens)}`
-
-    if (!themeCache.has(cacheKey)) {
-      const overrides = generateNaiveUIThemeOverrides(effectiveMode.value, currentTokens.value)
-      themeCache.set(cacheKey, overrides)
-    }
-
-    return themeCache.get(cacheKey)
-  })
 
   /**
    * Variables CSS à injecter dans le DOM
@@ -354,8 +333,6 @@ export function useDesignSystem() {
     effectiveMode: readonly(effectiveMode),
     currentTokens: readonly(currentTokens),
     currentColors: readonly(currentColors),
-    naiveTheme: readonly(naiveTheme),
-    naiveThemeOverrides: readonly(naiveThemeOverrides),
     cssVariables: readonly(cssVariables),
     themePresets: readonly(themePresets),
 
