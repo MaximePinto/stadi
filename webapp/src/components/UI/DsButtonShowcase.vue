@@ -1,12 +1,43 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { DsButton, DsThemeSelector, useDesignSystem, useButtonColors } from '@/design-system'
+import { DsButton, DsThemeSelector, useDesignSystem } from '@/design-system'
 
-const { themePreset, effectiveMode } = useDesignSystem()
-const { buttonColors } = useButtonColors()
+const { themePreset, effectiveMode, currentColors } = useDesignSystem()
 
 const buttonVariants = ['primary', 'secondary', 'success', 'warning', 'error'] as const
 const buttonSizes = ['tiny', 'small', 'medium', 'large'] as const
+
+// Configuration des couleurs directement avec les tokens
+const buttonColors = computed(() => {
+  const colors = currentColors.value
+  return {
+    primary: {
+      base: colors.primaryBase,
+      hover: colors.primaryHover,
+      gradient: `linear-gradient(135deg, ${colors.primaryBase}, ${colors.primaryHover})`
+    },
+    secondary: {
+      base: colors.secondaryBase,
+      hover: colors.secondaryHover,
+      gradient: `linear-gradient(135deg, ${colors.secondaryBase}, ${colors.secondaryHover})`
+    },
+    success: {
+      base: colors.successBase,
+      hover: colors.successHover,
+      gradient: `linear-gradient(135deg, ${colors.successBase}, ${colors.successHover})`
+    },
+    warning: {
+      base: colors.warningBase,
+      hover: colors.warningHover,
+      gradient: `linear-gradient(135deg, ${colors.warningBase}, ${colors.warningHover})`
+    },
+    error: {
+      base: colors.errorBase,
+      hover: colors.errorHover,
+      gradient: `linear-gradient(135deg, ${colors.errorBase}, ${colors.errorHover})`
+    }
+  }
+})
 
 const showcaseConfig = computed(() => ({
   preset: themePreset.value,
