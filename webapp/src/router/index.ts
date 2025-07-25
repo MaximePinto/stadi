@@ -17,7 +17,6 @@ const router = createRouter({
     { path: '/heroes', name: 'heroes', component: () => import('../views/HeroesView.vue') },
     { path: '/theme-demo', name: 'theme-demo', component: () => import('../design-system/views/ThemeDemo.vue') },
     { path: '/tailwind-demo', name: 'tailwind-demo', component: () => import('../views/TailwindDemo.vue') },
-    { path: '/naive-demo', name: 'naive-demo', component: () => import('../views/NaiveUIDemo.vue') },
   ],
 })
 
