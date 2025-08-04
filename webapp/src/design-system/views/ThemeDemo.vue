@@ -156,14 +156,14 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useDesignSystem } from '@/design-system'
-import { themeDemoConfig } from './config/theme-demo-config'
+import { useThemeStore } from '@/stores/theme'
+import { DsButton, DsThemeSelector } from '@/design-system/components'
 
-// Utilisation du système de design
-const { effectiveMode } = useDesignSystem()
+// Utilisation du store de thème
+const themeStore = useThemeStore()
 
 // État local
-const currentMode = computed(() => effectiveMode.value)
+const currentMode = computed(() => themeStore.mode)
 
 // État de collapse pour chaque section (basé sur l'index)
 const collapsedSections = ref<Set<number>>(new Set())
@@ -182,43 +182,84 @@ const isSectionCollapsed = (index: number) => {
   return collapsedSections.value.has(index)
 }
 
-// Configuration des variantes de composants (externalisée)
-const componentVariants = themeDemoConfig
-console.log(componentVariants)
+// Configuration simple des composants de demo
+const componentVariants = [
+  {
+    title: "Boutons",
+    category: "Interactive",
+    description: "Boutons avec différentes variantes et tailles",
+    mainSection: {
+      title: "Variants",
+      component: DsButton,
+      layout: "inline",
+      variants: [
+        { props: { text: "Primary", variant: "primary" } },
+        { props: { text: "Secondary", variant: "secondary" } },
+        { props: { text: "Success", variant: "success" } },
+        { props: { text: "Warning", variant: "warning" } },
+        { props: { text: "Error", variant: "error" } },
+      ]
+    },
+    variantsSection: {
+      title: "États",
+      component: DsButton,
+      variants: [
+        { title: "Normal", props: { text: "Normal", variant: "primary" } },
+        { title: "Loading", props: { text: "Loading...", variant: "primary", loading: true } },
+        { title: "Disabled", props: { text: "Disabled", variant: "primary", disabled: true } },
+        { title: "Ghost", props: { text: "Ghost", variant: "primary", ghost: true } },
+      ]
+    }
+  },
+  {
+    title: "Sélecteur de thème",
+    category: "System",
+    description: "Contrôles pour changer les thèmes",
+    mainSection: {
+      title: "Sélecteur",
+      component: DsThemeSelector,
+      layout: "inline",
+      variants: [
+        { props: { showColorPicker: true } }
+      ]
+    },
+    variantsSection: { title: "", component: null, variants: [] }
+  }
+]
 </script>
 
 <style scoped>
 .theme-demo {
   max-width: 1200px;
   margin: 0 auto;
-  padding: var(--ds-spacing-xl);
+  padding: var(--space-xl);
 }
 
 .theme-demo-header {
   text-align: center;
-  margin-bottom: var(--ds-spacing-2xl);
+  margin-bottom: var(--space-2xl);
 }
 
 .theme-demo-section {
-  margin-bottom: var(--ds-spacing-2xl);
-  padding: var(--ds-spacing-lg);
-  background: var(--ds-bg-soft);
-  border: 1px solid var(--ds-border-base);
-  border-radius: var(--ds-radius-lg);
+  margin-bottom: var(--space-2xl);
+  padding: var(--space-lg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
 }
 
 .theme-variant-card {
-  background: var(--ds-bg-base);
-  border: 2px solid var(--ds-border-base);
-  border-radius: var(--ds-radius-lg);
-  transition: all var(--ds-transition-normal);
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-normal);
   overflow: hidden;
-  box-shadow: var(--ds-shadow-sm);
+  box-shadow: var(--shadow-sm);
 }
 
 .theme-variant-card:hover {
-  border-color: var(--ds-border-hover);
-  box-shadow: var(--ds-shadow-lg);
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
 }
 
@@ -235,15 +276,15 @@ console.log(componentVariants)
 
 /* Bloc Principal : Métadonnées */
 .component-main-block {
-  padding: var(--ds-spacing-lg);
-  background: var(--ds-bg-soft);
-  border-bottom: 1px solid var(--ds-border-base);
+  padding: var(--space-lg);
+  background: var(--surface-hover);
+  border-bottom: 1px solid var(--border);
 }
 
 /* Bloc Variante : Composant rendu */
 .component-variant-block {
-  padding: var(--ds-spacing-lg);
-  background: var(--ds-bg-base);
+  padding: var(--space-lg);
+  background: var(--surface);
   min-height: 80px;
   display: flex;
   align-items: center;
@@ -251,55 +292,55 @@ console.log(componentVariants)
 }
 
 .theme-test-zone {
-  background: var(--ds-bg-base);
-  border-radius: var(--ds-radius-md);
-  padding: var(--ds-spacing-lg);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
 }
 
 .theme-test-card {
-  padding: var(--ds-spacing-lg);
-  background: var(--ds-bg-soft);
-  border: 1px solid var(--ds-border-base);
-  border-radius: var(--ds-radius-md);
+  padding: var(--space-lg);
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
 }
 
 /* Nouveaux styles pour les metadata */
 .category-badge {
-  background: var(--ds-color-primary);
-  color: white;
+  background: var(--primary);
+  color: var(--on-primary);
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--radius-sm);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .experimental-badge {
-  background: var(--ds-color-warning);
-  color: var(--ds-text-primary);
+  background: var(--warning);
+  color: var(--on-warning);
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--radius-sm);
   font-weight: 500;
 }
 
 .complexity-badge {
-  background: var(--ds-bg-mute);
-  color: var(--ds-text-secondary);
+  background: var(--surface-pressed);
+  color: var(--text-muted);
   font-size: 0.7rem;
   padding: 0.2rem 0.4rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--radius-sm);
   font-weight: 500;
   text-transform: capitalize;
 }
 
 .tag {
-  background: var(--ds-bg-mute);
-  color: var(--ds-text-secondary);
+  background: var(--surface-pressed);
+  color: var(--text-muted);
   font-size: 0.75rem;
   padding: 0.2rem 0.4rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--radius-sm);
   font-weight: 400;
 }
 
@@ -309,8 +350,8 @@ console.log(componentVariants)
 }
 
 .section-header {
-  border-bottom: 1px solid var(--ds-border-base);
-  padding-bottom: var(--ds-spacing-sm);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--space-sm);
 }
 
 /* Styles pour le bouton de collapse */
@@ -320,22 +361,22 @@ console.log(componentVariants)
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: var(--ds-bg-soft);
-  border: 1px solid var(--ds-border-base);
-  border-radius: var(--ds-radius-sm);
-  color: var(--ds-text-secondary);
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
   cursor: pointer;
-  transition: all var(--ds-transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .collapse-toggle:hover {
-  background: var(--ds-bg-mute);
-  border-color: var(--ds-border-hover);
-  color: var(--ds-text-primary);
+  background: var(--surface-pressed);
+  border-color: var(--border-hover);
+  color: var(--text);
 }
 
 .collapse-toggle svg {
-  transition: transform var(--ds-transition-fast);
+  transition: transform var(--transition-fast);
 }
 
 .collapse-toggle.rotated svg {
@@ -344,12 +385,12 @@ console.log(componentVariants)
 
 .variant-header {
   /* Plus de border-bottom pour unifier les blocs */
-  margin-bottom: var(--ds-spacing-sm);
+  margin-bottom: var(--space-sm);
 }
 
 /* Préparation pour le système réduisible */
 .component-variant-block {
-  transition: all var(--ds-transition-normal);
+  transition: all var(--transition-normal);
 }
 
 .component-variant-block.collapsed {
@@ -364,9 +405,9 @@ console.log(componentVariants)
 .component-group-container {
   display: flex;
   flex-direction: column;
-  gap: var(--ds-spacing-xl);
+  gap: var(--space-xl);
   overflow: hidden;
-  transition: max-height var(--ds-transition-normal) ease-out, opacity var(--ds-transition-fast) ease-out;
+  transition: max-height var(--transition-normal) ease-out, opacity var(--transition-fast) ease-out;
   max-height: 2000px; /* Valeur assez haute pour le contenu normal */
   opacity: 1;
 }
@@ -379,28 +420,27 @@ console.log(componentVariants)
 }
 
 .component-main-section {
-  padding: var(--ds-spacing-lg);
-  background: var(--ds-bg-soft);
-  border: 1px solid var(--ds-border-base);
-  border-radius: var(--ds-radius-lg);
+  padding: var(--space-lg);
+  background: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
 }
 
 .component-variants-section {
-  padding: var(--ds-spacing-lg);
-  background: var(--ds-bg-base);
-  border: 1px solid var(--ds-border-base);
-  border-radius: var(--ds-radius-lg);
+  padding: var(--space-lg);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .theme-demo {
-    padding: var(--ds-spacing-md);
+    padding: var(--space-md);
   }
 
   .theme-demo-section {
-    padding: var(--ds-spacing-md);
+    padding: var(--space-md);
   }
-
 }
 </style>

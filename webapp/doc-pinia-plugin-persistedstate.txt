@@ -1,0 +1,184 @@
+========================
+CODE SNIPPETS
+========================
+TITLE: Repository Setup Commands
+DESCRIPTION: Commands to set up the development environment for the project. This includes enabling Corepack, installing pnpm globally, and installing project dependencies.
+
+SOURCE: https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/CONTRIBUTING.md#_snippet_0
+
+LANGUAGE: bash
+CODE:
+```
+corepack enable
+npm i -g pnpm
+pnpm install
+```
+
+----------------------------------------
+
+TITLE: Install with pnpm
+DESCRIPTION: Installs the pinia-plugin-persistedstate package using the pnpm package manager. Ensure you have pnpm installed and configured.
+
+SOURCE: https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/docs/guide/index.md#_snippet_0
+
+LANGUAGE: sh
+CODE:
+```
+pnpm add pinia-plugin-persistedstate
+```
+
+----------------------------------------
+
+TITLE: Install with npm
+DESCRIPTION: Installs the pinia-plugin-persistedstate package using the npm package manager. This is a common method for Node.js projects.
+
+SOURCE: https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/docs/guide/index.md#_snippet_1
+
+LANGUAGE: sh
+CODE:
+```
+npm i pinia-plugin-persistedstate
+```
+
+----------------------------------------
+
+TITLE: Pinia Persisted State Plugin Setup Examples
+DESCRIPTION: Demonstrates how to enable and configure state persistence for Pinia stores using both the setup and options API syntaxes. It shows where to place the `persist` configuration object.
+
+SOURCE: https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/docs/guide/config.md#_snippet_0
+
+LANGUAGE: ts
+CODE:
+```
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+
+export const useStore = defineStore('main', () => {
+  const someState = ref('hello pinia')
+  return { someState }
+}, {
+  persist: {
+    // CONFIG OPTIONS HERE
+  }
+})
+```
+
+LANGUAGE: ts
+CODE:
+```
+import { defineStore } from 'pinia'
+
+export const useStore = defineStore('main', {
+  state: () => ({
+    someState: 'hello pinia',
+  }),
+  persist: {
+    // CONFIG OPTIONS HERE
+  },
+})
+```
+
+----------------------------------------
+
+TITLE: Enable Persistence (Setup Syntax)
+DESCRIPTION: Demonstrates how to enable state persistence for a Pinia store defined using the setup function syntax. Set the `persist` option to `true` within the store's configuration.
+
+SOURCE: https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/docs/guide/index.md#_snippet_4
+
+LANGUAGE: ts
+CODE:
+```
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
+
+export const useStore = defineStore(
+  'main',
+  () => {
+    const someState = ref('hello pinia')
+    return { someState }
+  },
+  {
+    persist: true,
+  },
+)
+```
+
+----------------------------------------
+
+TITLE: Install with yarn
+DESCRIPTION: Installs the pinia-plugin-persistedstate package using the yarn package manager. This is an alternative package manager for Node.js projects.
+
+SOURCE: https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/docs/guide/index.md#_snippet_2
+
+LANGUAGE: sh
+CODE:
+```
+yarn add pinia-plugin-persistedstate
+```
+
+----------------------------------------
+
+TITLE: Development and Build Commands
+DESCRIPTION: Common commands for running the development server, building the project for production, linting code, and managing documentation.
+
+SOURCE: https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/CONTRIBUTING.md#_snippet_1
+
+LANGUAGE: bash
+CODE:
+```
+pnpm run dev
+pnpm run build
+pnpm run lint
+pnpm run lint:fix
+pnpm run docs
+pnpm run docs:build
+```
+
+----------------------------------------
+
+TITLE: Add Plugin to Pinia Instance
+DESCRIPTION: Integrates the pinia-plugin-persistedstate into your Pinia application instance. This step is crucial for enabling the persistence functionality across your stores.
+
+SOURCE: https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/docs/guide/index.md#_snippet_3
+
+LANGUAGE: ts
+CODE:
+```
+import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate)
+```
+
+----------------------------------------
+
+TITLE: Install pinia-plugin-persistedstate
+DESCRIPTION: Installs the pinia-plugin-persistedstate package using various package managers. This is the initial step for integrating the plugin into a Nuxt project.
+
+SOURCE: https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/docs/frameworks/nuxt.md#_snippet_0
+
+LANGUAGE: sh
+CODE:
+```
+pnpm add pinia-plugin-persistedstate
+```
+
+LANGUAGE: sh
+CODE:
+```
+npm i pinia-plugin-persistedstate
+```
+
+LANGUAGE: sh
+CODE:
+```
+yarn add pinia-plugin-persistedstate
+```
+
+----------------------------------------
+
+TITLE: Enable Persistence (Option Syntax)
+DESCRIPTION: Shows how to enable state persistence for a Pinia store defined using the options object syntax. The `persist: true` option is added to the store's configuration object.
+
+SOURCE: https://github.com/prazdevs/pinia-plugin-persistedstate/blob/main/docs/

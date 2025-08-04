@@ -2,94 +2,30 @@
 import { RouterLink } from 'vue-router'
 import { useUserStore } from '../stores/user'
 import { DsThemeSelector } from '@/components/UI'
-import { useDesignSystem } from '@/design-system/composables/useDesignSystem'
 
 const user = useUserStore()
-const { currentTokens, effectiveMode } = useDesignSystem()
 </script>
 
 <template>
-  <header
-    class="shadow-md"
-    :style="{
-      background: `linear-gradient(to right, ${currentTokens.colors[effectiveMode].surface}, ${currentTokens.colors[effectiveMode].surfaceHover}, ${currentTokens.colors[effectiveMode].surfaceActive})`,
-      color: currentTokens.colors[effectiveMode].textPrimary
-    }"
-  >
-    <nav
-      class="container mx-auto flex flex-wrap justify-between items-center"
-      :style="{ padding: currentTokens.spacing.md }"
-    >
-      <div 
-        class="flex font-medium"
-        :style="{ gap: currentTokens.spacing.lg }"
-      >
-        <RouterLink 
-          class="nav-link transition-colors duration-200"
-          :style="{ 
-            color: currentTokens.colors[effectiveMode].textSecondary
-          }"
-          to="/"
-        >Accueil</RouterLink>
-        <RouterLink 
-          class="nav-link transition-colors duration-200"
-          :style="{ 
-            color: currentTokens.colors[effectiveMode].textSecondary
-          }"
-          to="/about"
-        >À propos</RouterLink>
-        <RouterLink 
-          class="nav-link transition-colors duration-200"
-          :style="{ 
-            color: currentTokens.colors[effectiveMode].textSecondary
-          }"
-          to="/heroes"
-        >Héros</RouterLink>
-        <RouterLink
-          v-if="user.isAdmin"
-          class="nav-link transition-colors duration-200"
-          :style="{ 
-            color: currentTokens.colors[effectiveMode].textSecondary
-          }"
-          to="/admin"
-        >Administration</RouterLink>
-        <RouterLink 
-          class="nav-link transition-colors duration-200"
-          :style="{ 
-            color: currentTokens.colors[effectiveMode].textSecondary
-          }"
-          to="/theme-demo"
-        >🎨 Thèmes</RouterLink>
+  <header class="header-container">
+    <nav class="header-nav">
+      <div class="nav-links">
+        <RouterLink class="nav-link" to="/">Accueil</RouterLink>
+        <RouterLink class="nav-link" to="/about">À propos</RouterLink>
+        <RouterLink class="nav-link" to="/heroes">Héros</RouterLink>
+        <RouterLink v-if="user.isAdmin" class="nav-link" to="/admin">Administration</RouterLink>
+        <RouterLink class="nav-link" to="/theme-demo">🎨 Thèmes</RouterLink>
       </div>
 
-      <div 
-        class="flex items-center"
-        :style="{ gap: currentTokens.spacing.md }"
-      >
-        <!-- Sélecteur de thème -->
-        <DsThemeSelector/>
-
-        <!-- Bouton de connexion/déconnexion -->
-        <div>
-          <RouterLink
-            v-if="!user.isLogged"
-            to="/login"
-            class="nav-link transition-colors duration-200"
-            :style="{ 
-              color: currentTokens.colors[effectiveMode].textSecondary
-            }"
-            >Connexion</RouterLink
-          >
-          <button
-            v-else
-            @click="user.logout()"
-            class="nav-link transition-colors duration-200"
-            :style="{ 
-              color: currentTokens.colors[effectiveMode].textSecondary
-            }"
-          >
-            Se déconnecter
-          </button>
+      <div class="header-actions">
+        <DsThemeSelector show-color-picker />
+        
+        <div v-if="user.isLogged" class="user-menu">
+          <button class="logout-btn" @click="user.logout()">Se déconnecter</button>
+        </div>
+        
+        <div v-else class="auth-menu">
+          <RouterLink class="auth-link" to="/login">Connexion</RouterLink>
         </div>
       </div>
     </nav>
@@ -97,35 +33,131 @@ const { currentTokens, effectiveMode } = useDesignSystem()
 </template>
 
 <style scoped>
+/* ================================ */
+/* HEADER CONTAINER */
+/* ================================ */
+
+.header-container {
+  background: linear-gradient(to right, var(--surface), var(--surface-hover));
+  color: var(--text);
+  box-shadow: var(--shadow-md);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-nav {
+  container: mx-auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ================================ */
+/* NAVIGATION LINKS */
+/* ================================ */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  font-weight: 500;
+}
+
 .nav-link {
-  transition: color 0.2s ease;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
 }
 
 .nav-link:hover {
-  color: v-bind('currentTokens.colors[effectiveMode].primaryBase') !important;
+  color: var(--primary);
+  background: var(--surface-hover);
 }
 
-.theme-selector-header {
-  /* Ajustements pour l'intégration dans le header */
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+.nav-link.router-link-active {
+  color: var(--primary);
+  background: var(--surface-pressed);
 }
 
-.theme-selector-header:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
+/* ================================ */
+/* HEADER ACTIONS */
+/* ================================ */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
 }
 
-/* Responsive */
+.user-menu,
+.auth-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.logout-btn,
+.auth-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.logout-btn:hover {
+  background: var(--error);
+  color: var(--on-error);
+  border-color: var(--error);
+}
+
+.auth-link:hover {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+}
+
+/* ================================ */
+/* RESPONSIVE */
+/* ================================ */
+
 @media (max-width: 768px) {
-  nav {
+  .header-nav {
     flex-direction: column;
-    gap: v-bind('currentTokens.spacing.md');
+    gap: var(--space-md);
   }
 
-  .theme-selector-header {
-    order: -1; /* Placer le sélecteur en premier sur mobile */
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+  }
+
+  .header-actions {
+    order: -1; /* Placer les actions en premier sur mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .nav-link {
+    width: 100%;
+    text-align: center;
+    padding: var(--space-sm);
   }
 }
 </style>

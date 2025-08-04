@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useDesignSystem } from '../../composables/useDesignSystem'
 
 /**
  * Props for the DsButton component.
@@ -43,82 +42,71 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emits>()
 
-// Utilisation du système de design unifié
-const { currentColors, currentTokens, themePreset } = useDesignSystem()
-
-// Configuration des tailles utilisant les tokens
+// Configuration des tailles avec variables CSS
 const sizeConfig = {
   tiny: {
-    paddingX: currentTokens.value.spacing.sm,
-    paddingY: currentTokens.value.spacing.xs,
-    fontSize: currentTokens.value.typography.caption.fontSize,
-    lineHeight: currentTokens.value.typography.caption.lineHeight,
+    paddingX: 'var(--space-sm)',
+    paddingY: 'var(--space-xs)',
+    fontSize: '0.75rem',
+    lineHeight: '1rem',
     minHeight: '24px'
   },
   small: {
-    paddingX: currentTokens.value.spacing.md,
-    paddingY: currentTokens.value.spacing.sm,
+    paddingX: 'var(--space-md)',
+    paddingY: 'var(--space-sm)',
     fontSize: '0.875rem',
     lineHeight: '1.25rem',
     minHeight: '32px'
   },
   medium: {
-    paddingX: currentTokens.value.spacing.lg,
-    paddingY: currentTokens.value.spacing.sm,
-    fontSize: currentTokens.value.typography.body.fontSize,
-    lineHeight: currentTokens.value.typography.body.lineHeight,
+    paddingX: 'var(--space-lg)',
+    paddingY: 'var(--space-sm)',
+    fontSize: '1rem',
+    lineHeight: '1.5rem',
     minHeight: '40px'
   },
   large: {
-    paddingX: currentTokens.value.spacing.xl,
-    paddingY: currentTokens.value.spacing.md,
+    paddingX: 'var(--space-xl)',
+    paddingY: 'var(--space-md)',
     fontSize: '1.125rem',
     lineHeight: '1.75rem',
     minHeight: '48px'
   }
 } as const
 
-// Configuration des couleurs par variante utilisant les tokens
-const variantColors = computed(() => {
-  const colors = currentColors.value
-  return {
-    primary: {
-      base: colors.primaryBase,
-      hover: colors.primaryHover,
-      pressed: colors.primaryPressed,
-      gradient: `linear-gradient(135deg, ${colors.primaryBase}, ${colors.primaryHover})`,
-      glow: `0 0 15px ${colors.primaryBase}40`
-    },
-    secondary: {
-      base: colors.secondaryBase,
-      hover: colors.secondaryHover,
-      pressed: colors.secondaryPressed,
-      gradient: `linear-gradient(135deg, ${colors.secondaryBase}, ${colors.secondaryHover})`,
-      glow: `0 0 15px ${colors.secondaryBase}40`
-    },
-    success: {
-      base: colors.successBase,
-      hover: colors.successHover,
-      pressed: colors.successPressed,
-      gradient: `linear-gradient(135deg, ${colors.successBase}, ${colors.successHover})`,
-      glow: `0 0 15px ${colors.successBase}40`
-    },
-    warning: {
-      base: colors.warningBase,
-      hover: colors.warningHover,
-      pressed: colors.warningPressed,
-      gradient: `linear-gradient(135deg, ${colors.warningBase}, ${colors.warningHover})`,
-      glow: `0 0 15px ${colors.warningBase}40`
-    },
-    error: {
-      base: colors.errorBase,
-      hover: colors.errorHover,
-      pressed: colors.errorPressed,
-      gradient: `linear-gradient(135deg, ${colors.errorBase}, ${colors.errorHover})`,
-      glow: `0 0 15px ${colors.errorBase}40`
-    }
+// Mapping des variants vers les variables CSS
+const variantCSSVars = {
+  primary: {
+    base: 'var(--primary)',
+    hover: 'var(--primary-hover)',
+    pressed: 'var(--primary-pressed)',
+    text: 'var(--on-primary)'
+  },
+  secondary: {
+    base: 'var(--secondary)',
+    hover: 'var(--secondary-hover)',
+    pressed: 'var(--secondary-pressed)',
+    text: 'var(--on-secondary)'
+  },
+  success: {
+    base: 'var(--success)',
+    hover: 'var(--success-hover)',
+    pressed: 'var(--success-pressed)',
+    text: 'var(--on-success)'
+  },
+  warning: {
+    base: 'var(--warning)',
+    hover: 'var(--warning-hover)',
+    pressed: 'var(--warning-pressed)',
+    text: 'var(--on-warning)'
+  },
+  error: {
+    base: 'var(--error)',
+    hover: 'var(--error-hover)',
+    pressed: 'var(--error-pressed)',
+    text: 'var(--on-error)'
   }
-})
+} as const
 
 // Classes CSS de base pour le bouton
 const buttonClasses = computed(() => {
@@ -166,7 +154,7 @@ const buttonClasses = computed(() => {
 
 // Style CSS dynamique pour le bouton
 const buttonStyle = computed(() => {
-  const colors = variantColors.value[props.variant]
+  const colors = variantCSSVars[props.variant]
   const size = sizeConfig[props.size]
   const style: Record<string, string> = {}
 
@@ -175,15 +163,15 @@ const buttonStyle = computed(() => {
   style.fontSize = size.fontSize
   style.lineHeight = size.lineHeight
   style.minHeight = size.minHeight
-  style.borderRadius = currentTokens.value.borderRadius.md
+  style.borderRadius = 'var(--radius-md)'
 
   // Couleurs selon le style
   if (props.gaming && !props.ghost) {
     // Style gaming avec gradients
-    style.background = colors.gradient
+    style.background = `linear-gradient(135deg, ${colors.base}, ${colors.hover})`
     style.borderColor = colors.base
-    style.boxShadow = `${colors.glow}, ${currentTokens.value.shadows.md}`
-    style.color = currentColors.value.onPrimary
+    style.boxShadow = `var(--shadow-glow-primary), var(--shadow-md)`
+    style.color = colors.text
   } else if (props.ghost) {
     // Style ghost
     style.background = 'transparent'
@@ -193,7 +181,7 @@ const buttonStyle = computed(() => {
     // Style normal
     style.background = colors.base
     style.borderColor = colors.base
-    style.color = currentColors.value.onPrimary
+    style.color = colors.text
   }
 
   // Variables CSS pour les effets hover
@@ -211,10 +199,7 @@ const handleClick = () => {
 </script>
 
 <template>
-  <div
-    :data-preset="themePreset"
-    class="ds-button-wrapper"
-  >
+  <div class="ds-button-wrapper">
     <!-- Bouton natif -->
     <button
       :class="buttonClasses"
@@ -251,9 +236,9 @@ const handleClick = () => {
         v-else-if="icon"
         :is="icon"
         :style="{ 
-          width: currentTokens.spacing.md, 
-          height: currentTokens.spacing.md,
-          marginRight: currentTokens.spacing.sm
+          width: 'var(--space-md)', 
+          height: 'var(--space-md)',
+          marginRight: 'var(--space-sm)'
         }"
       />
 
@@ -268,13 +253,13 @@ const handleClick = () => {
       <!-- Effet de surbrillance au hover -->
       <div
         class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20"
-        :style="{ borderRadius: currentTokens.borderRadius.md }"
+        style="border-radius: var(--radius-md)"
       />
 
       <!-- Effet de "sheen" (brillance animée) -->
       <div 
         class="absolute inset-0 overflow-hidden pointer-events-none z-20"
-        :style="{ borderRadius: currentTokens.borderRadius.md }"
+        style="border-radius: var(--radius-md)"
       >
         <div class="sheen-effect absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full transition-transform duration-700 ease-in-out" />
       </div>
@@ -283,7 +268,7 @@ const handleClick = () => {
       <div 
         v-if="variant === 'primary'" 
         class="gaming-particles absolute inset-0 pointer-events-none z-10"
-        :style="{ borderRadius: currentTokens.borderRadius.md }"
+        style="border-radius: var(--radius-md)"
       >
         <div class="particle particle-1" />
         <div class="particle particle-2" />
@@ -300,7 +285,7 @@ const handleClick = () => {
 
 .ds-button-wrapper {
   display: inline-block;
-  border-radius: v-bind('currentTokens.borderRadius.md');
+  border-radius: var(--radius-md);
   position: relative;
 }
 
@@ -322,7 +307,7 @@ const handleClick = () => {
   /* Focus states avec tokens */
   &:focus {
     ring-color: var(--button-hover);
-    box-shadow: 0 0 0 2px v-bind('currentColors.borderFocus');
+    box-shadow: 0 0 0 2px var(--border-focus);
   }
 }
 
@@ -378,7 +363,7 @@ const handleClick = () => {
 /* Particules flottantes pour bouton primary */
 .particle {
   position: absolute;
-  background: v-bind('currentColors.primaryBase');
+  background: var(--primary);
   border-radius: 50%;
   opacity: 0.6;
   animation: float 3s ease-in-out infinite;
