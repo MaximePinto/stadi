@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
-import { DsButton, useDesignSystem } from '@/design-system'
+import { DsButton } from '@/design-system'
+import { useThemeStore } from '@/stores/theme'
 // Import des icônes pour les boutons
 import {
   PersonOutline,
@@ -16,8 +17,8 @@ import {
 const router = useRouter()
 const store = useUserStore()
 
-// Utilisation du système de design unifié
-const { setThemePreset, themePreset, availablePresets } = useDesignSystem()
+// Utilisation du store de thème  
+const themeStore = useThemeStore()
 
 if (!store.isAdmin) {
   router.push('/')
@@ -45,9 +46,10 @@ async function handleClick(section: string) {
 
 // Fonction pour changer de thème (démo)
 function switchTheme() {
-  const currentIndex = availablePresets.value.indexOf(themePreset.value)
-  const nextIndex = (currentIndex + 1) % availablePresets.value.length
-  setThemePreset(availablePresets.value[nextIndex])
+  const presets = themeStore.availablePresets
+  const currentIndex = presets.indexOf(themeStore.preset)
+  const nextIndex = (currentIndex + 1) % presets.length
+  themeStore.setPreset(presets[nextIndex])
 }
 </script>
 
@@ -61,7 +63,7 @@ function switchTheme() {
 
       <!-- Contrôles de thème -->
       <div class="flex items-center gap-4">
-        <span class="text-ds-secondary text-sm">Thème: {{ themePreset }}</span>
+        <span class="text-ds-secondary text-sm">Thème: {{ themeStore.preset }}</span>
         <DsButton
           text="Changer thème"
           variant="secondary"

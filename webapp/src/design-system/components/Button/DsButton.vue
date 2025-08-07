@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { NButton, NIcon } from 'naive-ui'
-import { useDesignSystem } from '../../composables/useDesignSystem'
-import { useButtonColors } from './useButtonColors'
 
 /**
  * Props for the DsButton component.
@@ -40,78 +37,158 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   loading: false,
   ghost: false,
-  gaming: true // Par défaut, on garde le style gaming
+  gaming: true
 })
 
 const emit = defineEmits<Emits>()
 
-// Utilisation du système de design unifié
-const { currentColors, getColor } = useDesignSystem()
-const { getButtonColors, currentPreset } = useButtonColors()
-
-// Mapping des variants vers les types Naive UI
-const naiveVariantMap = {
-  primary: 'primary',
-  secondary: 'default',
-  success: 'success',
-  warning: 'warning',
-  error: 'error'
+// Configuration des tailles avec variables CSS
+const sizeConfig = {
+  tiny: {
+    paddingX: 'var(--space-sm)',
+    paddingY: 'var(--space-xs)',
+    fontSize: '0.75rem',
+    lineHeight: '1rem',
+    minHeight: '24px'
+  },
+  small: {
+    paddingX: 'var(--space-md)',
+    paddingY: 'var(--space-sm)',
+    fontSize: '0.875rem',
+    lineHeight: '1.25rem',
+    minHeight: '32px'
+  },
+  medium: {
+    paddingX: 'var(--space-lg)',
+    paddingY: 'var(--space-sm)',
+    fontSize: '1rem',
+    lineHeight: '1.5rem',
+    minHeight: '40px'
+  },
+  large: {
+    paddingX: 'var(--space-xl)',
+    paddingY: 'var(--space-md)',
+    fontSize: '1.125rem',
+    lineHeight: '1.75rem',
+    minHeight: '48px'
+  }
 } as const
 
-// Configuration gaming (effets visuels additionnels) - Maintenant dynamique
-const gamingConfig = computed(() => {
-  const colors = getButtonColors(props.variant)
-  
-  return {
-    gradient: colors.gradient,
-    glowColor: colors.glow,
-    borderGlow: colors.borderGlow,
-    baseColor: colors.base,
-    hoverColor: colors.hover,
-    pressedColor: colors.pressed
+// Mapping des variants vers les variables CSS
+const variantCSSVars = {
+  primary: {
+    base: 'var(--primary)',
+    hover: 'var(--primary-hover)',
+    pressed: 'var(--primary-pressed)',
+    text: 'var(--on-primary)'
+  },
+  secondary: {
+    base: 'var(--secondary)',
+    hover: 'var(--secondary-hover)',
+    pressed: 'var(--secondary-pressed)',
+    text: 'var(--on-secondary)'
+  },
+  success: {
+    base: 'var(--success)',
+    hover: 'var(--success-hover)',
+    pressed: 'var(--success-pressed)',
+    text: 'var(--on-success)'
+  },
+  warning: {
+    base: 'var(--warning)',
+    hover: 'var(--warning-hover)',
+    pressed: 'var(--warning-pressed)',
+    text: 'var(--on-warning)'
+  },
+  error: {
+    base: 'var(--error)',
+    hover: 'var(--error-hover)',
+    pressed: 'var(--error-pressed)',
+    text: 'var(--on-error)'
   }
-})
+} as const
 
-// Classes CSS pour les effets gaming
-const gamingClasses = computed(() => {
-  if (!props.gaming) return ''
-
+// Classes CSS de base pour le bouton
+const buttonClasses = computed(() => {
   const baseClasses = [
-    'ds-gaming-button',
-    'relative',
-    'overflow-hidden',
+    'ds-button',
+    'inline-flex',
+    'items-center',
+    'justify-center',
+    'font-medium',
+    'border',
     'transition-all',
-    'duration-300',
-    'ease-in-out'
+    'duration-200',
+    'ease-in-out',
+    'focus:outline-none',
+    'focus:ring-2',
+    'focus:ring-offset-2'
   ]
 
-  if (!props.disabled && !props.loading) {
+  // Classes pour les états
+  if (props.disabled) {
+    baseClasses.push('opacity-50', 'cursor-not-allowed')
+  } else {
+    baseClasses.push('cursor-pointer')
+  }
+
+  // Classes gaming
+  if (props.gaming) {
     baseClasses.push(
-      'hover:scale-105',
-      'active:scale-95',
-      'hover:shadow-lg'
+      'ds-gaming-button',
+      'relative',
+      'overflow-hidden'
     )
+    
+    if (!props.disabled && !props.loading) {
+      baseClasses.push(
+        'hover:scale-105',
+        'active:scale-95',
+        'hover:shadow-lg'
+      )
+    }
   }
 
   return baseClasses.join(' ')
 })
 
-// Style CSS dynamique pour les gradients gaming
-const gamingStyle = computed(() => {
-  if (!props.gaming || props.ghost) return {}
+// Style CSS dynamique pour le bouton
+const buttonStyle = computed(() => {
+  const colors = variantCSSVars[props.variant]
+  const size = sizeConfig[props.size]
+  const style: Record<string, string> = {}
 
-  const config = gamingConfig.value
+  // Taille
+  style.padding = `${size.paddingY} ${size.paddingX}`
+  style.fontSize = size.fontSize
+  style.lineHeight = size.lineHeight
+  style.minHeight = size.minHeight
+  style.borderRadius = 'var(--radius-md)'
 
-  return {
-    '--gaming-gradient': config.gradient,
-    '--gaming-glow': config.glowColor,
-    '--gaming-border-glow': config.borderGlow,
-    '--gaming-base': config.baseColor,
-    '--gaming-hover': config.hoverColor,
-    '--gaming-pressed': config.pressedColor,
-    background: config.gradient,
-    boxShadow: `${config.borderGlow}, 0 4px 15px rgba(0, 0, 0, 0.2)`
+  // Couleurs selon le style
+  if (props.gaming && !props.ghost) {
+    // Style gaming avec gradients
+    style.background = `linear-gradient(135deg, ${colors.base}, ${colors.hover})`
+    style.borderColor = colors.base
+    style.boxShadow = `var(--shadow-glow-primary), var(--shadow-md)`
+    style.color = colors.text
+  } else if (props.ghost) {
+    // Style ghost
+    style.background = 'transparent'
+    style.borderColor = colors.base
+    style.color = colors.base
+  } else {
+    // Style normal
+    style.background = colors.base
+    style.borderColor = colors.base
+    style.color = colors.text
   }
+
+  // Variables CSS pour les effets hover
+  style['--button-hover'] = colors.hover
+  style['--button-pressed'] = colors.pressed
+
+  return style
 })
 
 const handleClick = () => {
@@ -122,50 +199,77 @@ const handleClick = () => {
 </script>
 
 <template>
-  <div
-    :class="gamingClasses"
-    :style="gamingStyle"
-    :data-preset="currentPreset"
-    class="ds-button-wrapper"
-  >
-    <!-- Bouton Naive UI comme base -->
-    <NButton
-      :type="naiveVariantMap[variant]"
-      :size="size"
-      :disabled="disabled"
-      :loading="loading"
-      :ghost="ghost"
-      :class="['ds-button-base', { 'ds-gaming-transparent': gaming && !ghost }]"
+  <div class="ds-button-wrapper">
+    <!-- Bouton natif -->
+    <button
+      :class="buttonClasses"
+      :style="buttonStyle"
+      :disabled="disabled || loading"
       @click="handleClick"
-      block
+      type="button"
     >
-      <!-- Slot pour icône -->
-      <template #icon v-if="icon">
-        <NIcon>
-          <component :is="icon" />
-        </NIcon>
-      </template>
+      <!-- Icône de chargement -->
+      <svg
+        v-if="loading"
+        class="animate-spin -ml-1 mr-2 h-4 w-4"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <circle
+          class="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"
+        ></circle>
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        ></path>
+      </svg>
+
+      <!-- Icône personnalisée -->
+      <component
+        v-else-if="icon"
+        :is="icon"
+        :style="{ 
+          width: 'var(--space-md)', 
+          height: 'var(--space-md)',
+          marginRight: 'var(--space-sm)'
+        }"
+      />
 
       <!-- Contenu avec effets gaming -->
-      <span class="relative z-10 font-medium">
+      <span class="relative z-10">
         {{ text }}
       </span>
-    </NButton>
+    </button>
 
     <!-- Effets gaming additionnels -->
     <template v-if="gaming && !disabled && !loading">
       <!-- Effet de surbrillance au hover -->
       <div
-        class="absolute inset-0 rounded-md bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20"
+        class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-200 pointer-events-none z-20"
+        style="border-radius: var(--radius-md)"
       />
 
       <!-- Effet de "sheen" (brillance animée) -->
-      <div class="absolute inset-0 rounded-md overflow-hidden pointer-events-none z-20">
-        <div class="sheen-effect absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out" />
+      <div 
+        class="absolute inset-0 overflow-hidden pointer-events-none z-20"
+        style="border-radius: var(--radius-md)"
+      >
+        <div class="sheen-effect absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full transition-transform duration-700 ease-in-out" />
       </div>
 
-      <!-- Particules flottantes (optionnel, pour l'effet gaming ultime) -->
-      <div v-if="variant === 'primary'" class="gaming-particles absolute inset-0 pointer-events-none z-10">
+      <!-- Particules flottantes (pour bouton primary seulement) -->
+      <div 
+        v-if="variant === 'primary'" 
+        class="gaming-particles absolute inset-0 pointer-events-none z-10"
+        style="border-radius: var(--radius-md)"
+      >
         <div class="particle particle-1" />
         <div class="particle particle-2" />
         <div class="particle particle-3" />
@@ -176,29 +280,47 @@ const handleClick = () => {
 
 <style scoped>
 /* ================================ */
-/* BASE : Override du bouton Naive UI pour le gaming */
+/* BASE : Styles du bouton */
 /* ================================ */
 
 .ds-button-wrapper {
   display: inline-block;
-  border-radius: var(--ds-radius-md);
+  border-radius: var(--radius-md);
+  position: relative;
 }
 
-/* Rendre le bouton Naive UI transparent pour laisser place au gradient */
-.ds-gaming-transparent {
-  background: transparent !important;
-  border: 1px solid var(--gaming-glow, rgba(255, 255, 255, 0.2)) !important;
-  backdrop-filter: blur(8px);
-  color: white !important;
+/* Styles de base du bouton */
+.ds-button {
+  font-family: inherit;
   
-  /* Effets hover avec les nouvelles couleurs */
+  /* Effets hover utilisant les tokens */
   &:hover:not(:disabled) {
-    border-color: var(--gaming-hover, rgba(255, 255, 255, 0.4)) !important;
+    background: var(--button-hover) !important;
     transform: translateY(-1px);
   }
   
   &:active:not(:disabled) {
-    border-color: var(--gaming-pressed, rgba(255, 255, 255, 0.6)) !important;
+    background: var(--button-pressed) !important;
+    transform: translateY(0);
+  }
+  
+  /* Focus states avec tokens */
+  &:focus {
+    ring-color: var(--button-hover);
+    box-shadow: 0 0 0 2px var(--border-focus);
+  }
+}
+
+/* Styles gaming pour le bouton */
+.ds-gaming-button {
+  backdrop-filter: blur(8px);
+  
+  &:hover:not(:disabled) {
+    border-color: var(--button-hover) !important;
+  }
+  
+  &:active:not(:disabled) {
+    border-color: var(--button-pressed) !important;
     transform: translateY(0);
   }
 }
@@ -226,6 +348,7 @@ const handleClick = () => {
 /* Effet sheen amélioré */
 .ds-button-wrapper:hover .sheen-effect {
   animation: sheen-slide 0.7s ease-in-out;
+  transform: translateX(200%) skewX(-12deg);
 }
 
 @keyframes sheen-slide {
@@ -238,13 +361,9 @@ const handleClick = () => {
 }
 
 /* Particules flottantes pour bouton primary */
-.gaming-particles {
-  border-radius: var(--ds-radius-md);
-}
-
 .particle {
   position: absolute;
-  background: var(--ds-color-primary);
+  background: var(--primary);
   border-radius: 50%;
   opacity: 0.6;
   animation: float 3s ease-in-out infinite;
@@ -286,48 +405,6 @@ const handleClick = () => {
 }
 
 /* ================================ */
-/* MODES SOMBRE/CLAIR ET PRESETS */
-/* ================================ */
-
-/* Mode sombre : effets plus intenses */
-.dark .ds-button-wrapper {
-  --gaming-glow-intensity: 0.8;
-}
-
-/* Mode clair : effets plus subtils */
-.light .ds-button-wrapper {
-  --gaming-glow-intensity: 0.4;
-}
-
-/* Styles spécifiques aux presets */
-.ds-button-wrapper[data-preset="cyberpunk"] {
-  filter: saturate(1.2) contrast(1.1);
-}
-
-.ds-button-wrapper[data-preset="cyberpunk"]:hover {
-  filter: saturate(1.4) contrast(1.2);
-  animation: pulse-glow 1s ease-in-out infinite;
-}
-
-.ds-button-wrapper[data-preset="ocean"] {
-  filter: hue-rotate(10deg) saturate(1.1);
-}
-
-.ds-button-wrapper[data-preset="ocean"]:hover {
-  filter: hue-rotate(10deg) saturate(1.3);
-  box-shadow: 0 0 25px var(--gaming-glow), 0 0 50px var(--gaming-glow);
-}
-
-.ds-button-wrapper[data-preset="forest"] {
-  filter: sepia(0.1) saturate(1.2);
-}
-
-.ds-button-wrapper[data-preset="forest"]:hover {
-  filter: sepia(0.2) saturate(1.4);
-  transform: scale(1.02) translateY(-1px);
-}
-
-/* ================================ */
 /* RESPONSIVE */
 /* ================================ */
 
@@ -356,11 +433,5 @@ const handleClick = () => {
   .ds-button-wrapper:hover {
     transform: none !important;
   }
-}
-
-/* Focus visible amélioré */
-.ds-button-base:focus-visible {
-  outline: 2px solid var(--ds-border-focus);
-  outline-offset: 2px;
 }
 </style>

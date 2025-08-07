@@ -1,0 +1,106 @@
+/**
+ * 🎨 Thèmes - Variations par mode et preset
+ * Utilise les couleurs de base définies dans tokens.css
+ */
+
+/* ================================ */
+/* MODE SOMBRE                      */
+/* ================================ */
+
+.dark {
+  /* Layout & Surfaces */
+  --bg: var(--slate-900);
+  --bg-soft: var(--slate-800);
+  --bg-mute: var(--slate-700);
+  
+  --surface: var(--slate-800);
+  --surface-hover: var(--slate-700);
+  --surface-pressed: var(--slate-600);
+  
+  /* Texte */
+  --text: var(--slate-100);
+  --text-muted: var(--slate-400);
+  --text-disabled: var(--slate-600);
+  
+  /* Bordures */
+  --border: var(--slate-600);
+  --border-hover: var(--slate-500);
+  --border-focus: var(--indigo-400);
+
+  /* Couleurs principales - plus vives en mode sombre */
+  --primary: var(--indigo-500);
+  --primary-disabled: var(--indigo-800);
+  
+  /* Couleurs secondaires */
+  --secondary: var(--indigo-900);
+  --secondary-hover: var(--indigo-800);
+  --secondary-pressed: var(--indigo-950);
+  --secondary-disabled: var(--slate-800);
+  --on-secondary: var(--slate-100);
+
+  /* Couleurs d'accent - plus vives */
+  --accent: var(--purple-400);
+  
+  /* États - plus vifs en mode sombre */
+  --success: var(--green-400);
+  --warning: var(--amber-400);
+  --error: var(--red-400);
+  --info: var(--blue-400);
+}
+
+/* ================================ */
+/* PRESETS DE THÈMES               */
+/* ================================ */
+
+/* Gaming (Purple) */
+[data-theme="gaming"] {
+  --primary: var(--purple-600);
+  --accent: var(--indigo-600);
+}
+
+[data-theme="gaming"].dark {
+  --primary: var(--purple-400);
+  --accent: var(--indigo-400);
+}
+
+/* Ocean (Cyan) */
+[data-theme="ocean"] {
+  --primary: var(--cyan-600);
+  --accent: var(--blue-600);
+}
+
+[data-theme="ocean"].dark {
+  --primary: var(--cyan-400);
+  --accent: var(--blue-400);
+}
+
+/* Forest (Emerald) */
+[data-theme="forest"] {
+  --primary: var(--emerald-600);
+  --accent: var(--green-600);
+}
+
+[data-theme="forest"].dark {
+  --primary: var(--emerald-400);
+  --accent: var(--green-400);
+}
+
+/* ================================ */
+/* UTILITAIRES                     */
+/* ================================ */
+
+/* Classes utilitaires pour les développeurs */
+.theme-primary { color: var(--primary); }
+.theme-secondary { color: var(--secondary); }
+.theme-accent { color: var(--accent); }
+.theme-success { color: var(--success); }
+.theme-warning { color: var(--warning); }
+.theme-error { color: var(--error); }
+.theme-info { color: var(--info); }
+
+.theme-bg-primary { background-color: var(--primary); }
+.theme-bg-secondary { background-color: var(--secondary); }
+.theme-bg-surface { background-color: var(--surface); }
+
+.theme-border-primary { border-color: var(--primary); }
+.theme-border-focus { border-color: var(--border-focus); }

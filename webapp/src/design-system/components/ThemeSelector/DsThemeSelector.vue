@@ -1,35 +1,40 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useDesignSystem } from '../../composables/useDesignSystem'
-import type { ThemeChangeEvent } from '../../types'
+import { useDesignSystem } from '@/composables/useDesignSystem'
 import {
   SunnyOutline,
   MoonOutline,
-  LaptopOutline,
-  SettingsOutline
+  SettingsOutline,
+  ColorPaletteOutline,
+  PhonePortraitOutline,
+  DesktopOutline
 } from '@vicons/ionicons5'
 
-
- interface Props {
-  showModeToggle?: boolean      // Afficher les boutons mode (☀️🌙💻)
+interface Props {
+  showModeToggle?: boolean      // Afficher les boutons mode (☀️🌙)
   showPresetSelector?: boolean  // Afficher le sélecteur de presets
-  showAdvanced?: boolean        // Afficher le bouton paramètres avancés
+  showColorPicker?: boolean     // Afficher le color picker
+  showSystemInfo?: boolean      // Afficher les infos système (VueUse)
+  autoAdaptive?: boolean        // Configuration automatique selon l'appareil
   size?: 'small' | 'medium' | 'large'  // Taille des composants
   compact?: boolean             // Layout compact (vertical)
   gaming?: boolean              // Effets visuels gaming
 }
 
 interface Emits {
-  'mode-change': [mode: 'light' | 'dark' | 'auto']  // Changement de mode
-  'preset-change': [preset: string]                 // Changement de preset
-  'theme-change': [theme: ThemeChangeEvent]         // Tout changement
+  'mode-change': [mode: 'light' | 'dark']
+  'preset-change': [preset: string]
+  'color-change': [colorKey: string, color: string]
+  'system-reset': []
 }
 
 // Définition des props avec valeurs par défaut
 const props = withDefaults(defineProps<Props>(), {
   showModeToggle: true,
   showPresetSelector: true,
-  showAdvanced: false,
+  showColorPicker: false,
+  showSystemInfo: false,
+  autoAdaptive: true,
   size: 'medium',
   compact: false,
   gaming: true
@@ -38,75 +43,94 @@ const props = withDefaults(defineProps<Props>(), {
 // Définition des émissions d'événements
 const emit = defineEmits<Emits>()
 
-// Utilisation du système de design unifié
-const {
-  effectiveMode,    // Mode actuel (résout 'auto' vers 'light' ou 'dark')
-  themePreset,      // Preset de thème actuel
-  setThemeMode,     // Fonction pour changer le mode
-  setThemePreset,   // Fonction pour changer le preset
-  toggleTheme,      // Fonction pour basculer light/dark
-  currentTokens,    // Tokens de design actuels
-  themePresets      // Liste des presets disponibles
-} = useDesignSystem()
+// Utilisation du Design System avec VueUse
+const designSystem = useDesignSystem({
+  autoDetectPreferences: true,
+  syncWithSystem: true,
+  enableReducedMotion: true
+})
 
-// Configuration des options pour le sélecteur de mode (light/dark/auto)
+// Accès au store via le design system
+const { themeStore } = designSystem
+
+// Configuration des options pour le sélecteur de mode
 const modeOptions = [
   {
     label: 'Clair',
-    value: 'light',
-    icon: SunnyOutline    // ☀️
+    value: 'light' as const,
+    icon: SunnyOutline
   },
   {
     label: 'Sombre',
-    value: 'dark',
-    icon: MoonOutline     // 🌙
-  },
-  {
-    label: 'Auto',
-    value: 'auto',
-    icon: LaptopOutline   // 💻
+    value: 'dark' as const,
+    icon: MoonOutline
   }
 ]
 
-// Options calculées pour le sélecteur de préréglage de thème
-const presetOptions = computed(() => {
-  if (!themePresets || typeof themePresets !== 'object') {
-    return []
-  }
+// Configuration des presets (utilise les données du store)
+const presetOptions = computed(() => themeStore.availablePresets)
 
-  return Object.entries(themePresets).map(([key, preset]) => ({
-    label: preset.name,
-    value: key,
-    description: preset.description
-  }))
-})
-
-// Gestionnaire pour le changement de mode de thème
-const handleModeChange = (mode: 'light' | 'dark' | 'auto') => {
-  setThemeMode(mode)                                    // Met à jour le mode
-  emit('mode-change', mode)                            // Émet l'événement
-  emit('theme-change', { mode, type: 'mode' })         // Émet l'événement général
+// Gestionnaire pour le changement de mode de thème (avec VueUse)
+const handleModeChange = (mode: 'light' | 'dark') => {
+  designSystem.smartToggle() // Utilise le toggle intelligent de VueUse
+  emit('mode-change', mode)
 }
 
 // Gestionnaire pour le changement de préréglage de thème
 const handlePresetChange = (event: Event) => {
   const target = event.target as HTMLSelectElement
-  const preset = target.value
-  setThemePreset(preset)                               // Met à jour le preset
-  emit('preset-change', preset)                        // Émet l'événement
-  emit('theme-change', { preset, type: 'preset' })    // Émet l'événement général
+  const preset = target.value as any
+  
+  // Utilise la méthode avec gestion des animations
+  designSystem.setPresetWithMotion(preset)
+  emit('preset-change', preset)
 }
 
 // Gestionnaire pour le basculement rapide de thème
 const handleToggleTheme = () => {
-  toggleTheme()                                        // Bascule light/dark
-  emit('theme-change', { type: 'toggle' })            // Émet l'événement
+  designSystem.smartToggle()
 }
 
+// Gestionnaire pour reset aux préférences système
+const handleSystemReset = () => {
+  designSystem.resetToSystemPreferences()
+  emit('system-reset')
+}
+
+// Gestionnaire pour le changement de couleur personnalisée
+const handleColorChange = (colorKey: string, event: Event) => {
+  const target = event.target as HTMLInputElement
+  const color = target.value
+  themeStore.setCustomColor(colorKey, color)
+  emit('color-change', colorKey, color)
+}
+
+// Configuration adaptative basée sur VueUse
+const adaptiveConfig = computed(() => {
+  if (!props.autoAdaptive) {
+    return {
+      size: props.size,
+      compact: props.compact,
+      gaming: props.gaming && !designSystem.isReducedMotion,
+      showPresetSelector: props.showPresetSelector,
+      showColorPicker: props.showColorPicker
+    }
+  }
+  
+  // Configuration automatique selon l'appareil et les préférences
+  const optimal = designSystem.optimalThemeSelectorConfig.value
+  return {
+    size: optimal.size,
+    compact: optimal.compact,
+    gaming: optimal.gaming,
+    showPresetSelector: optimal.showPresetSelector,
+    showColorPicker: optimal.showColorPicker
+  }
+})
 
 // Classes CSS calculées pour les effets de jeu
 const gamingClasses = computed(() => {
-  if (!props.gaming) return ''
+  if (!adaptiveConfig.value.gaming) return ''
 
   return [
     'ds-theme-selector-gaming',
@@ -118,19 +142,9 @@ const gamingClasses = computed(() => {
   ].join(' ')
 })
 
-// Style CSS dynamique calculé pour les effets de jeu
-const gamingStyle = computed(() => {
-  if (!props.gaming) return {}
-
-  return {
-    '--gaming-glow': currentTokens.value.colors[effectiveMode.value].primaryBase,
-    boxShadow: `0 0 20px ${currentTokens.value.colors[effectiveMode.value].primaryBase}20`
-  }
-})
-
-// Classes de taille calculées selon la prop size
+// Classes de taille calculées selon la configuration adaptative
 const sizeClasses = computed(() => {
-  switch (props.size) {
+  switch (adaptiveConfig.value.size) {
     case 'small': return 'ds-theme-size-small'
     case 'large': return 'ds-theme-size-large'
     default: return 'ds-theme-size-medium'
@@ -141,74 +155,107 @@ const sizeClasses = computed(() => {
 <template>
   <div
     :class="[gamingClasses, sizeClasses]"
-    :style="gamingStyle"
     class="ds-theme-selector"
   >
     <div
       :class="[
         'ds-theme-container',
-        { 'ds-theme-compact': compact }
+        { 'ds-theme-compact': adaptiveConfig.compact }
       ]"
     >
-      <!-- Sélecteur de mode de thème (☀️🌙💻) -->
+      <!-- Sélecteur de mode de thème (☀️🌙) -->
       <template v-if="showModeToggle">
         <button
           v-for="option in modeOptions"
           :key="option.value"
           :class="[
             'ds-theme-mode-btn',
-            { 'ds-theme-mode-active': effectiveMode === option.value }
+            { 'ds-theme-mode-active': themeStore.mode === option.value }
           ]"
           :aria-label="option.label"
-          @click="handleModeChange(option.value as 'light' | 'dark' | 'auto')"
+          @click="handleModeChange(option.value)"
           type="button"
         >
           <component :is="option.icon" />
         </button>
-      </template>
-
-      <!-- Bascule rapide light/dark -->
-      <template v-if="showModeToggle">
+        
         <div class="ds-theme-divider" />
+        
+        <!-- Bascule rapide light/dark -->
         <button
           class="ds-theme-toggle-btn"
           aria-label="Basculer thème"
           @click="handleToggleTheme"
           type="button"
         >
-          <component :is="effectiveMode === 'dark' ? SunnyOutline : MoonOutline" />
+          <component :is="themeStore.mode === 'dark' ? SunnyOutline : MoonOutline" />
         </button>
       </template>
 
       <!-- Sélecteur de préréglage -->
-      <template v-if="showPresetSelector">
+      <template v-if="adaptiveConfig.showPresetSelector">
         <div class="ds-theme-divider" />
         <select
-          :value="themePreset"
+          :value="themeStore.preset"
           class="ds-theme-preset-select"
           @change="handlePresetChange"
         >
-          <option value="" disabled>Choisir un thème</option>
           <option
             v-for="option in presetOptions"
-            :key="option.value"
-            :value="option.value"
+            :key="option.id"
+            :value="option.id"
           >
             {{ option.label }}
           </option>
         </select>
       </template>
 
-      <!-- Paramètres avancés -->
-      <template v-if="showAdvanced">
+      <!-- Color Picker pour customisation -->
+      <template v-if="adaptiveConfig.showColorPicker">
         <div class="ds-theme-divider" />
-        <button
-          class="ds-theme-advanced-btn"
-          aria-label="Paramètres avancés"
-          type="button"
-        >
-          <SettingsOutline />
-        </button>
+        <div class="ds-color-picker-group">
+          <input
+            type="color"
+            :value="themeStore.customColors.primary || themeStore.currentPreset?.colors.primary || '#4338ca'"
+            @change="handleColorChange('primary', $event)"
+            class="ds-color-input"
+            title="Couleur primaire"
+          >
+          <input
+            type="color"
+            :value="themeStore.customColors.accent || themeStore.currentPreset?.colors.accent || '#9333ea'"
+            @change="handleColorChange('accent', $event)"
+            class="ds-color-input"
+            title="Couleur d'accent"
+          >
+          <button
+            @click="themeStore.resetCustomColors()"
+            class="ds-reset-btn"
+            title="Reset couleurs"
+          >
+            <SettingsOutline />
+          </button>
+        </div>
+      </template>
+
+      <!-- Informations système VueUse -->
+      <template v-if="showSystemInfo">
+        <div class="ds-theme-divider" />
+        <div class="ds-system-info">
+          <div class="ds-info-item" :title="`Préférence système: ${designSystem.preferredColorScheme.value}`">
+            <component :is="designSystem.preferredColorScheme.value === 'dark' ? MoonOutline : SunnyOutline" />
+          </div>
+          <div class="ds-info-item" :title="`Appareil: ${designSystem.deviceType}`">
+            <component :is="designSystem.isMobile ? PhonePortraitOutline : DesktopOutline" />
+          </div>
+          <button
+            @click="handleSystemReset"
+            class="ds-system-reset-btn"
+            title="Retour aux préférences système"
+          >
+            <SettingsOutline />
+          </button>
+        </div>
       </template>
     </div>
   </div>
@@ -222,29 +269,29 @@ const sizeClasses = computed(() => {
 .ds-theme-selector {
   display: inline-flex;
   align-items: center;
-  padding: var(--ds-spacing-sm);
-  background: var(--ds-bg-soft);
-  border: 1px solid var(--ds-border-base);
-  border-radius: var(--ds-radius-lg);
+  padding: var(--space-sm);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   backdrop-filter: blur(10px);
-  transition: all var(--ds-transition-normal);
+  transition: all var(--transition-normal);
 }
 
 .ds-theme-selector:hover {
-  border-color: var(--ds-border-hover);
-  background: var(--ds-bg-base);
+  border-color: var(--border-hover);
+  background: var(--surface-hover);
 }
 
 .ds-theme-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--ds-spacing-sm);
+  gap: var(--space-sm);
 }
 
 .ds-theme-compact {
   flex-direction: column;
-  gap: var(--ds-spacing-xs);
+  gap: var(--space-xs);
 }
 
 /* ================================ */
@@ -254,9 +301,9 @@ const sizeClasses = computed(() => {
 .ds-theme-mode-btn {
   position: relative;
   overflow: hidden;
-  transition: all var(--ds-transition-fast);
+  transition: all var(--transition-fast);
   background: transparent;
-  border: 1px solid var(--ds-border-base);
+  border: 1px solid var(--border);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -264,25 +311,24 @@ const sizeClasses = computed(() => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--ds-text-primary);
+  color: var(--text);
 }
 
 .ds-theme-mode-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-color: var(--ds-border-hover);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-hover);
 }
 
 .ds-theme-mode-active {
-  background: var(--ds-color-primary) !important;
-  color: white !important;
-  border-color: var(--ds-color-primary) !important;
-  box-shadow: 0 0 15px var(--ds-color-primary)40;
+  background: var(--primary) !important;
+  color: var(--on-primary) !important;
+  border-color: var(--primary) !important;
+  box-shadow: var(--shadow-glow-primary);
 }
 
 .ds-theme-mode-active:hover {
-  background: var(--ds-color-primary-hover) !important;
-  box-shadow: 0 0 20px var(--ds-color-primary)60;
+  background: var(--primary-hover) !important;
 }
 
 /* ================================ */
@@ -292,9 +338,9 @@ const sizeClasses = computed(() => {
 .ds-theme-toggle-btn {
   position: relative;
   overflow: hidden;
-  transition: all var(--ds-transition-fast);
+  transition: all var(--transition-fast);
   background: transparent;
-  border: 1px solid var(--ds-border-base);
+  border: 1px solid var(--border);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -302,14 +348,14 @@ const sizeClasses = computed(() => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--ds-text-primary);
+  color: var(--text);
 }
 
 .ds-theme-toggle-btn:hover {
   transform: rotate(180deg) scale(1.1);
-  background: var(--ds-color-primary) !important;
-  color: white !important;
-  border-color: var(--ds-color-primary) !important;
+  background: var(--primary) !important;
+  color: var(--on-primary) !important;
+  border-color: var(--primary) !important;
 }
 
 /* ================================ */
@@ -319,52 +365,75 @@ const sizeClasses = computed(() => {
 .ds-theme-preset-select {
   min-width: 140px;
   padding: 8px 12px;
-  border: 1px solid var(--ds-border-base);
-  border-radius: var(--ds-radius-md);
-  background: var(--ds-bg-base);
-  color: var(--ds-text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
   font-size: 14px;
   cursor: pointer;
-  transition: all var(--ds-transition-fast);
+  transition: all var(--transition-fast);
 }
 
 .ds-theme-preset-select:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-color: var(--ds-border-hover);
+  box-shadow: var(--shadow-sm);
+  border-color: var(--border-hover);
 }
 
 .ds-theme-preset-select:focus {
   outline: none;
-  border-color: var(--ds-color-primary);
-  box-shadow: 0 0 0 2px var(--ds-color-primary)20;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 /* ================================ */
-/* BOUTON AVANCÉ */
+/* COLOR PICKER */
 /* ================================ */
 
-.ds-theme-advanced-btn {
-  position: relative;
-  overflow: hidden;
-  transition: all var(--ds-transition-fast);
-  background: transparent;
-  border: 1px solid var(--ds-border-base);
+.ds-color-picker-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.ds-color-input {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+  overflow: hidden;
+}
+
+.ds-color-input::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.ds-color-input::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.ds-reset-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  color: var(--ds-text-primary);
+  transition: all var(--transition-fast);
 }
 
-.ds-theme-advanced-btn:hover {
-  transform: rotate(90deg);
-  background: var(--ds-color-secondary) !important;
-  color: white !important;
-  border-color: var(--ds-color-secondary) !important;
+.ds-reset-btn:hover {
+  background: var(--error);
+  color: var(--on-error);
+  border-color: var(--error);
 }
 
 /* ================================ */
@@ -374,14 +443,14 @@ const sizeClasses = computed(() => {
 .ds-theme-divider {
   width: 1px;
   height: 24px;
-  background: var(--ds-border-base);
-  margin: 0 var(--ds-spacing-xs);
+  background: var(--border);
+  margin: 0 var(--space-xs);
 }
 
 .ds-theme-compact .ds-theme-divider {
   width: 100%;
   height: 1px;
-  margin: var(--ds-spacing-xs) 0;
+  margin: var(--space-xs) 0;
 }
 
 /* ================================ */
@@ -390,62 +459,18 @@ const sizeClasses = computed(() => {
 
 .ds-theme-size-small .ds-theme-mode-btn,
 .ds-theme-size-small .ds-theme-toggle-btn,
-.ds-theme-size-small .ds-theme-advanced-btn {
-  width: 32px;
-  height: 32px;
-}
-
-.ds-theme-size-small .ds-theme-mode-btn svg,
-.ds-theme-size-small .ds-theme-toggle-btn svg,
-.ds-theme-size-small .ds-theme-advanced-btn svg {
-  width: 16px;
-  height: 16px;
-}
-
-.ds-theme-size-small .ds-theme-preset-select {
-  padding: 6px 10px;
-  font-size: 12px;
-  min-width: 120px;
-}
-
-.ds-theme-size-medium .ds-theme-mode-btn,
-.ds-theme-size-medium .ds-theme-toggle-btn,
-.ds-theme-size-medium .ds-theme-advanced-btn {
-  width: 40px;
-  height: 40px;
-}
-
-.ds-theme-size-medium .ds-theme-mode-btn svg,
-.ds-theme-size-medium .ds-theme-toggle-btn svg,
-.ds-theme-size-medium .ds-theme-advanced-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
-.ds-theme-size-medium .ds-theme-preset-select {
-  padding: 8px 12px;
-  font-size: 14px;
-  min-width: 140px;
+.ds-theme-size-small .ds-color-input,
+.ds-theme-size-small .ds-reset-btn {
+  width: 28px;
+  height: 28px;
 }
 
 .ds-theme-size-large .ds-theme-mode-btn,
 .ds-theme-size-large .ds-theme-toggle-btn,
-.ds-theme-size-large .ds-theme-advanced-btn {
+.ds-theme-size-large .ds-color-input,
+.ds-theme-size-large .ds-reset-btn {
   width: 48px;
   height: 48px;
-}
-
-.ds-theme-size-large .ds-theme-mode-btn svg,
-.ds-theme-size-large .ds-theme-toggle-btn svg,
-.ds-theme-size-large .ds-theme-advanced-btn svg {
-  width: 24px;
-  height: 24px;
-}
-
-.ds-theme-size-large .ds-theme-preset-select {
-  padding: 10px 14px;
-  font-size: 16px;
-  min-width: 160px;
 }
 
 /* ================================ */
@@ -461,13 +486,13 @@ const sizeClasses = computed(() => {
   position: absolute;
   inset: -2px;
   background: linear-gradient(45deg,
-    var(--gaming-glow),
+    var(--primary),
     transparent,
-    var(--gaming-glow)
+    var(--primary)
   );
   border-radius: inherit;
   opacity: 0;
-  transition: opacity var(--ds-transition-normal);
+  transition: opacity var(--transition-normal);
   z-index: -1;
 }
 
@@ -476,20 +501,47 @@ const sizeClasses = computed(() => {
 }
 
 /* ================================ */
-/* ANIMATIONS */
+/* INFORMATIONS SYSTÈME (VUEUSE) */
 /* ================================ */
 
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px var(--gaming-glow)20;
-  }
-  50% {
-    box-shadow: 0 0 30px var(--gaming-glow)40;
-  }
+.ds-system-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
 }
 
-.ds-theme-selector-gaming:hover {
-  animation: pulse-glow 2s ease-in-out infinite;
+.ds-info-item {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: var(--surface);
+  cursor: help;
+}
+
+.ds-system-reset-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.ds-system-reset-btn:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+  transform: scale(1.05);
 }
 
 /* ================================ */
@@ -499,33 +551,19 @@ const sizeClasses = computed(() => {
 @media (max-width: 640px) {
   .ds-theme-selector {
     flex-direction: column;
-    gap: var(--ds-spacing-sm);
+    gap: var(--space-sm);
   }
 
   .ds-theme-container {
     flex-direction: column;
-    gap: var(--ds-spacing-sm);
+    gap: var(--space-sm);
   }
 
   .ds-theme-divider {
     width: 100%;
     height: 1px;
-    margin: var(--ds-spacing-xs) 0;
+    margin: var(--space-xs) 0;
   }
-}
-
-/* ================================ */
-/* SPÉCIFICITÉS DU MODE SOMBRE */
-/* ================================ */
-
-.dark .ds-theme-selector {
-  background: var(--ds-bg-mute);
-  border-color: var(--ds-border-base);
-}
-
-.dark .ds-theme-selector:hover {
-  background: var(--ds-bg-soft);
-  border-color: var(--ds-border-hover);
 }
 
 /* ================================ */
@@ -534,14 +572,28 @@ const sizeClasses = computed(() => {
 
 .ds-theme-mode-btn:focus,
 .ds-theme-toggle-btn:focus,
-.ds-theme-advanced-btn:focus {
+.ds-reset-btn:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--ds-color-primary)40;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 40%, transparent);
 }
 
 .ds-theme-mode-btn:active,
 .ds-theme-toggle-btn:active,
-.ds-theme-advanced-btn:active {
+.ds-reset-btn:active {
   transform: scale(0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-theme-selector,
+  .ds-theme-mode-btn,
+  .ds-theme-toggle-btn,
+  .ds-system-reset-btn {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .ds-theme-selector-gaming::before {
+    display: none !important;
+  }
 }
 </style>

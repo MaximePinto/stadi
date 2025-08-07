@@ -7,43 +7,25 @@ const user = useUserStore()
 </script>
 
 <template>
-  <header
-    class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 text-white shadow-md"
-  >
-    <nav
-      class="container mx-auto flex flex-wrap justify-between items-center p-4"
-    >
-      <div class="flex space-x-6 font-medium">
-        <RouterLink class="hover:text-blue-400" to="/">Accueil</RouterLink>
-        <RouterLink class="hover:text-blue-400" to="/about">À propos</RouterLink>
-        <RouterLink class="hover:text-blue-400" to="/heroes">Héros</RouterLink>
-        <RouterLink
-          v-if="user.isAdmin"
-          class="hover:text-blue-400"
-          to="/admin"
-        >Administration</RouterLink>
-        <RouterLink class="hover:text-blue-400" to="/theme-demo">🎨 Thèmes</RouterLink>
+  <header class="header-container">
+    <nav class="header-nav">
+      <div class="nav-links">
+        <RouterLink class="nav-link" to="/">Accueil</RouterLink>
+        <RouterLink class="nav-link" to="/about">À propos</RouterLink>
+        <RouterLink class="nav-link" to="/heroes">Héros</RouterLink>
+        <RouterLink v-if="user.isAdmin" class="nav-link" to="/admin">Administration</RouterLink>
+        <RouterLink class="nav-link" to="/theme-demo">🎨 Thèmes</RouterLink>
       </div>
 
-      <div class="flex items-center space-x-4">
-        <!-- Sélecteur de thème -->
-        <DsThemeSelector/>
-
-        <!-- Bouton de connexion/déconnexion -->
-        <div>
-          <RouterLink
-            v-if="!user.isLogged"
-            to="/login"
-            class="hover:text-blue-400"
-            >Connexion</RouterLink
-          >
-          <button
-            v-else
-            @click="user.logout()"
-            class="hover:text-blue-400"
-          >
-            Se déconnecter
-          </button>
+      <div class="header-actions">
+        <DsThemeSelector show-color-picker />
+        
+        <div v-if="user.isLogged" class="user-menu">
+          <button class="logout-btn" @click="user.logout()">Se déconnecter</button>
+        </div>
+        
+        <div v-else class="auth-menu">
+          <RouterLink class="auth-link" to="/login">Connexion</RouterLink>
         </div>
       </div>
     </nav>
@@ -51,27 +33,131 @@ const user = useUserStore()
 </template>
 
 <style scoped>
-.theme-selector-header {
-  /* Ajustements pour l'intégration dans le header */
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+/* ================================ */
+/* HEADER CONTAINER */
+/* ================================ */
+
+.header-container {
+  background: linear-gradient(to right, var(--surface), var(--surface-hover));
+  color: var(--text);
+  box-shadow: var(--shadow-md);
+  border-bottom: 1px solid var(--border);
 }
 
-.theme-selector-header:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
+.header-nav {
+  container: mx-auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Responsive */
+/* ================================ */
+/* NAVIGATION LINKS */
+/* ================================ */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  font-weight: 500;
+}
+
+.nav-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+}
+
+.nav-link:hover {
+  color: var(--primary);
+  background: var(--surface-hover);
+}
+
+.nav-link.router-link-active {
+  color: var(--primary);
+  background: var(--surface-pressed);
+}
+
+/* ================================ */
+/* HEADER ACTIONS */
+/* ================================ */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.user-menu,
+.auth-menu {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.logout-btn,
+.auth-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.logout-btn:hover {
+  background: var(--error);
+  color: var(--on-error);
+  border-color: var(--error);
+}
+
+.auth-link:hover {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+}
+
+/* ================================ */
+/* RESPONSIVE */
+/* ================================ */
+
 @media (max-width: 768px) {
-  nav {
+  .header-nav {
     flex-direction: column;
-    gap: var(--ds-spacing-md);
+    gap: var(--space-md);
   }
 
-  .theme-selector-header {
-    order: -1; /* Placer le sélecteur en premier sur mobile */
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-sm);
+  }
+
+  .header-actions {
+    order: -1; /* Placer les actions en premier sur mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+  }
+  
+  .nav-link {
+    width: 100%;
+    text-align: center;
+    padding: var(--space-sm);
   }
 }
 </style>

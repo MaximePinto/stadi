@@ -1,0 +1,35 @@
+/**
+ * 🌍 Styles globaux du Design System
+ * Application des variables du DS aux éléments HTML de base
+ */
+
+/* Application du thème au body */
+body {
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* Utilitaires globaux optionnels */
+.ds-text-primary { color: var(--text); }
+.ds-text-muted { color: var(--text-muted); }
+.ds-text-disabled { color: var(--text-disabled); }
+
+.ds-bg-base { background-color: var(--bg); }
+.ds-bg-surface { background-color: var(--surface); }
+.ds-bg-surface-hover { background-color: var(--surface-hover); }
+
+.ds-border { border-color: var(--border); }
+.ds-border-focus { border-color: var(--border-focus); }
+
+/* Classes d'animation */
+.ds-transition {
+  transition: all var(--transition-normal);
+}
+
+.ds-transition-fast {
+  transition: all var(--transition-fast);
+}
+
+.ds-transition-slow {
+  transition: all var(--transition-slow);
+}

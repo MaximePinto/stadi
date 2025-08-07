@@ -1,0 +1,13 @@
+/**
+ * 🎨 Design System CSS - Point d'entrée
+ * Import unique pour tout le système de design
+ */
+
+/* Variables CSS de base */
+@import './tokens.css';
+
+/* Variations par thème */
+@import './themes.css';
+
+/* Styles globaux utilisant les variables */
+@import './global.css';
