@@ -3,6 +3,9 @@
  * Import unique pour tout le système de design
  */
 
+/* Tailwind CSS v4 */
+@import "tailwindcss";
+
 /* Variables CSS de base */
 @import './tokens.css';
 

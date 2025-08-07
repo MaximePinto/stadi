@@ -1,14 +1,18 @@
-// webapp/tailwind.config.ts
-export default {
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
   content: [
-    './index.html',
-    './src/**/*.{vue,js,ts,jsx,tsx}', // Ensures all relevant files are scanned
-    './src/components/UI/**/*.vue', // Explicitly include DS components
+    "./index.html",
+    "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
-      // Project-specific overrides can go here if necessary
+      animation: {
+        'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      }
     },
   },
   plugins: [],
-};
+}
+
+export default config

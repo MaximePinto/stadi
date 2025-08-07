@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
+import stadiumBackground from '../assets/images/stadium_background.webp'
 
 const email = ref('')
 const password = ref('')
@@ -23,13 +24,13 @@ async function handleLogin() {
   <div class="min-h-screen bg-overwatch flex items-center justify-center">
 
     <!-- Overlay sombre pour améliorer la lisibilité -->
-    <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+    <div class="absolute inset-0 bg-black/40"></div>
 
     <!-- Conteneur principal centré avec largeur maximale -->
     <div class="relative z-10 w-full max-w-6xl mx-auto">
 
       <!-- Carte principale avec effet glassmorphism -->
-      <div class="mt-36 bg-white bg-opacity-10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white border-opacity-20 overflow-hidden">
+      <div class="mt-36 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
 
         <!-- Grille responsive en 2 colonnes sur grand écran -->
         <div class="grid lg:grid-cols-2 min-h-[600px]">
@@ -59,7 +60,7 @@ async function handleLogin() {
           </div>
 
           <!-- Section droite : Formulaire de connexion -->
-          <div class="bg-white bg-opacity-95 backdrop-blur-sm p-12 lg:p-16 flex flex-col justify-center">
+          <div class="bg-white/95 backdrop-blur-sm p-12 lg:p-16 flex flex-col justify-center">
 
             <!-- Titre du formulaire -->
             <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">
@@ -120,7 +121,7 @@ async function handleLogin() {
 
 <style>
 .bg-overwatch {
-  background-image: url('../assets/images/stadium_background.webp');
+  background-image: url('/src/assets/images/stadium_background.webp');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
