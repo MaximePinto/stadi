@@ -1,10 +1,10 @@
 /**
  * 🎨 Store Pinia pour la gestion des thèmes
- * Version simplifiée avec variables CSS pures
+ * Version améliorée avec intégration VueUse
  */
 
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 export type ThemeMode = 'light' | 'dark'
 export type ThemePreset = 'indigo' | 'gaming' | 'ocean' | 'forest'
@@ -92,17 +92,11 @@ export const useThemeStore = defineStore('theme', () => {
   }
 
   /**
-   * Initialise le thème (à appeler au démarrage de l'app)
+   * Initialise le thème (simplifié - VueUse gère la détection système)
    */
   const initTheme = () => {
-    // Détecte la préférence système si aucun mode sauvegardé
-    if (mode.value === 'light' && typeof window !== 'undefined') {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-      if (prefersDark) {
-        mode.value = 'dark'
-      }
-    }
-    
+    // VueUse via useDesignSystem gère maintenant la détection automatique
+    // On applique juste le thème actuel
     applyTheme()
   }
 
@@ -111,14 +105,53 @@ export const useThemeStore = defineStore('theme', () => {
   // ================================
   
   /**
-   * Liste des presets disponibles
+   * Liste des presets disponibles avec métadonnées
    */
-  const availablePresets: ThemePreset[] = ['indigo', 'gaming', 'ocean', 'forest']
+  const availablePresets = computed(() => [
+    { 
+      id: 'indigo' as ThemePreset, 
+      label: 'Indigo Gaming', 
+      description: 'Thème par défaut avec indigo',
+      colors: { primary: '#4338ca', accent: '#9333ea' }
+    },
+    { 
+      id: 'gaming' as ThemePreset, 
+      label: 'Gaming Purple', 
+      description: 'Style gaming avec purple',
+      colors: { primary: '#9333ea', accent: '#4338ca' }
+    },
+    { 
+      id: 'ocean' as ThemePreset, 
+      label: 'Ocean Blue', 
+      description: 'Thème océan avec cyan',
+      colors: { primary: '#0891b2', accent: '#2563eb' }
+    },
+    { 
+      id: 'forest' as ThemePreset, 
+      label: 'Forest Green', 
+      description: 'Thème nature avec emerald',
+      colors: { primary: '#059669', accent: '#16a34a' }
+    }
+  ])
   
   /**
    * Liste des modes disponibles
    */
   const availableModes: ThemeMode[] = ['light', 'dark']
+
+  /**
+   * Preset actuel avec métadonnées
+   */
+  const currentPreset = computed(() => 
+    availablePresets.value.find(p => p.id === preset.value)
+  )
+
+  /**
+   * Vérifie si des couleurs personnalisées sont définies
+   */
+  const hasCustomColors = computed(() => 
+    Object.keys(customColors.value).length > 0
+  )
 
   return {
     // État (réactif)
@@ -136,8 +169,12 @@ export const useThemeStore = defineStore('theme', () => {
     applyTheme,
     initTheme,
     
-    // Métadonnées
+    // Getters calculés
     availablePresets,
+    currentPreset,
+    hasCustomColors,
+    
+    // Métadonnées
     availableModes,
   }
 }, {

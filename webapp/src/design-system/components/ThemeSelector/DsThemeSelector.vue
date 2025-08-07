@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useThemeStore } from '@/stores/theme'
+import { useDesignSystem } from '@/composables/useDesignSystem'
 import {
   SunnyOutline,
   MoonOutline,
   SettingsOutline,
-  ColorPaletteOutline
+  ColorPaletteOutline,
+  PhonePortraitOutline,
+  DesktopOutline
 } from '@vicons/ionicons5'
 
 interface Props {
   showModeToggle?: boolean      // Afficher les boutons mode (☀️🌙)
   showPresetSelector?: boolean  // Afficher le sélecteur de presets
   showColorPicker?: boolean     // Afficher le color picker
+  showSystemInfo?: boolean      // Afficher les infos système (VueUse)
+  autoAdaptive?: boolean        // Configuration automatique selon l'appareil
   size?: 'small' | 'medium' | 'large'  // Taille des composants
   compact?: boolean             // Layout compact (vertical)
   gaming?: boolean              // Effets visuels gaming
@@ -21,6 +25,7 @@ interface Emits {
   'mode-change': [mode: 'light' | 'dark']
   'preset-change': [preset: string]
   'color-change': [colorKey: string, color: string]
+  'system-reset': []
 }
 
 // Définition des props avec valeurs par défaut
@@ -28,6 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
   showModeToggle: true,
   showPresetSelector: true,
   showColorPicker: false,
+  showSystemInfo: false,
+  autoAdaptive: true,
   size: 'medium',
   compact: false,
   gaming: true
@@ -36,8 +43,15 @@ const props = withDefaults(defineProps<Props>(), {
 // Définition des émissions d'événements
 const emit = defineEmits<Emits>()
 
-// Utilisation du store de thème
-const themeStore = useThemeStore()
+// Utilisation du Design System avec VueUse
+const designSystem = useDesignSystem({
+  autoDetectPreferences: true,
+  syncWithSystem: true,
+  enableReducedMotion: true
+})
+
+// Accès au store via le design system
+const { themeStore } = designSystem
 
 // Configuration des options pour le sélecteur de mode
 const modeOptions = [
@@ -53,17 +67,12 @@ const modeOptions = [
   }
 ]
 
-// Configuration des presets
-const presetOptions = [
-  { label: 'Indigo Gaming', value: 'indigo', description: 'Thème par défaut avec indigo' },
-  { label: 'Gaming Purple', value: 'gaming', description: 'Style gaming avec purple' },
-  { label: 'Ocean Blue', value: 'ocean', description: 'Thème océan avec cyan' },
-  { label: 'Forest Green', value: 'forest', description: 'Thème nature avec emerald' }
-]
+// Configuration des presets (utilise les données du store)
+const presetOptions = computed(() => themeStore.availablePresets)
 
-// Gestionnaire pour le changement de mode de thème
+// Gestionnaire pour le changement de mode de thème (avec VueUse)
 const handleModeChange = (mode: 'light' | 'dark') => {
-  themeStore.setMode(mode)
+  designSystem.smartToggle() // Utilise le toggle intelligent de VueUse
   emit('mode-change', mode)
 }
 
@@ -71,13 +80,21 @@ const handleModeChange = (mode: 'light' | 'dark') => {
 const handlePresetChange = (event: Event) => {
   const target = event.target as HTMLSelectElement
   const preset = target.value as any
-  themeStore.setPreset(preset)
+  
+  // Utilise la méthode avec gestion des animations
+  designSystem.setPresetWithMotion(preset)
   emit('preset-change', preset)
 }
 
 // Gestionnaire pour le basculement rapide de thème
 const handleToggleTheme = () => {
-  themeStore.toggleMode()
+  designSystem.smartToggle()
+}
+
+// Gestionnaire pour reset aux préférences système
+const handleSystemReset = () => {
+  designSystem.resetToSystemPreferences()
+  emit('system-reset')
 }
 
 // Gestionnaire pour le changement de couleur personnalisée
@@ -88,9 +105,32 @@ const handleColorChange = (colorKey: string, event: Event) => {
   emit('color-change', colorKey, color)
 }
 
+// Configuration adaptative basée sur VueUse
+const adaptiveConfig = computed(() => {
+  if (!props.autoAdaptive) {
+    return {
+      size: props.size,
+      compact: props.compact,
+      gaming: props.gaming && !designSystem.isReducedMotion,
+      showPresetSelector: props.showPresetSelector,
+      showColorPicker: props.showColorPicker
+    }
+  }
+  
+  // Configuration automatique selon l'appareil et les préférences
+  const optimal = designSystem.optimalThemeSelectorConfig.value
+  return {
+    size: optimal.size,
+    compact: optimal.compact,
+    gaming: optimal.gaming,
+    showPresetSelector: optimal.showPresetSelector,
+    showColorPicker: optimal.showColorPicker
+  }
+})
+
 // Classes CSS calculées pour les effets de jeu
 const gamingClasses = computed(() => {
-  if (!props.gaming) return ''
+  if (!adaptiveConfig.value.gaming) return ''
 
   return [
     'ds-theme-selector-gaming',
@@ -102,9 +142,9 @@ const gamingClasses = computed(() => {
   ].join(' ')
 })
 
-// Classes de taille calculées selon la prop size
+// Classes de taille calculées selon la configuration adaptative
 const sizeClasses = computed(() => {
-  switch (props.size) {
+  switch (adaptiveConfig.value.size) {
     case 'small': return 'ds-theme-size-small'
     case 'large': return 'ds-theme-size-large'
     default: return 'ds-theme-size-medium'
@@ -120,7 +160,7 @@ const sizeClasses = computed(() => {
     <div
       :class="[
         'ds-theme-container',
-        { 'ds-theme-compact': compact }
+        { 'ds-theme-compact': adaptiveConfig.compact }
       ]"
     >
       <!-- Sélecteur de mode de thème (☀️🌙) -->
@@ -153,7 +193,7 @@ const sizeClasses = computed(() => {
       </template>
 
       <!-- Sélecteur de préréglage -->
-      <template v-if="showPresetSelector">
+      <template v-if="adaptiveConfig.showPresetSelector">
         <div class="ds-theme-divider" />
         <select
           :value="themeStore.preset"
@@ -162,8 +202,8 @@ const sizeClasses = computed(() => {
         >
           <option
             v-for="option in presetOptions"
-            :key="option.value"
-            :value="option.value"
+            :key="option.id"
+            :value="option.id"
           >
             {{ option.label }}
           </option>
@@ -171,19 +211,19 @@ const sizeClasses = computed(() => {
       </template>
 
       <!-- Color Picker pour customisation -->
-      <template v-if="showColorPicker">
+      <template v-if="adaptiveConfig.showColorPicker">
         <div class="ds-theme-divider" />
         <div class="ds-color-picker-group">
           <input
             type="color"
-            :value="themeStore.customColors.primary || '#4338ca'"
+            :value="themeStore.customColors.primary || themeStore.currentPreset?.colors.primary || '#4338ca'"
             @change="handleColorChange('primary', $event)"
             class="ds-color-input"
             title="Couleur primaire"
           >
           <input
             type="color"
-            :value="themeStore.customColors.accent || '#9333ea'"
+            :value="themeStore.customColors.accent || themeStore.currentPreset?.colors.accent || '#9333ea'"
             @change="handleColorChange('accent', $event)"
             class="ds-color-input"
             title="Couleur d'accent"
@@ -192,6 +232,26 @@ const sizeClasses = computed(() => {
             @click="themeStore.resetCustomColors()"
             class="ds-reset-btn"
             title="Reset couleurs"
+          >
+            <SettingsOutline />
+          </button>
+        </div>
+      </template>
+
+      <!-- Informations système VueUse -->
+      <template v-if="showSystemInfo">
+        <div class="ds-theme-divider" />
+        <div class="ds-system-info">
+          <div class="ds-info-item" :title="`Préférence système: ${designSystem.preferredColorScheme.value}`">
+            <component :is="designSystem.preferredColorScheme.value === 'dark' ? MoonOutline : SunnyOutline" />
+          </div>
+          <div class="ds-info-item" :title="`Appareil: ${designSystem.deviceType}`">
+            <component :is="designSystem.isMobile ? PhonePortraitOutline : DesktopOutline" />
+          </div>
+          <button
+            @click="handleSystemReset"
+            class="ds-system-reset-btn"
+            title="Retour aux préférences système"
           >
             <SettingsOutline />
           </button>
@@ -441,6 +501,50 @@ const sizeClasses = computed(() => {
 }
 
 /* ================================ */
+/* INFORMATIONS SYSTÈME (VUEUSE) */
+/* ================================ */
+
+.ds-system-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.ds-info-item {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  background: var(--surface);
+  cursor: help;
+}
+
+.ds-system-reset-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.ds-system-reset-btn:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+/* ================================ */
 /* RESPONSIVE */
 /* ================================ */
 
@@ -482,9 +586,14 @@ const sizeClasses = computed(() => {
 @media (prefers-reduced-motion: reduce) {
   .ds-theme-selector,
   .ds-theme-mode-btn,
-  .ds-theme-toggle-btn {
+  .ds-theme-toggle-btn,
+  .ds-system-reset-btn {
     animation: none !important;
     transition: none !important;
+  }
+  
+  .ds-theme-selector-gaming::before {
+    display: none !important;
   }
 }
 </style>
