@@ -59,7 +59,12 @@
               :key="`main-${index}`"
               v-bind="variant.props"
               v-on="variant.events || {}"
-            />
+            >
+              <!-- Contenu pour shadcn-vue -->
+              <template v-if="group.mainSection.component === ShadcnButton">
+                {{ variant.props?.variant ? variant.props.variant.charAt(0).toUpperCase() + variant.props.variant.slice(1) : 'Default' }}
+              </template>
+            </component>
             <!-- Affichage du mode de thème actuel -->
             <div class="text-sm text-text-secondary">
               Mode actuel: <span class="font-medium">{{ currentMode }}</span>
@@ -144,6 +149,10 @@
                 >
                   <!-- Contenu du slot si template fourni -->
                   <div v-if="variant.template" v-html="variant.template"></div>
+                  <!-- Contenu pour shadcn-vue -->
+                  <template v-else-if="group.variantsSection.component === ShadcnButton">
+                    {{ variant.props?.size === 'icon' ? '🔥' : variant.title }}
+                  </template>
                 </component>
               </div>
             </div>
@@ -158,6 +167,7 @@
 import { computed, ref } from 'vue'
 import { useThemeStore } from '@/stores/theme'
 import { DsButton, DsThemeSelector } from '@/design-system/components'
+import { Button as ShadcnButton } from '@/design-system/components/shadcn'
 
 // Utilisation du store de thème
 const themeStore = useThemeStore()
@@ -224,6 +234,34 @@ const componentVariants = [
       ]
     },
     variantsSection: { title: "", component: null, variants: [] }
+  },
+  {
+    title: "Composants shadcn-vue",
+    category: "External",
+    description: "Composants provenant de la librairie shadcn-vue",
+    mainSection: {
+      title: "Button shadcn-vue",
+      component: ShadcnButton,
+      layout: "inline",
+      variants: [
+        { props: {} },
+        { props: { variant: "secondary" } },
+        { props: { variant: "destructive" } },
+        { props: { variant: "outline" } },
+        { props: { variant: "ghost" } },
+        { props: { variant: "link" } },
+      ]
+    },
+    variantsSection: {
+      title: "Tailles",
+      component: ShadcnButton,
+      variants: [
+        { title: "Small", props: { size: "sm" } },
+        { title: "Default", props: { size: "default" } },
+        { title: "Large", props: { size: "lg" } },
+        { title: "Icon", props: { size: "icon" } },
+      ]
+    }
   }
 ]
 </script>
