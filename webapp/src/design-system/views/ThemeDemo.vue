@@ -230,10 +230,25 @@ const componentVariants = [
       component: DsThemeSelector,
       layout: "inline",
       variants: [
-        { props: { showColorPicker: true } }
+        { 
+          title: "Standard",
+          props: { size: "medium", gaming: true },
+          events: {
+            'mode-toggle': (mode: string) => console.log('Mode:', mode),
+            'preset-change': (preset: string) => console.log('Preset:', preset)
+          }
+        }
       ]
     },
-    variantsSection: { title: "", component: null, variants: [] }
+    variantsSection: { 
+      title: "Tailles", 
+      component: DsThemeSelector, 
+      variants: [
+        { title: "Small", props: { size: "small", gaming: false } },
+        { title: "Medium", props: { size: "medium", gaming: true } },
+        { title: "Large", props: { size: "large", gaming: true } }
+      ]
+    }
   },
   {
     title: "Composants shadcn-vue",

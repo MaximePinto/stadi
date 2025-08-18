@@ -58,7 +58,7 @@
   --accent: var(--indigo-600);
 }
 
-[data-theme="gaming"].dark {
+.dark[data-theme="gaming"] {
   --primary: var(--purple-400);
   --accent: var(--indigo-400);
 }
@@ -69,7 +69,7 @@
   --accent: var(--blue-600);
 }
 
-[data-theme="ocean"].dark {
+.dark[data-theme="ocean"] {
   --primary: var(--cyan-400);
   --accent: var(--blue-400);
 }
@@ -80,7 +80,7 @@
   --accent: var(--green-600);
 }
 
-[data-theme="forest"].dark {
+.dark[data-theme="forest"] {
   --primary: var(--emerald-400);
   --accent: var(--green-400);
 }

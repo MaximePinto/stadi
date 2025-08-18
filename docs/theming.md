@@ -1,281 +1,256 @@
-# �� Système de Theming Unifié
+# 🎨 Système de Design Hybride
 
 ## Vue d'ensemble
 
-Notre système de theming unifié offre une expérience cohérente et flexible à travers toute l'application. Il utilise une architecture centralisée basée sur des **design tokens** qui sont transformés automatiquement en différents formats pour Tailwind CSS, Naive UI et variables CSS.
+Le système de design utilise une **architecture hybride** combinant classes CSS et attributs data pour une flexibilité maximale. Il repose sur des **design tokens CSS** comme source unique de vérité, avec un mapping automatique vers les classes Tailwind.
 
-## Composants principaux
+## Architecture
 
-### 1. `tokens.ts` - Source unique de vérité
+### 1. **Structure des fichiers**
 
-C'est le fichier central qui définit tous nos tokens de design :
-
-```typescript
-export interface DesignTokens {
-  colors: {
-    light: SemanticColors
-    dark: SemanticColors
-  }
-  typography: TypographyScale
-  spacing: SpacingScale
-  borderRadius: BorderRadius
-  shadows: Shadows
-  transitions: {
-    fast: string
-    normal: string
-    slow: string
-  }
-}
+```
+design-system/styles/
+├── index.css              # 📦 Point d'entrée - imports uniquement
+├── tokens.css             # 🎯 Source de vérité (couleurs, spacing, etc.)
+├── themes.css             # 🌈 Variations (.dark + [data-theme])
+├── tailwind-theme.css     # ⚙️ Mapping tokens → classes Tailwind
+└── global.css             # 🌍 Styles globaux
 ```
 
-**Fonctionnalités clés :**
-- ✅ Support natif light/dark
-- ✅ Palettes de couleurs complètes (indigo, slate, blue, emerald, amber, red)
-- ✅ Presets de thèmes prédéfinis
-- ✅ Couleurs sémantiques cohérentes
-- ✅ Système de typographie évolutif
+### 2. **Approche hybride**
 
-### 2. `useDesignSystem.ts` - Composable principal
+Le système combine **deux mécanismes** pour une séparation claire des responsabilités :
 
-Composable unifié qui gère tout le système de thèmes :
-
-```typescript
-export function useDesignSystem() {
-  // État réactif
-  const effectiveMode = computed<'light' | 'dark'>()
-  const currentTokens = computed<DesignTokens>()
-  const naiveTheme = computed<GlobalTheme | null>()
-  const naiveThemeOverrides = computed()
-  const cssVariables = computed()
-
-  // Actions
-  const setThemeMode = (mode: ThemeMode)
-  const setThemePreset = (preset: ThemePresetKey)
-  const toggleTheme = ()
-  const updateCustomColors = (mode, colors)
-  const resetCustomizations = ()
-}
-```
-
-**Fonctionnalités :**
-- ✅ Mode auto/light/dark
-- ✅ Presets de thèmes
-- ✅ Personnalisation en temps réel
-- ✅ Persistance des préférences
-- ✅ Cache intelligent des thèmes
-- ✅ Injection automatique des variables CSS
-
-### 3. Générateurs automatiques
-
-- **`tailwind.generator.ts`** : Génère la configuration Tailwind avec variables CSS
-- **`naive-ui.generator.ts`** : Crée les overrides Naive UI automatiquement
-
-## Presets de thèmes disponibles
-
-### 🎯 Default (Gaming)
-- **Couleurs** : Indigo primaire, Slate secondaire
-- **Style** : Moderne et gaming
-- **Mode** : Support light/dark complet
-
-### 🌙 Cyberpunk
-- **Couleurs** : Néon et contrastes élevés
-- **Style** : Futuriste et immersif
-- **Mode** : Optimisé pour le dark mode
-
-### 🌅 Sunset
-- **Couleurs** : Dégradés chauds
-- **Style** : Chaleureux et accueillant
-- **Mode** : Équilibre light/dark
-
-### 🎨 Custom
-- **Couleurs** : Personnalisables
-- **Style** : Adapté à vos besoins
-- **Mode** : Flexibilité totale
-
-## Utilisation
-
-### Dans un composant Vue
-
-```vue
-<template>
-  <n-config-provider 
-    :theme="naiveTheme" 
-    :theme-overrides="naiveThemeOverrides"
-  >
-    <div class="bg-bg-base text-text-primary">
-      <button class="btn btn-primary btn-md">
-        Mon bouton
-      </button>
-    </div>
-  </n-config-provider>
-</template>
-
-<script setup>
-import { useDesignSystem } from '@/composables/useDesignSystem'
-
-const { 
-  naiveTheme, 
-  naiveThemeOverrides, 
-  setThemePreset,
-  setThemeMode,
-  toggleTheme
-} = useDesignSystem()
-</script>
-```
-
-### Changer de thème
-
-```typescript
-// Changer le preset
-setThemePreset('cyberpunk')
-
-// Changer le mode
-setThemeMode('dark')
-setThemeMode('light')
-setThemeMode('auto') // Suit le système
-
-// Bascule rapide
-toggleTheme()
-
-// Personnalisation avancée
-updateCustomColors('dark', {
-  primary: '#ff6b35',
-  primaryHover: '#ff5722',
-  background: '#1a1a1a'
-})
-```
-
-### Classes Tailwind disponibles
-
+#### **Classes CSS** pour le mode sombre
 ```html
-<!-- Couleurs -->
-<div class="bg-bg-base text-text-primary">
-<div class="bg-bg-soft border-border-base">
-
-<!-- Boutons -->
-<button class="btn btn-primary btn-md">
-<button class="btn btn-secondary btn-lg">
-
-<!-- Ombres -->
-<div class="shadow-glow shadow-lg">
-
-<!-- Espacements -->
-<div class="p-spacing-md m-spacing-lg">
-
-<!-- Border radius -->
-<div class="rounded-radius-md">
+<html class="dark">
+```
+```css
+.dark {
+  --bg: var(--slate-900);
+  --text: var(--slate-100);
+  --primary: var(--indigo-500);
+}
 ```
 
-## Variables CSS injectées
+#### **Attributs data** pour les variantes thématiques
+```html
+<html data-theme="gaming">
+<html data-theme="ocean">
+<html data-theme="forest">
+```
+```css
+[data-theme="gaming"] {
+  --primary: var(--purple-600);
+  --accent: var(--indigo-600);
+}
+```
 
-Le système injecte automatiquement ces variables CSS :
+#### **Combinaisons** pour thèmes sombres
+```html
+<html class="dark" data-theme="gaming">
+```
+```css
+.dark[data-theme="gaming"] {
+  --primary: var(--purple-400);  /* Plus vif en mode sombre */
+}
+```
+
+## Sources de vérité
+
+### 1. **`tokens.css`** - Variables de base
+
+Définit tous les **design tokens** de l'application :
 
 ```css
 :root {
-  /* Couleurs */
-  --ds-color-primary: #4338ca;
-  --ds-color-primary-hover: #4f46e5;
-  --ds-text-primary: #1e293b;
-  --ds-bg-base: #ffffff;
+  /* Palette de couleurs */
+  --indigo-500: #6366f1;
+  --purple-600: #9333ea;
+  --slate-900: #0f172a;
   
-  /* Espacements */
-  --ds-spacing-md: 1rem;
-  --ds-spacing-lg: 1.5rem;
+  /* Variables sémantiques */
+  --primary: var(--indigo-700);
+  --bg: var(--slate-50);
+  --text: var(--slate-900);
   
-  /* Ombres */
-  --ds-shadow-glow: 0 0 20px rgba(67, 56, 202, 0.3);
+  /* Spacing */
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
   
-  /* Transitions */
-  --ds-transition-normal: 0.2s ease-in-out;
+  /* Border radius */
+  --radius-md: 0.5rem;
 }
 ```
 
-## Avantages du nouveau système
+### 2. **`themes.css`** - Variations thématiques
 
-### 🚀 Performance
-- Cache intelligent des thèmes générés
-- Variables CSS pour les changements instantanés
-- Pas de recompilation Tailwind nécessaire
+Redéfinit les variables pour le **mode sombre** et les **presets** :
 
-### 🎨 Flexibilité
-- Presets prédéfinis + personnalisation complète
-- Support natif light/dark/auto
-- Cohérence garantie entre tous les composants
+```css
+/* Mode sombre */
+.dark {
+  --bg: var(--slate-900);
+  --text: var(--slate-100);
+  --primary: var(--indigo-500);
+}
 
-### 🔧 Développement
-- API simple et intuitive
-- Génération automatique des configurations
-- TypeScript complet avec autocomplétion
+/* Presets thématiques */
+[data-theme="gaming"] {
+  --primary: var(--purple-600);
+}
 
-### 🎯 UX
-- Transitions fluides entre thèmes
-- Persistance des préférences utilisateur
-- Adaptation automatique au système
+.dark[data-theme="gaming"] {
+  --primary: var(--purple-400);
+}
+```
 
-## Bonnes pratiques
+### 3. **`tailwind-theme.css`** - Mapping Tailwind
 
-### ✅ À faire
-1. Utiliser `useDesignSystem()` dans vos composants
-2. Préférer les classes Tailwind générées (`btn-primary`, `bg-bg-base`)
-3. Utiliser les composants Naive UI qui respectent automatiquement le thème
-4. Tester vos interfaces en mode light ET dark
+Connecte les tokens CSS aux **classes Tailwind** :
 
-### ❌ À éviter
-1. Couleurs codées en dur dans les composants
-2. Styles CSS personnalisés qui ignorent le système
-3. Oublier de tester les transitions de thème
-4. Créer des composants qui ne supportent qu'un seul mode
+```css
+@theme inline {
+  --color-primary: var(--primary);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --radius-md: var(--radius-md);
+}
+```
 
-## Migration depuis l'ancien système
+## Store Pinia
 
-Si vous migrez depuis l'ancien système :
+### **`useThemeStore`** - Gestion d'état
 
-1. **Remplacer** les imports directs de tokens par `useDesignSystem()`
-2. **Mettre à jour** les classes CSS pour utiliser les nouvelles classes Tailwind
-3. **Tester** que vos composants fonctionnent en mode light et dark
-4. **Profiter** des nouveaux presets de thèmes !
+```typescript
+export const useThemeStore = defineStore('theme', () => {
+  const mode = ref<ThemeMode>('light')
+  const preset = ref<ThemePreset>('indigo')
+  
+  const setMode = (newMode: ThemeMode) => {
+    mode.value = newMode
+    applyTheme()
+  }
+  
+  const setPreset = (newPreset: ThemePreset) => {
+    preset.value = newPreset
+    applyTheme()
+  }
+  
+  const applyTheme = () => {
+    const root = document.documentElement
+    
+    // Applique le mode (classe CSS)
+    root.classList.remove('light', 'dark')
+    root.classList.add(mode.value)
+    
+    // Applique le preset (data attribute)  
+    root.dataset.theme = preset.value
+  }
+})
+```
 
-## Exemples d'utilisation avancée
+## Thèmes disponibles
 
-### Créer un sélecteur de thème
+### **Presets intégrés**
+
+| Preset   | Couleur principale | Style        | Usage recommandé  |
+|----------|-------------------|--------------|-------------------|
+| `indigo` | Indigo (#4338ca)  | Défaut       | Interface générale |
+| `gaming` | Purple (#9333ea)  | Gaming       | Mode jeu          |
+| `ocean`  | Cyan (#0891b2)    | Océan        | Thème bleu        |
+| `forest` | Emerald (#059669) | Nature       | Thème vert        |
+
+### **Modes**
+
+- **`light`** : Mode clair (défaut)
+- **`dark`** : Mode sombre avec couleurs adaptées
+
+## Utilisation
+
+### **Dans les composants Vue**
 
 ```vue
 <template>
-  <div class="theme-selector">
-    <select @change="setThemePreset($event.target.value)">
-      <option value="default">Gaming</option>
-      <option value="cyberpunk">Cyberpunk</option>
-      <option value="sunset">Sunset</option>
-    </select>
-    
-    <button @click="toggleTheme">
-      {{ effectiveMode === 'dark' ? '☀️' : '🌙' }}
+  <div class="bg-background text-foreground">
+    <button class="bg-primary hover:bg-primary-hover">
+      Mon bouton
     </button>
   </div>
 </template>
+
+<script setup>
+import { useThemeStore } from '@/stores/theme'
+
+const themeStore = useThemeStore()
+
+// Changer de thème
+const switchToGaming = () => themeStore.setPreset('gaming')
+const toggleDark = () => themeStore.toggleMode()
+</script>
 ```
 
-### Personnalisation avancée
+### **Classes Tailwind disponibles**
 
-```typescript
-// Créer un thème personnalisé
-const customTheme = {
-  colors: {
-    light: {
-      primary: '#ff6b35',
-      background: '#fafafa',
-      // ... autres couleurs
-    },
-    dark: {
-      primary: '#ff8c42',
-      background: '#1a1a1a',
-      // ... autres couleurs
-    }
-  }
-}
+```html
+<!-- Couleurs de base -->
+<div class="bg-background text-foreground border-border">
 
-// Appliquer le thème personnalisé
-updateCustomTokens(customTheme)
+<!-- Couleurs sémantiques -->
+<button class="bg-primary text-primary-foreground hover:bg-primary-hover">
+<div class="bg-surface hover:bg-surface-hover">
+
+<!-- États -->
+<span class="text-success">Succès</span>
+<span class="text-error">Erreur</span>
+
+<!-- Mode sombre automatique -->
+<div class="bg-white dark:bg-slate-900 text-black dark:text-white">
 ```
 
-Le système de theming unifié offre une expérience de développement moderne et une interface utilisateur cohérente et personnalisable ! 🎨
+### **Changement programmatique**
+
+```javascript
+// Mode sombre
+document.documentElement.classList.add('dark')
+
+// Thème gaming
+document.documentElement.setAttribute('data-theme', 'gaming')
+
+// Combinaison : gaming sombre
+document.documentElement.className = 'dark'
+document.documentElement.setAttribute('data-theme', 'gaming')
+```
+
+## Avantages du système hybride
+
+### ✅ **Classes CSS** (`.dark`)
+- **Familier** : Standard industrie
+- **Simple** : `classList.toggle('dark')`
+- **Compatible** : Tailwind, frameworks
+- **Performance** : Spécificité CSS optimale
+
+### ✅ **Attributs data** (`data-theme="gaming"`)
+- **Sémantique** : Intention claire
+- **Pas de conflits** : Namespace séparé
+- **Validation** : HTML5 standard
+- **État applicatif** : Un seul attribut à gérer
+
+### ✅ **Combinaison**
+- **Séparation** : Mode vs. variante thématique
+- **Flexibilité** : 4 thèmes × 2 modes = 8 combinaisons
+- **Évolutivité** : Ajout facile de nouveaux presets
+- **Spécificité CSS** : `.dark[data-theme="gaming"]` priorité maximale
+
+## Directive Tailwind v4
+
+```css
+@custom-variant dark (&:is(.dark *));
+```
+
+Cette directive permet d'utiliser `dark:` dans les classes Tailwind :
+- `dark:bg-black` = `background: black` si élément dans `.dark`
+- Plus performant que les media queries
+- Compatible avec l'approche hybride
+
+Le système hybride offre le **meilleur des deux mondes** : simplicité des classes + sémantique des attributs data ! 🎨

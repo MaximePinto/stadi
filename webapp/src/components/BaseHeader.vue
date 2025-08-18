@@ -18,12 +18,12 @@ const user = useUserStore()
       </div>
 
       <div class="header-actions">
-        <DsThemeSelector show-color-picker />
+        <DsThemeSelector size="small" />
         
         <div v-if="user.isLogged" class="user-menu">
           <button class="logout-btn" @click="user.logout()">Se déconnecter</button>
         </div>
-        
+
         <div v-else class="auth-menu">
           <RouterLink class="auth-link" to="/login">Connexion</RouterLink>
         </div>
@@ -153,7 +153,7 @@ const user = useUserStore()
     width: 100%;
     text-align: center;
   }
-  
+
   .nav-link {
     width: 100%;
     text-align: center;

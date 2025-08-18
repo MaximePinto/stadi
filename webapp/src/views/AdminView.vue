@@ -5,14 +5,7 @@ import { useRouter } from 'vue-router'
 import { DsButton } from '@/design-system'
 import { useThemeStore } from '@/stores/theme'
 // Import des icônes pour les boutons
-import {
-  PersonOutline,
-  FlashOutline,
-  DiamondOutline,
-  ArrowBackOutline,
-  SettingsOutline,
-  RefreshOutline
-} from '@vicons/ionicons5'
+import { Icon } from '@iconify/vue'
 
 const router = useRouter()
 const store = useUserStore()
@@ -29,9 +22,9 @@ const loading = ref<string | null>(null)
 
 // Configuration des sections avec icônes
 const sections = [
-  { name: 'Héros', icon: PersonOutline, variant: 'primary' as const },
-  { name: 'Pouvoir', icon: FlashOutline, variant: 'warning' as const },
-  { name: 'Objet', icon: DiamondOutline, variant: 'success' as const }
+  { name: 'Héros', icon: 'radix-icons:person', variant: 'primary' as const },
+  { name: 'Pouvoir', icon: 'radix-icons:lightning-bolt', variant: 'warning' as const },
+  { name: 'Objet', icon: 'radix-icons:cube', variant: 'success' as const }
 ]
 
 async function handleClick(section: string) {
@@ -102,7 +95,7 @@ function switchTheme() {
         <DsButton
           text="Rafraîchir données"
           variant="secondary"
-          :icon="RefreshOutline"
+          icon="radix-icons:update"
           size="medium"
           :ghost="true"
           @click="() => {}"
@@ -111,7 +104,7 @@ function switchTheme() {
         <DsButton
           text="Configuration"
           variant="primary"
-          :icon="SettingsOutline"
+          icon="radix-icons:gear"
           size="medium"
           :gaming="false"
           @click="() => {}"
@@ -123,8 +116,8 @@ function switchTheme() {
     <div v-if="selectedSection" class="card bg-ds-soft border border-ds-base rounded-lg p-6 transition-ds">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-2xl font-semibold text-ds-primary flex items-center gap-3">
-          <component
-            :is="sections.find(s => s.name === selectedSection)?.icon"
+          <Icon
+            :icon="sections.find(s => s.name === selectedSection)?.icon"
             class="w-8 h-8"
           />
           Gestion de {{ selectedSection }}

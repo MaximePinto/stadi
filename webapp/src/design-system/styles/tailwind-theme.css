@@ -1,0 +1,52 @@
+/**
+ * 🎨 Tailwind CSS Theme Configuration
+ * Mapping des variables CSS tokens vers les classes Tailwind
+ */
+
+@theme inline {
+  /* Couleurs principales */
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--on-primary);
+  
+  /* Couleurs secondaires */
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-foreground: var(--on-secondary);
+  
+  /* Couleurs d'accent */
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-foreground: var(--on-accent);
+  
+  /* États */
+  --color-success: var(--success);
+  --color-success-foreground: var(--on-success);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--on-warning);
+  --color-error: var(--error);
+  --color-error-foreground: var(--on-error);
+  --color-info: var(--info);
+  --color-info-foreground: var(--on-info);
+  
+  /* Layout & surfaces */
+  --color-background: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  
+  /* Texte */
+  --color-foreground: var(--text);
+  --color-muted: var(--text-muted);
+  --color-muted-foreground: var(--text-disabled);
+  
+  /* Bordures */
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+  --color-ring: var(--border-focus);
+  
+  /* Rayons de bordure */
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+}
